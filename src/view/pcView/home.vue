@@ -30,19 +30,19 @@
                       <h2>金湾区第七届人大常委会第22次会议</h2>
                       <div class="f-flex-content">
                         <span class="f-flex-item">
-                          <i>15</i>
+                          <b>15</b>
                           <p>议题</p>
                         </span>
                         <span class="f-flex-item">
-                          <i>15</i>
+                          <b>15</b>
                           <p>资料</p>
                         </span>
                         <span class="f-flex-item">
-                          <i>15</i>
+                          <b>15</b>
                           <p>批注</p>
                         </span>
                         <span class="f-flex-item">
-                          <i>15</i>
+                          <b>15</b>
                           <p>白板</p>
                         </span>
                       </div>
@@ -88,9 +88,11 @@
 
 
 </template>
+
 <script>
   import mHeader from '@/components/header.vue'
   import mBody from '@/components/body.vue'
+  import '@/assets/css/pcScrollBar.css'
     export default{
         data(){
             return{
@@ -244,7 +246,7 @@
     position: relative;
     overflow: hidden;
   }
-  .m-main-nav-list-hd-content .f-flex-item:after{
+  .m-main-nav-list-hd-content .f-flex-item:not(:nth-last-of-type(1)):after{
     content:'';
     position: absolute;
     right: 1px;

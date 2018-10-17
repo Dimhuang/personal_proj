@@ -65,6 +65,22 @@ export const routerList = [
     path: '/wap/login',
     name: 'wapLogin',
     component: resolve => require(["@/view/wapView/login/login"], resolve)
+  },{
+    path: '/wap/register',
+    name: 'wapRegister',
+    component: resolve => require(["@/view/wapView/login/register"], resolve)
+  },{
+    path: '/wap/meetingList',
+    name: 'wapMeetingList',
+    component: resolve => require(["@/view/wapView/list/meetingList"], resolve)
+  },{
+    path: '/wap/functions',
+    name: 'wapFunctions',
+    component: resolve => require(["@/view/wapView/list/functions"], resolve)
+  },{
+    path: '/wap/meetingMsg',
+    name: 'wapMeetingMsg',
+    component: resolve => require(["@/view/wapView/list/meetingMsg"], resolve)
   }
 ]
 

@@ -49,43 +49,7 @@ body,html{
   -ms-user-select:none;
   user-select:none;
 }
-::-webkit-scrollbar
-{
-  width: 10px;
-  height: 10px;
-  background-color: #F5F5F5;
-}
-/*定义滚动条轨道 内阴影+圆角*/
-::-webkit-scrollbar-track
-{
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-  border-radius: 10px;
-  background-color: #F5F5F5;
-}
-/*定义滑块 内阴影+圆角*/
-::-webkit-scrollbar-thumb
-{
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-  background-color: #bdbdbd;
-}
-/*滑块效果*/
-::-webkit-scrollbar-thumb:hover
-{
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-  background: rgba(0,0,0,0.4);
-}
-/*IE滚动条颜色*/
-html {
-  scrollbar-face-color:#bfbfbf;/*滚动条颜色*/
-  scrollbar-highlight-color:#000;
-  scrollbar-3dlight-color:#000;
-  scrollbar-darkshadow-color:#000;
-  scrollbar-Shadow-color:#adadad;/*滑块边色*/
-  scrollbar-arrow-color:rgba(0,0,0,0.4);/*箭头颜色*/
-  scrollbar-track-color:#eeeeee;/*背景颜色*/
-}
+
 /*自定义*/
 .f-view-width{
   width: 1000px;
@@ -128,12 +92,26 @@ html {
   background-size: 100%;
   margin-right: 15px;
 }
+.f-wap-pdf-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_PDF.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
+}
 .f-wjj-icon{
   width: 54px;
   height: 54px;
   background: url("../../assets/img/icon_wenjian.png") no-repeat center;
   background-size: 100%;
   margin-right: 15px;
+}
+.f-wap-wjj-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_wenjian.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
 }
 .f-doc-icon{
   width: 54px;
@@ -142,12 +120,26 @@ html {
   background-size: 100%;
   margin-right: 15px;
 }
+.f-wap-doc-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_doc.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
+}
 .f-jpg-icon{
   width: 54px;
   height: 54px;
   background: url("../../assets/img/icon_JPG.png") no-repeat center;
   background-size: 100%;
   margin-right: 15px;
+}
+.f-wap-jpg-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_JPG.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
 }
 .f-mp3-icon{
   width: 54px;
@@ -156,12 +148,26 @@ html {
   background-size: 100%;
   margin-right: 15px;
 }
+.f-wap-mp3-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_MP3.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
+}
 .f-na-icon{
   width: 54px;
   height: 54px;
   background: url("../../assets/img/icon_NA.png") no-repeat center;
   background-size: 100%;
   margin-right: 15px;
+}
+.f-wap-na-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_NA.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
 }
 .f-png-icon{
   width: 54px;
@@ -170,12 +176,26 @@ html {
   background-size: 100%;
   margin-right: 15px;
 }
+.f-wap-png-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_PNG.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
+}
 .f-ppt-icon{
   width: 54px;
   height: 54px;
   background: url("../../assets/img/icon_PPT.png") no-repeat center;
   background-size: 100%;
   margin-right: 15px;
+}
+.f-wap-ppt-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_PPT.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
 }
 .f-txt-icon{
  width: 54px;
@@ -184,12 +204,26 @@ html {
  background-size: 100%;
  margin-right: 15px;
 }
+.f-wap-txt-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_TXT.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
+}
 .f-video-icon{
   width: 54px;
   height: 54px;
   background: url("../../assets/img/icon_VIDEO.png") no-repeat center;
   background-size: 100%;
   margin-right: 15px;
+}
+.f-wap-video-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_VIDEO.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
 }
 .f-xls-icon{
   width: 54px;
@@ -198,7 +232,13 @@ html {
   background-size: 100%;
   margin-right: 15px;
 }
-
+.f-wap-xls-icon{
+  width: 0.9rem;
+  height: 0.9rem;
+  background: url("../../assets/img/icon_XLS.png") no-repeat center;
+  background-size: 100%;
+  margin-right: 0.15rem;
+}
 
 /*pc*/
 
@@ -237,9 +277,14 @@ html {
   background-color: #1791ff !important;
   color: #fff !important;
 }
-.yd-navbar span{
+.yd-navbar span.yd-navbar-center-title{
   color: #fff !important;
   font-size: 0.34rem !important;
+}
+
+.yd-navbar .yd-navbar-item span{
+  font-size: 0.2rem;
+  color: #fff !important;
 }
 
 /*字体图标*/

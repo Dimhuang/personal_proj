@@ -143,6 +143,7 @@
 <script>
   import mHeader from '@/components/header.vue'
   import mBody from '@/components/body.vue'
+  import '@/assets/css/pcScrollBar.css'
   export default{
     data(){
       return{

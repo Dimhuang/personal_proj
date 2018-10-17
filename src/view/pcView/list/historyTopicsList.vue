@@ -36,6 +36,7 @@
 </template>
 <script>
   import { mapState } from 'vuex'
+  import '@/assets/css/pcScrollBar.css'
   export default{
 
     data(){
