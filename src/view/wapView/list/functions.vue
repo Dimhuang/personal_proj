@@ -15,19 +15,19 @@
           <img slot="icon" src="../../../assets/img/but_hyxx.png">
           <span slot="text">会议信息</span>
         </yd-grids-item>
-        <yd-grids-item v-if="listType==1">
+        <yd-grids-item @click.native="goUser" v-if="listType==1">
           <img slot="icon" src="../../../assets/img/but_chmd.png">
           <span slot="text">参会名单</span>
         </yd-grids-item>
-        <yd-grids-item>
+        <yd-grids-item @click.native="goTopic">
           <img slot="icon" src="../../../assets/img/but_hyyt.png">
           <span slot="text">会议议题</span>
         </yd-grids-item>
-        <yd-grids-item>
+        <yd-grids-item @click.native="goFolder">
           <img slot="icon" src="../../../assets/img/but_lswj.png">
           <span slot="text">临时文件</span>
         </yd-grids-item>
-        <yd-grids-item v-if="listType==1">
+        <yd-grids-item @click.native="goVote" v-if="listType==1">
           <img slot="icon" src="../../../assets/img/but_hytp.png">
           <span slot="text">会议投票</span>
         </yd-grids-item>
@@ -47,7 +47,7 @@
   export default{
     data(){
       return {
-        listType:'1'
+        listType:1
       }
     },
     mounted(){
@@ -62,6 +62,22 @@
         var _self = this;
         _self.$router.push({name:'wapMeetingMsg',params: { listType: _self.listType }});
       },
+      goUser(){
+        var _self = this;
+        _self.$router.push({name:'wapUserList',params: { listType: _self.listType }});
+      },
+      goTopic(){
+        var _self = this;
+        _self.$router.push({name:'wapTopicList',params: { listType: _self.listType }});
+      },
+      goFolder(){
+        var _self = this;
+        _self.$router.push({name:'wapTopicFolderList',params: { listType: _self.listType ,type:2}});
+      },
+      goVote(){
+        var _self = this;
+        _self.$router.push({name:'wapVote',params: { listType: _self.listType}});
+      },
       goBack(){
         this.$router.push({name:'wapMeetingList'});
       }
@@ -72,9 +88,6 @@
   }
 </script>
 <style>
-  .yd-scrollview{
-    overflow: hidden;
-  }
   .m-wap-index-title-logo .yd-navbar-item{
     overflow: inherit;
     padding:0 0.3rem;

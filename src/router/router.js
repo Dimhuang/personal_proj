@@ -81,6 +81,30 @@ export const routerList = [
     path: '/wap/meetingMsg',
     name: 'wapMeetingMsg',
     component: resolve => require(["@/view/wapView/list/meetingMsg"], resolve)
+  },{
+    path: '/wap/userList',
+    name: 'wapUserList',
+    component: resolve => require(["@/view/wapView/list/userList"], resolve)
+  },{
+    path: '/wap/topicList',
+    name: 'wapTopicList',
+    component: resolve => require(["@/view/wapView/list/topicList"], resolve)
+  },{
+    path: '/wap/topicFolderList',
+    name: 'wapTopicFolderList',
+    component: resolve => require(["@/view/wapView/list/topicFolderList"], resolve)
+  },{
+    path: '/wap/topicFileList',
+    name: 'wapTopicFileList',
+    component: resolve => require(["@/view/wapView/list/topicFileList"], resolve)
+  },{
+    path: '/wap/vote',
+    name: 'wapVote',
+    component: resolve => require(["@/view/wapView/list/vote"], resolve)
+  },{
+    path: '/wap/voteSelect',
+    name: 'wapVoteSelect',
+    component: resolve => require(["@/view/wapView/list/voteSelect"], resolve)
   }
 ]
 

@@ -51,7 +51,7 @@
   </yd-layout>
 </template>
 <script>
-
+  import { getRequest } from '@/utils/utils'
   export default{
     data(){
       return{
@@ -59,7 +59,10 @@
       }
     },
     created(){
-
+      //获取链接参数
+      getRequest((item)=>{
+        console.log(item.id)
+      })
     },
     methods:{
       goLogin(){

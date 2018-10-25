@@ -1,5 +1,5 @@
 <template>
-    <yd-layout>
+    <yd-layout class="m-wap-index-view">
       <yd-navbar class="m-wap-index-title-logo" slot="navbar">
         <div class="f-ex" slot="left">
           <i></i>
@@ -102,7 +102,7 @@
     }
 </script>
 <style>
-  .yd-scrollview{
+  .m-wap-index-view .yd-scrollview{
     overflow: hidden;
   }
   .m-wap-index-title-logo .yd-navbar-item{

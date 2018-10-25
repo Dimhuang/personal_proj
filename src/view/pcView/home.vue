@@ -93,6 +93,7 @@
   import mHeader from '@/components/header.vue'
   import mBody from '@/components/body.vue'
   import '@/assets/css/pcScrollBar.css'
+  import { getRequest } from '@/utils/utils'
     export default{
         data(){
             return{
@@ -101,7 +102,10 @@
             }
         },
         created(){
-
+          //获取链接参数
+          getRequest((item)=>{
+            console.log(item.id)
+          })
         },
         methods:{
           goHistory(){
