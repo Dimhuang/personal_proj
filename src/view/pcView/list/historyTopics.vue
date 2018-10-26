@@ -1,7 +1,7 @@
 <template>
     <div>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item v-for="(n,index) in breakList" :key="index">{{n.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item>会议议题</el-breadcrumb-item>
       </el-breadcrumb>
       <ul>
         <li class="m-history-topics-list f-flex-content" v-for="items in topicList">
@@ -23,7 +23,6 @@
     </div>
 </template>
 <script>
-    import { mapState } from 'vuex'
     import '@/assets/css/pcScrollBar.css'
     export default{
 
@@ -33,9 +32,7 @@
                 {id:1,name:'二、审查金湾区政府关于2017年金湾区经济和社会发展计划执行情况与2018年金湾区社会发展报告；湾区社会发展报告；',reporter:'阿东',place:'金湾区政府',status:2}]
             }
         },
-        computed:{
-          ...mapState(["breakList"])
-        },
+
         mounted(){
 
         },
@@ -44,8 +41,11 @@
         },
         methods:{
           goList(name){
-            this.$store.commit("pushBreak",{name:name,breadNum:2,path:'topicsList'})
-            this.$router.push({name:'topicsList',params:{id:'1'}})
+            this.$router.push({path:'/list/historyList/topicsList',query:{id:'1','name':name}})
+          },
+          goPath(item){
+            this.$store.commit("tapBreak",item)
+            this.$router.push({path:item.path})
           }
         }
     }

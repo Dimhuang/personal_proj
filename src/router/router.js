@@ -35,6 +35,14 @@ export const routerList = [
         path: '/list/historyList/topicsDetails',
         name:'topicsDetails',
         component: resolve => require(["@/view/pcView/list/historyTopicsDetails"], resolve)
+      },{
+        path: '/list/historyList/stmpfile',
+        name:'stmpfile',
+        component: resolve => require(["@/view/pcView/list/historyStmpfile"], resolve)
+      },{
+        path: '/list/historyList/stmpfileDetails',
+        name:'stmpfileDetails',
+        component: resolve => require(["@/view/pcView/list/historyStmpfileDetails"], resolve)
       }
     ]
    /* redirect:{

@@ -1,31 +1,17 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
-      <el-breadcrumb-item>{{topicNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goMain">临时资料</el-breadcrumb-item>
+      <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content">
-        <div class="f-flex-item">
-          <h2 v-text="topicList.topicName"></h2>
-          <span>汇报人：{{topicList.topicReporter}}   {{topicList.topicPlace}}</span>
-          <span>列席人员：{{topicList.topicUsers}}</span>
-        </div>
-        <div class="m-history-list-r">
-            <span class="f-end-ico" v-if="topicList.topicStatus==0">
-              <i>已结束</i>
-            </span>
-          <p></p>
-          <p class="f-fc-blue">全部</p>
-        </div>
-      </li>
-      <li class="m-history-topics-list f-flex-content" v-for="items in topicList.topicFiles">
         <div class="f-flex-item m-history-topics-list-file">
-          <div class="f-wjj-icon fl" :class="{'f-wjj-icon':items.filesType==1,'f-doc-icon':items.filesType==0}"></div>
-          <div v-text="items.filesName"></div>
+          <div class="f-doc-icon fl"></div>
+          <div>金湾区第七届人大常委会第24次会议方案.doc</div>
         </div>
         <div class="m-history-list-r">
-          <el-button size="mini" round @click.native="goDetails(items)">打开</el-button>
+          <el-button size="mini" round>打开</el-button>
         </div>
       </li>
     </ul>
@@ -34,44 +20,17 @@
 <script>
   import '@/assets/css/pcScrollBar.css'
   export default{
-
     data(){
       return {
-        topicNameTxt:'',
-        topicList:{
-            topicName:'一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；',
-            topicReporter:'阿东',
-            topicPlace:'金湾区政府',
-            topicUsers:'刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二',
-            topicStatus:'0',
-            topicFiles:[{
-              filesName:'金湾区第七届人大常委会第24次会议方案',
-              filesType:'1'
-            },{
-              filesName:'会议方案.doc',
-              filesType:'0'
-            }]
-        }
+        folderNameTxt:''
       }
     },
     mounted(){
-      console.log(JSON.stringify(this.$route.query))
-      this.topicNameTxt = this.$route.query.name
-    },
-    components: {
-
+      this.folderNameTxt = this.$route.query.f_name
     },
     methods:{
-      goDetails(data){
-        let _self = this;
-        if(data.filesType==1){
-          _self.$router.push({path:'/list/historyList/topicsDetails',query:{id:'1','name':_self.topicNameTxt,'f_name':data.filesName}})
-        }else{
-          _self.$message('这是文档');
-        }
-      },
       goMain(){
-        this.$router.push({path:'/list/historyList/topics'})
+        this.$router.push({path:'/list/historyList/stmpfile',query:{'id':2}})
       }
     }
   }

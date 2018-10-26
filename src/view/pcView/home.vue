@@ -109,10 +109,10 @@
         },
         methods:{
           goHistory(){
-            this.$router.push({name:'historyList'})
+            this.$router.push({path:'/list/historyList'})
           },
           goMeeting(){
-            this.$router.push({name:'meetingList'})
+            this.$router.push({path:'/list/meetingList'})
           }
         },
         components: {

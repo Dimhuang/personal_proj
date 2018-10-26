@@ -1,8 +1,7 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
-      <el-breadcrumb-item>{{topicNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item>临时资料</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content">
@@ -37,26 +36,24 @@
 
     data(){
       return {
-        topicNameTxt:'',
         topicList:{
-            topicName:'一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；',
-            topicReporter:'阿东',
-            topicPlace:'金湾区政府',
-            topicUsers:'刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二',
-            topicStatus:'0',
-            topicFiles:[{
-              filesName:'金湾区第七届人大常委会第24次会议方案',
-              filesType:'1'
-            },{
-              filesName:'会议方案.doc',
-              filesType:'0'
-            }]
+          topicName:'一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；',
+          topicReporter:'阿东',
+          topicPlace:'金湾区政府',
+          topicUsers:'刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二',
+          topicStatus:'0',
+          topicFiles:[{
+            filesName:'金湾区第七届人大常委会第24次会议方案',
+            filesType:'1'
+          },{
+            filesName:'会议方案.doc',
+            filesType:'0'
+          }]
         }
       }
     },
     mounted(){
-      console.log(JSON.stringify(this.$route.query))
-      this.topicNameTxt = this.$route.query.name
+console.log(this.$route.query)
     },
     components: {
 
@@ -65,14 +62,12 @@
       goDetails(data){
         let _self = this;
         if(data.filesType==1){
-          _self.$router.push({path:'/list/historyList/topicsDetails',query:{id:'1','name':_self.topicNameTxt,'f_name':data.filesName}})
+          _self.$router.push({path:'/list/historyList/stmpfileDetails',query:{id:'2','f_name':data.filesName}})
         }else{
           _self.$message('这是文档');
         }
       },
-      goMain(){
-        this.$router.push({path:'/list/historyList/topics'})
-      }
+
     }
   }
 </script>

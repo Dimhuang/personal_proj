@@ -88,15 +88,6 @@
 
     },
     methods:{
-      handleClick(tab, event){
-        if(tab.label == "会议议题"){
-          this.$store.commit("tabBreak",{name:tab.label,breadNum:1,path:'topics'})
-          this.$router.push({name:'topics'})
-        }else if(tab.label == "临时资料"){
-          this.$store.commit("tabBreak",{name:tab.label,breadNum:1,path:'topicsList'})
-          this.$router.push({name:'topicsList'})
-        }
-      },
       back(){
         this.$router.push({name:'pcHome'})
       }

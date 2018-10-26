@@ -26,7 +26,7 @@ export default new Vuex.Store({
       state.breakList = []
       setTimeout(function(){
         state.breakList.push(txt)
-      },1)
+      },50)
     },
     tapBreak(state,txt){
       //点击面包屑
@@ -37,10 +37,9 @@ export default new Vuex.Store({
         state.breakList = []
         setTimeout(function(){
           state.breakList.push(txt)
-        },1)
-        return
+        },500)
       }else{
-        return
+        return false
       }
     }
   }

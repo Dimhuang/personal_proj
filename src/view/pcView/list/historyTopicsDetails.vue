@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <!--<el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
-      <el-breadcrumb-item @click.native="goList">二、审查金湾区政府关于2017年金湾区经济和社会发展计划执行情况与2018年金湾区社会发展报告；</el-breadcrumb-item>
-      <el-breadcrumb-item>二、审查金湾区政府关于2017年金湾区经济和社会发展计划执行情况与2018年金湾区社会发展报告；</el-breadcrumb-item>-->
-      <el-breadcrumb-item v-for="(n,index) in breakList" :key="index" @click.native="goPath(n)">{{n.name}}</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goList">{{topicNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
+      <!--<el-breadcrumb-item v-for="(n,index) in breakList" :key="index" @click.native="goPath(n)">{{n.name}}</el-breadcrumb-item>-->
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content">
@@ -20,24 +20,24 @@
   </div>
 </template>
 <script>
-  import { mapState } from 'vuex'
   import '@/assets/css/pcScrollBar.css'
   export default{
     data(){
       return {
-
+        topicNameTxt:'',
+        folderNameTxt:''
       }
     },
-    computed:{
-      ...mapState(["breakList"])
-    },
-    components: {
-
+    mounted(){
+      this.topicNameTxt = this.$route.query.name
+      this.folderNameTxt = this.$route.query.f_name
     },
     methods:{
-      goPath(item){
-        this.$store.commit("tapBreak",item)
-        this.$router.push({name:item.path})
+      goMain(){
+        this.$router.push({path:'/list/historyList/topics'})
+      },
+      goList(){
+        this.$router.push({path:'/list/historyList/topicsList',query:{id:'1','name':this.topicNameTxt}})
       }
     }
   }
