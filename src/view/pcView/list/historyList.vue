@@ -5,7 +5,7 @@
       <div class="m-list-nav">
 
         <div class="f-view-width">
-          <span class="m-back-btn" @click="back">
+          <span class="m-back-btn" @click.stop="back">
             <i class="el-icon-arrow-left"></i>
             <em v-text="'返回'"></em>
           </span>

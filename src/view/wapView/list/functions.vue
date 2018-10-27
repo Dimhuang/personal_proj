@@ -15,7 +15,7 @@
           <img slot="icon" src="../../../assets/img/but_hyxx.png">
           <span slot="text">会议信息</span>
         </yd-grids-item>
-        <yd-grids-item @click.native="goUser" v-if="listType==1">
+        <yd-grids-item @click.native="goUser" v-if="wapFunType==1">
           <img slot="icon" src="../../../assets/img/but_chmd.png">
           <span slot="text">参会名单</span>
         </yd-grids-item>
@@ -27,11 +27,11 @@
           <img slot="icon" src="../../../assets/img/but_lswj.png">
           <span slot="text">临时文件</span>
         </yd-grids-item>
-        <yd-grids-item @click.native="goVote" v-if="listType==1">
+        <yd-grids-item @click.native="goVote" v-if="wapFunType==1">
           <img slot="icon" src="../../../assets/img/but_hytp.png">
           <span slot="text">会议投票</span>
         </yd-grids-item>
-        <yd-grids-item v-if="listType==2">
+        <yd-grids-item v-if="wapFunType==2">
           <img slot="icon" src="../../../assets/img/but_pzbb.png">
           <span slot="text">批注白板</span>
         </yd-grids-item>
@@ -44,15 +44,18 @@
   </yd-layout>
 </template>
 <script>
+  import {mapState} from 'vuex'
   export default{
     data(){
       return {
-        listType:1
+
       }
     },
+    computed: {
+      ...mapState(["wapFunType"])
+    },
     mounted(){
-      var _self = this;
-      _self.listType = _self.$route.params.listType
+
     },
     created(){
 
@@ -60,26 +63,26 @@
     methods:{
       goMsg(){
         var _self = this;
-        _self.$router.push({name:'wapMeetingMsg',params: { listType: _self.listType }});
+        _self.$router.push({path:'/wap/meetingMsg'});
       },
       goUser(){
         var _self = this;
-        _self.$router.push({name:'wapUserList',params: { listType: _self.listType }});
+        _self.$router.push({path:'/wap/userList'});
       },
       goTopic(){
         var _self = this;
-        _self.$router.push({name:'wapTopicList',params: { listType: _self.listType }});
+        _self.$router.push({path:'/wap/topicList'});
       },
       goFolder(){
         var _self = this;
-        _self.$router.push({name:'wapTopicFolderList',params: { listType: _self.listType ,type:2}});
+        _self.$router.push({path:'/wap/topicFolderList',query: { type:2}});
       },
       goVote(){
         var _self = this;
-        _self.$router.push({name:'wapVote',params: { listType: _self.listType}});
+        _self.$router.push({path:'/wap/vote'});
       },
       goBack(){
-        this.$router.push({name:'wapMeetingList'});
+        this.$router.push({path:'/wap/meetingList'});
       }
     },
     components: {
@@ -140,5 +143,7 @@
   .m-wap-function-list-box .yd-grids-3 .yd-grids-item .yd-grids-txt{
     font-size: 0.28rem;
     margin-top: 0.2rem;
+    height: 0.4rem;
+    line-height: 0.4rem;
   }
 </style>

@@ -93,7 +93,8 @@
       methods:{
         goFunctionList(type){
           //type=1 =》会议列表，type=2 =》历史会议
-          this.$router.push({name:'wapFunctions',params: { listType: type }})
+          this.$store.commit("changeType",type)
+          this.$router.push({path:'/wap/functions'})
         }
       },
       components: {

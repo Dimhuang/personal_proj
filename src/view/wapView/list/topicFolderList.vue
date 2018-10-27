@@ -34,15 +34,13 @@
     export default{
       data(){
         return {
-          listType: '',
           showType:'1',
           title:''
         }
       },
       mounted(){
         var _self = this;
-        _self.listType = _self.$route.params.listType
-        _self.showType = _self.$route.params.type
+        _self.showType = _self.$route.query.type
         if(_self.showType==1){
           _self.title = '会议议题'
         }else{
@@ -52,14 +50,14 @@
       methods: {
         goDetails(title){
           var _self = this;
-          _self.$router.push({name:'wapTopicFileList',params: { listType: _self.listType ,type:_self.showType,title:title}});
+          _self.$router.push({path:'/wap/topicFileList',query: {type:_self.showType,title:title}});
         },
         back(){
           var _self = this;
           if(_self.showType==1){
-            _self.$router.push({name:'wapTopicList',params: { listType: _self.listType }})
+            _self.$router.push({path:'/wap/topicList'})
           }else{
-            _self.$router.push({name:'wapFunctions',params: { listType: _self.listType }})
+            _self.$router.push({path:'/wap/functions'})
           }
         }
       }
@@ -70,6 +68,9 @@
     padding:0.2rem 0.5rem;
     background-color: #fff;
     margin-bottom: 0;
+  }
+  .m-wap-folder-list-hd .yd-cell:after{
+    height: 0;
   }
   .m-wap-folder-list-hd .yd-cell-item,
   .m-wap-folder-list-hd .yd-cell-right,

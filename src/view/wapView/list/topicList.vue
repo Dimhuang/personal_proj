@@ -37,21 +37,20 @@
   export default{
     data(){
       return {
-        listType: ''
+
       }
     },
     mounted(){
       var _self = this;
-      _self.listType = _self.$route.params.listType
     },
     methods: {
       goList(){
         var _self = this;
-        _self.$router.push({name:'wapTopicFolderList',params: { listType: _self.listType ,type:1}});
+        _self.$router.push({path:'/wap/topicFolderList',query: { type:1}});
       },
       back(){
         var _self = this;
-        _self.$router.push({name:'wapFunctions',params: { listType: _self.listType }})
+        _self.$router.push({path:'/wap/functions'})
       }
     }
   }

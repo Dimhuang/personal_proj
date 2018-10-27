@@ -50,10 +50,10 @@
         },
         methods:{
           goRegister(){
-            this.$router.push({name:'wapRegister'})
+            this.$router.push({path:'/wap/register'})
           },
           goIndex(){
-            this.$router.push({name:'wapMeetingList'})
+            this.$router.push({path:'/wap/meetingList'})
           }
         },
         components: {

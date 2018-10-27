@@ -19,21 +19,19 @@
   export default{
     data(){
       return {
-        listType: '',
         showType:'1',
         title:''
       }
     },
     mounted(){
       var _self = this;
-      _self.listType = _self.$route.params.listType
-      _self.showType = _self.$route.params.type
-      _self.title = _self.$route.params.title
+      _self.showType = _self.$route.query.type
+      _self.title = _self.$route.query.title
     },
     methods: {
       back(){
         var _self = this;
-        _self.$router.push({name:'wapTopicFolderList',params: { listType: _self.listType ,type: _self.showType}})
+        _self.$router.push({path:'/wap/topicFolderList',query: {type: _self.showType}})
       }
     }
   }

@@ -10,7 +10,7 @@
         <yd-cell-group title="这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题" v-for="(items,index) in 3" :key="index">
           <yd-cell-item>
             <span slot="left">
-              <span class="f-fc-black">我的订单我的订单我的订单我的订单我的订单我的订单我的订单我的订单</span>
+              <span class="f-fc-black f-ex">我的订单我的订单我的订单我的订单我的订单我的订单我的订单我的订单</span>
               <div>
                 <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="true">进行中</yd-badge>
                 <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
@@ -19,12 +19,12 @@
             </span>
             <span slot="right">
               <yd-button bgcolor="#28b464" color="#FFF" shape="circle" v-if="true" @click.native="goSelect">投票</yd-button>
-              <yd-button bgcolor="transparent" color="#0092ff" shape="circle" class="f-ex" v-else>查看详情</yd-button>
+              <yd-button bgcolor="transparent" color="#0092ff" shape="circle" class="f-ex" v-else @click.native="goDetails">查看详情</yd-button>
             </span>
           </yd-cell-item>
           <yd-cell-item>
             <span slot="left">
-              <span class="f-fc-grey-black">我的订单我的订单我的订单我的订单我的订单我的订单我的订单我的订单</span>
+              <span class="f-fc-grey-black f-ex">我的订单我的订单我的订单我的订单我的订单我的订单我的订单我的订单</span>
               <div>
                 <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="false">进行中</yd-badge>
                 <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
@@ -33,7 +33,7 @@
             </span>
             <span slot="right">
               <yd-button bgcolor="#28b464" color="#FFF" shape="circle" v-if="false">投票</yd-button>
-              <yd-button color="#0092ff" shape="circle" class="f-ex" v-else>查看详情</yd-button>
+              <yd-button color="#0092ff" shape="circle" class="f-ex" v-else @click.native="goDetails">查看详情</yd-button>
             </span>
           </yd-cell-item>
         </yd-cell-group>
@@ -44,21 +44,25 @@
     export default{
       data(){
         return {
-          listType: ''
+
         }
       },
       mounted(){
         var _self = this;
-        _self.listType = _self.$route.params.listType
+
       },
       methods: {
         goSelect(){
           var _self = this;
-          _self.$router.push({name:'wapVoteSelect',params: { listType: _self.listType }})
+          _self.$router.push({path:'/wap/voteSelect'})
+        },
+        goDetails(){
+          var _self = this;
+          _self.$router.push({path:'/wap/voteDetails'})
         },
         back(){
           var _self = this;
-          _self.$router.push({name:'wapFunctions',params: { listType: _self.listType }})
+          _self.$router.push({path:'/wap/functions'})
         }
       }
     }
@@ -85,13 +89,20 @@
     margin-bottom: 0.2rem;
   }
   .m-wap-vote-list-content .yd-cell-left{
-    width: 60%;
+    width: 70%;
     overflow: hidden;
   }
   .m-wap-vote-list-content .yd-cell-left span{
     text-overflow: ellipsis;
     overflow: hidden;
     display: inline-block;
+  }
+  .m-wap-vote-list-content .yd-cell-left span span.f-ex{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    width: 4.8rem;
   }
   .m-wap-vote-list-content .yd-cell-left div{
    position: relative;

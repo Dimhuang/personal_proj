@@ -27,28 +27,26 @@
           <span>投票选项</span>
           <span>单选</span>
           <span>00:00:30</span>
+          <span class="f-ex">
+            <em>未投 :</em>
+            <em>3</em>
+          </span>
         </div>
-        <!--单选-->
-        <div v-show="true">
-          <yd-radio-group v-model="voteRadio">
-            <yd-radio :val="items.id" v-for="items,index in selectList" :key="index" :class="{'f-active':items.id == voteRadio}">
-              <span>{{items.name}}</span>
-              <yd-icon name="yes_line" custom color="#fff"></yd-icon>
-            </yd-radio>
-          </yd-radio-group>
+        <div>
+          <ul>
+            <li class="vote-detail-progressbar-list" v-for="item in totalList" >
+              <yd-progressbar type="line" :progress="(item.num/100)" trail-width="10" trail-color="#8bc34a"> </yd-progressbar>
+              <div class="f-text">
+                <span v-text="item.name"></span>
+                <span class="f-ex" v-text="item.num+'% ('+item.user+')'"></span>
+              </div>
+            </li>
+          </ul>
         </div>
-        <!--多选-->
-        <div v-show="false">
-          <yd-checkbox-group v-model="voteCheckbox">
-            <yd-checkbox :val="items.id" v-for="items,index in selectList" :key="index" :class="'f-active-'+items.id">
-              <span>{{items.name}}</span>
-              <yd-icon name="yes_line" custom color="#fff"></yd-icon>
-            </yd-checkbox>
-          </yd-checkbox-group>
-        </div>
+
       </div>
     </div>
-    <yd-button size="large" bgcolor="#1791ff" color="#fff" shape="angle" slot="bottom" class="f-bottom-btn" @click.native="confirm">确定</yd-button>
+    <yd-button size="large" bgcolor="#1791ff" color="#fff" shape="angle" slot="bottom" class="f-bottom-btn">备注</yd-button>
   </yd-layout>
 </template>
 <script>
@@ -56,9 +54,7 @@
     data(){
       return {
         titleToggle:true,
-        voteRadio:'',
-        selectList:[{'id':1,'name':'嘻嘻'},{'id':2,'name':'呵呵'},{'id':3,'name':'哈哈'},{'id':4,'name':'嘿嘿'}],
-        voteCheckbox:[]
+        totalList:[{'id':1,'name':'嘻嘻','num':'50','user':7},{'id':2,'name':'呵呵','num':'10','user':1},{'id':3,'name':'哈哈','num':'20','user':2},{'id':4,'name':'嘿嘿','num':'10','user':1}],
       }
     },
     mounted(){
@@ -66,31 +62,12 @@
 
     },
     methods: {
-      confirm(){
-        var _self = this;
-        _self.$router.push({path:'/wap/voteDetails'})
-      },
+
       back(){
         var _self = this;
         _self.$router.push({path:'/wap/vote'})
       }
-    },
-    watch:{
-      'voteCheckbox'(){
-        var _self = this;
-        if(_self.voteCheckbox.length!=0){
-          for(var j=0;j<_self.selectList.length;j++){
-            document.querySelector('.f-active-'+_self.selectList[j].id).classList.remove('f-active')
-            for(var i=0;i<_self.voteCheckbox.length;i++){
-              document.querySelector('.f-active-'+_self.voteCheckbox[i]).classList.add('f-active')
-            }
-          }
-        }else{
-          for(var j=0;j<_self.selectList.length;j++){
-            document.querySelector('.f-active-'+_self.selectList[j].id).classList.remove('f-active')
-          }
-        }
-      }
+
     }
   }
 </script>
@@ -109,7 +86,7 @@
     color: #333333;
     line-height: 0.52rem;
     text-align: center;
-    padding: 0 0.2rem;
+    padding:0 0.2rem;
   }
   .m-wap-vote-select-title-bd{
     margin-top: 0.2rem;
@@ -149,38 +126,7 @@
   .m-wap-vote-select-content{
     padding:0.3rem;
   }
-  .m-wap-vote-select-content .yd-radio,
-  .m-wap-vote-select-content .yd-checkbox{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    height: 0.88rem;
-    line-height: 0.88rem;
-    background-color: #fff;
-    margin-bottom:0.2rem;
-    border-radius: 3px;
-    font-family: PingFang-SC-Medium;
-    font-size:0.34rem;
-    font-weight: normal;
-    font-stretch: normal;
-    letter-spacing: 0px;
-    color: #333333;
-    position: relative;
-    padding-right: 0;
-  }
-  .m-wap-vote-select-content .yd-radio.f-active,
-  .m-wap-vote-select-content .yd-checkbox.f-active{
-    background-color: #8bc34a;
-  }
-  .m-wap-vote-select-content .yd-radio .icon-custom-yes_line,
-  .m-wap-vote-select-content .yd-checkbox .icon-custom-yes_line{
-    position: absolute;
-    right:0.2rem;
-  }
-  .m-wap-vote-select-content .yd-radio .yd-radio-icon,
-  .m-wap-vote-select-content .yd-checkbox .yd-checkbox-icon{
-    display: none;
-  }
+
   .m-wap-vote-select-content-title{
     padding-bottom: 0.24rem;
   }
@@ -195,5 +141,37 @@
   }
   .m-wap-vote-select-content-title span:nth-of-type(1){
     color: #999;
+  }
+  .m-wap-vote-select-content-title span.f-ex{
+    color:#f36323;
+    float: right;
+    margin-right: 0;
+  }
+  .vote-detail-progressbar-list{
+    position: relative;
+    margin-bottom: 0.3rem;
+    overflow: hidden;
+  }
+  .vote-detail-progressbar-list .f-text{
+    position: absolute;
+    left:0;
+    top:0;
+    width: 100%;
+    height: 100%;
+    line-height: 0.72rem;
+    text-align: center;
+    font-family: PingFang-SC-Medium;
+    font-size: 0.34rem;
+    font-weight: normal;
+    font-stretch: normal;
+    letter-spacing: 0px;
+    color: #333333;
+  }
+
+  .vote-detail-progressbar-list .f-ex{
+    position: absolute;
+    right:0.3rem;
+    top:0;
+
   }
 </style>

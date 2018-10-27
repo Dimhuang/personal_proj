@@ -6,6 +6,7 @@ import { isMobile } from '../utils/utils'
 Vue.use(Router)
 
 const RouterConfig = {
+  mode: 'history',
   routes:routers
 }
 export const router = new Router(RouterConfig)

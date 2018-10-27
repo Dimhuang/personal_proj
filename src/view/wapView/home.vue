@@ -66,7 +66,7 @@
     },
     methods:{
       goLogin(){
-        this.$router.push({name:'wapLogin'})
+        this.$router.push({path:'/wap/login'})
       }
     },
     components:{

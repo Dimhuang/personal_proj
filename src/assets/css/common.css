@@ -106,6 +106,14 @@ body,html{
 .f-fc-black{
   color: #333;
 }
+.f-bottom-btn{
+  font-family: MicrosoftYaHei;
+  font-size: 0.34rem !important;
+  font-weight: normal;
+  font-stretch: normal;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
 .f-pdf-icon{
   width: 54px;
   height: 54px;
