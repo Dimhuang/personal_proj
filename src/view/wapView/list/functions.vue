@@ -31,7 +31,7 @@
           <img slot="icon" src="../../../assets/img/but_hytp.png">
           <span slot="text">会议投票</span>
         </yd-grids-item>
-        <yd-grids-item v-if="wapFunType==2">
+        <yd-grids-item @click.native="goBoard" v-if="wapFunType==2">
           <img slot="icon" src="../../../assets/img/but_pzbb.png">
           <span slot="text">批注白板</span>
         </yd-grids-item>
@@ -80,6 +80,10 @@
       goVote(){
         var _self = this;
         _self.$router.push({path:'/wap/vote'});
+      },
+      goBoard(){
+        var _self = this;
+        _self.$router.push({path:'/wap/board'});
       },
       goBack(){
         this.$router.push({path:'/wap/meetingList'});

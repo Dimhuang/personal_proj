@@ -117,6 +117,10 @@ export const routerList = [
     path: '/wap/voteDetails',
     name: 'wapVoteDetails',
     component: resolve => require(["@/view/wapView/list/voteDetails"], resolve)
+  },{
+    path: '/wap/board',
+    name: 'wapBoard',
+    component: resolve => require(["@/view/wapView/list/board"], resolve)
   }
 ]
 

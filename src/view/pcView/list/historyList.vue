@@ -124,8 +124,18 @@
                       <span>1</span>
                       <p>电子白板</p>
                     </div>
-                    <div>
-                      电子白板
+                    <div class="m-ele-white-view">
+
+
+
+                      <el-row :gutter="12">
+                        <el-col :span="8"  v-for="n,o in list" :key="o">
+                          <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                            <img preview="1" :src="n.src">
+                          </el-card>
+                        </el-col>
+                      </el-row>
+
                     </div>
                   </el-tab-pane>
                 </el-tabs>
@@ -148,7 +158,15 @@
     data(){
       return{
         msg:'hello vue',
-        whiteBoardActive:'1'
+        whiteBoardActive:'1',
+        list: [
+          {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s1.jpg'},
+          {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s2.jpg'},
+          {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s3.jpg'},
+          {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s4.jpg'},
+          {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s5.jpg'},
+          {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s6.jpg'}
+        ]
       }
     },
     mounted(){
@@ -192,6 +210,7 @@
   }
   .m-list-nav .el-tabs__nav-wrap{
     padding-left: 320px;
+    margin-top:-1px;
   }
   .m-list-nav .el-tabs__item{
     font-size: 18px;
@@ -340,5 +359,8 @@
     color: #333;
     font-size: 14px;
   }
-
+  .m-ele-white-view .el-card__body{
+    padding: 0.1rem !important;
+    background-color: #fff;
+  }
 </style>

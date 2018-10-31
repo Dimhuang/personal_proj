@@ -6,7 +6,7 @@
       <span>无纸化个人中心</span>
     </div>
     <div class="f-right-box">
-      <span><i class="iconfont pl-user"></i></span>
+      <!--<span><i class="iconfont pl-user"></i></span>-->
       <span @click.stop="login"><i class="iconfont pl-icon_sign_out_n"></i></span>
     </div>
   </div>

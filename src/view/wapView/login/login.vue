@@ -2,7 +2,7 @@
     <div class="g-wap-login-view">
       <yd-cell-group>
         <yd-cell-item>
-          <span slot="right" @click.stop="goRegister">注册账号</span>
+          <!--<span slot="right" @click.stop="goRegister">注册账号</span>-->
         </yd-cell-item>
       </yd-cell-group>
       <!--登录-->
@@ -30,9 +30,9 @@
         </yd-cell-item>
       </yd-cell-group>
       <div class="m-wap-login-button-box">
-        <p>
+       <!-- <p>
           <span>忘记密码?</span>
-        </p>
+        </p>-->
         <yd-button size="large" bgcolor="#8bc34a" shape="circle" @click.native="goIndex">登　录</yd-button>
       </div>
 

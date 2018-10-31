@@ -12,10 +12,13 @@ import '@/assets/css/common.css'
 import store from './store'
 import YDUI from 'vue-ydui';
 import 'vue-ydui/dist/ydui.rem.css';
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
 
 Vue.use(VueRouter);
 Vue.use(ElementUI);
 Vue.use(YDUI);
+Vue.use(preview)
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 

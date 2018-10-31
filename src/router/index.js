@@ -13,27 +13,39 @@ export const router = new Router(RouterConfig)
 
 
 router.beforeEach((to, from, next)=>{
-  if(to.matched[0].meta.is_first != undefined){
-    isMobile(function(is_mobile){
-      if(is_mobile){
-        if(to.path === '/wap'){
-          next()
-        }else if(to.path === '/wap/index'){
-          next()
+
+
+    if(to.matched[0].meta.is_first != undefined){
+      isMobile(function(is_mobile){
+        if(is_mobile){
+          if(to.path === '/wap'){
+            next()
+          }else if(to.path === '/wap/index'){
+            next()
+          }else{
+            next('/wap')
+          }
         }else{
-          next('/wap')
+          if(to.path === '/'){
+            next()
+          }else if(to.path === '/index'){
+            next()
+          }else{
+            next('/')
+          }
         }
-      }else{
-        if(to.path === '/'){
-          next()
-        }else if(to.path === '/index'){
-          next()
-        }else{
-          next('/')
-        }
+      })
+    }else{
+      next()
+    }
+
+  //客户端
+    if(typeof jsObj === "undefined") {
+      console.log("你没有对象，不好意思")
+    } else {
+       var token= jsObj.getToken();
+        console.log(token)
       }
-    })
-  }else{
-    next()
-  }
+
+
 })

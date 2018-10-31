@@ -5,9 +5,9 @@
           <i></i>
           <span>无纸化微终端</span>
         </div>
-        <span slot="right">
+       <!-- <span slot="right">
             <yd-icon name="user" custom size="0.44rem" color="#fff"></yd-icon>
-          </span>
+          </span>-->
       </yd-navbar>
       <yd-tab active-color="#1791ff">
         <yd-tab-panel label="会议列表">
