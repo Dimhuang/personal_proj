@@ -10,7 +10,7 @@
       <li class="m-history-topics-list f-flex-content">
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-doc-icon fl"></div>
-          <div>金湾区第七届人大常委会第24次会议方案.doc</div>
+          <div class="f-ellipsis">金湾区第七届人大常委会第24次会议方案.doc</div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round>打开</el-button>
@@ -104,6 +104,12 @@
   .m-history-topics-list-file{
     line-height: 54px;
   }
+  .m-history-topics-list-file div.f-ellipsis{
+    width:700px;
+    font-size: 16px;
+  }
+
+
   .m-history-list-r button{
     margin-top:14px;
   }

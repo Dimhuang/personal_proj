@@ -9,20 +9,23 @@
         <div class="f-flex-item">
           <h2 v-text="topicList.topicName"></h2>
           <span>汇报人：{{topicList.topicReporter}}   {{topicList.topicPlace}}</span>
-          <span>列席人员：{{topicList.topicUsers}}</span>
+          <span class="f-topic-list-user">
+            <span>列席人员：</span>
+            <p :class="{'f-ellipsis':toggleTap}">{{topicList.topicUsers}}</p>
+          </span>
         </div>
         <div class="m-history-list-r">
             <span class="f-end-ico" v-if="topicList.topicStatus==0">
               <i>已结束</i>
             </span>
           <p></p>
-          <p class="f-fc-blue">全部</p>
+          <p class="f-fc-blue" v-text="toggleTap?'全部':'收起'" @click.stop="toggleTap = !toggleTap"></p>
         </div>
       </li>
       <li class="m-history-topics-list f-flex-content" v-for="items in topicList.topicFiles">
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-wjj-icon fl" :class="{'f-wjj-icon':items.filesType==1,'f-doc-icon':items.filesType==0}"></div>
-          <div v-text="items.filesName"></div>
+          <div class="f-ellipsis" v-text="items.filesName" :title="items.filesName"></div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round @click.native="goDetails(items)">打开</el-button>
@@ -38,11 +41,12 @@
     data(){
       return {
         topicNameTxt:'',
+        toggleTap:true,
         topicList:{
             topicName:'一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；',
             topicReporter:'阿东',
             topicPlace:'金湾区政府',
-            topicUsers:'刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二',
+            topicUsers:'刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二',
             topicStatus:'0',
             topicFiles:[{
               filesName:'金湾区第七届人大常委会第24次会议方案',
@@ -102,6 +106,12 @@
     word-break: break-all;
     line-height: 24px;
   }
+
+  .m-history-topics-list div.f-ellipsis{
+   width:700px;
+    font-size: 16px;
+  }
+
   .m-history-list-r{
     text-align: right;
   }
@@ -133,7 +143,7 @@
     cursor: pointer;
   }
   .m-history-list-r p:nth-of-type(2){
-    margin-top: 26px;
+    margin-top: 30px;
   }
   .m-history-topics-list-file{
     line-height: 54px;
@@ -147,4 +157,13 @@
     padding-left: 0;
     font-size: 100%;
   }
+  .f-topic-list-user span{
+    float: left;
+  }
+.f-topic-list-user p{
+  float: left;
+  display: inline-block;
+  width: 802px;
+}
+
 </style>

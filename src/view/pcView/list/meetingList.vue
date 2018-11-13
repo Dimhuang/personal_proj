@@ -111,7 +111,7 @@
   }
   .m-meeting-nav .el-tabs__header{
     background-color: #fff;
-    height: 54px;
+    height: 53px;
   }
 
   .m-meeting-nav .el-tabs__nav-scroll{

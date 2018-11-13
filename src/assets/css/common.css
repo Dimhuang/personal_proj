@@ -94,6 +94,12 @@ body,html{
   float: right;
 }
 
+.f-ellipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .f-fc-blue{
   color: #1792ff;
 }

@@ -241,7 +241,9 @@
     display: -webkit-box;
     line-clamp: 2;
     -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    /*! autoprefixer: off */
+  　　-webkit-box-orient: vertical;
+    /*autoprefixer: on */
   }
   .m-main-nav-list-hd-content .f-flex-content{
       margin-top: 10px;

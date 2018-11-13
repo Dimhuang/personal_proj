@@ -128,6 +128,9 @@
     font-size: 0.3rem;
     color: #333;
     border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
   }
 
   .m-wap-function-list-box .yd-grids-3 .yd-grids-item{

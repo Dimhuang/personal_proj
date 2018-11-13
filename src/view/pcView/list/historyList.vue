@@ -57,7 +57,9 @@
                     <span>会议方案：</span>
                     <div class="m-history-list-flie f-flex-content">
                       <div class="f-pdf-icon"></div>
-                      <div class="f-flex-item">金湾区第七届人大常委会第24次会议方案.pdf</div>
+                      <div class="f-flex-item">
+                        <span class="f-ellipsis" :title="'金湾区第七届人大常委会第24次会议方案.pdf'">金湾区第七届人大常委会第24次会议方案.pdf</span>
+                      </div>
                     </div>
                   </div>
                 </li>
@@ -125,9 +127,6 @@
                       <p>电子白板</p>
                     </div>
                     <div class="m-ele-white-view">
-
-
-
                       <el-row :gutter="12">
                         <el-col :span="8"  v-for="n,o in list" :key="o">
                           <el-card :body-style="{ padding: '0px' }" shadow="hover">
@@ -272,6 +271,12 @@
     align-items: center;
     background-color: #f5f5f5;
   }
+  .m-history-list-flie span{
+    width: 700px;
+    font-size: 16px;
+    display: inline-block;
+  }
+
   .m-white-view .el-tabs__header{
     height: auto;
   }
