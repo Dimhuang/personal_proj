@@ -9,6 +9,7 @@ import { router } from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/common.css'
+import '@/assets/js/ydui.flexible.js'
 import store from './store'
 import YDUI from 'vue-ydui';
 import 'vue-ydui/dist/ydui.rem.css';

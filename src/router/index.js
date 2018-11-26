@@ -43,7 +43,7 @@ router.beforeEach((to, from, next)=>{
     if(typeof jsObj === "undefined") {
       console.log("你没有对象，不好意思")
     } else {
-       var token= jsObj.getToken();
+       var token= jsObj.getUser();
         console.log(token)
       }
 
