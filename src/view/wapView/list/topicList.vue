@@ -8,45 +8,88 @@
       </yd-navbar>
       <div class="m-wap-topic-list-view">
         <yd-list theme="5">
-          <yd-list-item v-for="item, key in 3" :key="key" @click.native="goList">
-            <span slot="title">adasdaaaaaaaaaa111111111111111111111111111111111111111111111111111111111111111111</span>
+          <yd-list-item v-for="item, key in topicList" :key="key" @click.native="goList(item.id)">
+            <span slot="title" v-text="item.name"></span>
             <yd-list-other class="f-ex" slot="other">
               <div>
                 <span>汇报人：</span>
-                <span>asda1111111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span>
+                <span v-text="item.reporter"></span>
               </div>
             </yd-list-other>
             <yd-list-other slot="other">
               <div class="m-wap-topic-statu-box">
-                <span class="f-end" v-if="key == 0">已结束</span>
-                <span class="f-load" v-if="key == 1">进行中</span>
-                <span class="f-restar" v-if="key == 2">未开始</span>
+                <span class="f-end" v-if="item.status == 2">已结束</span>
+                <span class="f-load" v-if="item.status == 1">进行中</span>
+                <span class="f-restar" v-if="item.status == 0">未开始</span>
               </div>
               <div class="f-fc-blue">
                 <span>查看材料 (</span>
-                <span>{{key+1}}</span>
+                <span>{{item.file_count}}</span>
                 <span> ) ></span>
               </div>
             </yd-list-other>
           </yd-list-item>
         </yd-list>
+        <yd-backtop></yd-backtop>
+        <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+          <i class="el-icon-loading" v-if="!busy"></i>
+          <span v-else>暂无更多数据</span>
+        </div>
       </div>
     </yd-layout>
 </template>
 <script>
+  import {mapState} from 'vuex'
   export default{
     data(){
       return {
-
+        page:1,
+        topicList:[],
+        busy:true
       }
+    },
+    computed: {
+      ...mapState(["wapFunType","mid"])
     },
     mounted(){
       var _self = this;
+      _self.getList()
     },
     methods: {
-      goList(){
+      getList(flag){
+        this.$fetch('/wap/meeting/datum',{
+          m_id:this.mid,
+          pagesize:10,
+          page:this.page
+        }).then(result=>{
+          let res = result.data;
+          if(result.msg=='success'){
+            if(flag){
+              this.topicList = this.topicList.concat(res.data)
+              if(res.total<this.page*10){
+                this.busy=true
+              }else{
+                this.busy=false
+              }
+            }else{
+              this.topicList = res.data
+              this.busy=false
+            }
+          }else{
+            this.topicList = []
+          }
+        })
+      },
+      loadMore(){
+        this.busy = true;
+        setTimeout(() => {
+          this.page++;
+          this.getList(true)
+        }, 500);
+      },
+      goList(id){
         var _self = this;
-        _self.$router.push({path:'/wap/topicFolderList',query: { type:1}});
+        _self.$router.push({path:'/wap/topicFolderList',query: { type:1,did:id}});
       },
       back(){
         var _self = this;

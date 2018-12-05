@@ -24,7 +24,10 @@
         },
         methods:{
           login(){
-            this.$router.push({path:'/login'})
+            this.$fetch('/wap/User/logout').then(result=>{
+              this.$router.push({path:'/login'})
+              sessionStorage.removeItem('accessToken')
+            })
           }
         }
     }

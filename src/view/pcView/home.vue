@@ -22,27 +22,27 @@
         <!--历史会议-->
         <div class="f-view-width m-main-nav-list" v-show="indexActive==1">
           <el-row :gutter="12">
-            <el-col :span="8" v-for="(items, index) in 4" :key="index" @click.native="goHistory">
+            <el-col :span="8" v-for="(items, index) in hisList" :key="index" @click.native="goHistory(items.id,items.is_secrect)">
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
                   <div class="m-main-nav-list-hd">
                     <div class="m-main-nav-list-hd-content">
-                      <em>保密会议，需向管理员申请权限</em>
-                      <h2>金湾区第七届人大常委会第22次会议</h2>
+                      <em :class="{'f-visibility':items.is_secrect==0}">保密会议，需向管理员申请权限</em><!---->
+                      <h2 v-text="items.name"></h2>
                       <div class="f-flex-content">
                         <span class="f-flex-item">
-                          <b>15</b>
+                          <b v-text="items.datum_count"></b>
                           <p>议题</p>
                         </span>
                         <span class="f-flex-item">
-                          <b>15</b>
+                           <b v-text="items.stmpfile_count"></b>
                           <p>资料</p>
                         </span>
                         <span class="f-flex-item">
-                          <b>15</b>
+                           <b v-text="items.annotation_count"></b>
                           <p>批注</p>
                         </span>
                         <span class="f-flex-item">
-                          <b>15</b>
+                           <b v-text="items.whiteboard_count"></b>
                           <p>白板</p>
                         </span>
                       </div>
@@ -50,41 +50,51 @@
                   </div>
                   <div class="m-main-nav-list-bd">
                     <p>
-                      <span class="fl"><span v-text="'时间:'"></span><span v-text="'2018-07-30 13:00'"></span></span>
-                      <span class="fr"><span v-text="'主持人:'"></span><span v-text="'啊飒飒'"></span></span>
+                      <span class="fl"><span v-text="'时间:'"></span><span v-text="items.start_time"></span></span>
+                      <span class="fr"><span v-text="'主持人:'"></span><span v-text="items.moderator"></span></span>
                     </p>
-                    <p><span v-text="'会议室:'"></span><span v-text="'啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话'"></span></p>
+                    <p><span v-text="'会议室:'"></span><span v-text="items.room_name"></span></p>
                   </div>
               </el-card>
             </el-col>
           </el-row>
+          <div class="f-load-box" v-infinite-scroll="loadMoreHis" infinite-scroll-disabled="hisBusy" infinite-scroll-distance="30">
+            <i class="el-icon-loading" v-if="!hisBusy"></i>
+            <span v-else>暂无更多数据</span>
+          </div>
+
         </div>
         <!--会议列表-->
         <div class="f-view-width m-main-nav-list" v-show="indexActive==2">
           <el-row :gutter="12">
-            <el-col :span="8" v-for="(items, index) in 5" :key="index" @click.native="goMeeting">
+            <el-col :span="8" v-for="(items, index) in metList" :key="index" @click.native="goMeeting(items.id)">
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
                 <div class="m-main-nav-list-hd">
                   <div class="m-main-nav-list-hd-content">
                     <em></em>
-                    <i class="f-restart-ico" v-if="false">未开始</i>
+                    <i class="f-restart-ico" v-if="items.status==0">未开始</i>
                     <i class="f-load-ico" v-else>进行中</i>
-                    <h2>金湾区第七届人大常委会第22次会议</h2>
+                    <h2 v-text="items.name"></h2>
                   </div>
                 </div>
                 <div class="m-main-nav-list-bd">
                   <p>
-                    <span class="fl"><span v-text="'时间:'"></span><span v-text="'2018-07-30 13:00'"></span></span>
-                    <span class="fr"><span v-text="'主持人:'"></span><span v-text="'啊飒飒'"></span></span>
+                    <span class="fl"><span v-text="'时间:'"></span><span v-text="items.start_time"></span></span>
+                    <span class="fr"><span v-text="'主持人:'"></span><span v-text="items.moderator"></span></span>
                   </p>
-                  <p><span v-text="'会议室:'"></span><span v-text="'啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话'"></span></p>
+                  <p><span v-text="'会议室:'"></span><span v-text="items.room_name"></span></p>
                 </div>
               </el-card>
             </el-col>
           </el-row>
+          <div class="f-load-box" v-infinite-scroll="loadMoreMet" infinite-scroll-disabled="metBusy" infinite-scroll-distance="30">
+            <i class="el-icon-loading" v-if="!metBusy"></i>
+            <span v-else>暂无更多数据</span>
+          </div>
         </div>
       </m-body>
   </el-container>
+
 
 
 </template>
@@ -97,22 +107,98 @@
     export default{
         data(){
             return{
-              msg:'hello vue',
-              indexActive:'1'
+              hisList:[],
+              metList:[],
+              indexActive:'1',
+              hisBusy:true,
+              metBusy:true,
+              hisPage:1,
+              metPage:1
             }
         },
         created(){
           //获取链接参数
-          getRequest((item)=>{
+         /* getRequest((item)=>{
             console.log(item.id)
-          })
+          })*/
+
+          sessionStorage.removeItem('keepMid')
+          this.getHistorytList()
+          this.getMeetingList()
         },
         methods:{
-          goHistory(){
-            this.$router.push({path:'/list/historyList'})
+          getHistorytList(flag){
+            this.$fetch('/wap/meeting/data',{
+              status:2,
+              pagisize:9,
+              page:this.hisPage
+            }).then(result=>{
+              let res = result.data;
+              if(result.msg=='success'){
+                if(flag){
+                  this.hisList = this.hisList.concat(res.data)
+                  if(res.total<this.hisPage*9){
+                    this.hisBusy=true
+                  }else{
+                    this.hisBusy=false
+                  }
+                }else{
+                  this.hisList = res.data
+                  this.hisBusy=false
+                }
+              }else{
+                this.hisList = []
+              }
+            })
           },
-          goMeeting(){
-            this.$router.push({path:'/list/meetingList'})
+          loadMoreHis(){
+            this.hisBusy = true;
+            setTimeout(() => {
+              this.hisPage++;
+              this.getHistorytList(true)
+            }, 500);
+          },
+
+          getMeetingList(flag){
+            this.$fetch('/wap/meeting/data',{
+              status:"0,1",
+              pagisize:9,
+              page:this.metPage
+            }).then(result=>{
+            let res = result.data;
+            if(result.msg=='success'){
+              if(flag){
+                this.metList = this.metList.concat(res.data)
+                if(res.total<this.metPage*9){
+                  this.metBusy=true
+                }else{
+                  this.metBusy=false
+                }
+              }else{
+                this.metList = res.data
+                this.metBusy=false
+              }
+            }else{
+              this.metList = []
+            }
+          })
+          },
+          loadMoreMet(){
+            this.metBusy = true;
+            setTimeout(() => {
+              this.metPage++;
+            this.getMeetingList(true)
+          }, 500);
+          },
+          goHistory(id,secrect){
+            if(secrect==1){
+              this.$message('保密会议，需向管理员申请权限');
+            }else{
+              this.$router.push({path:'/list/historyList',query:{mid:id}})
+            }
+          },
+          goMeeting(id){
+            this.$router.push({path:'/list/meetingList',query:{mid:id}})
           }
         },
         components: {
@@ -239,6 +325,8 @@
     text-overflow: ellipsis;
     display: box;
     display: -webkit-box;
+    -webkit-box-align:center;
+    -webkit-box-pack:center;
     line-clamp: 2;
     -webkit-line-clamp: 2;
     /*! autoprefixer: off */
@@ -276,5 +364,9 @@
     line-height: 20px;
     width: 100%;
     position: relative;
+  }
+
+  .f-visibility{
+    visibility: hidden;
   }
 </style>

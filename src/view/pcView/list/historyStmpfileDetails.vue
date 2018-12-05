@@ -5,32 +5,95 @@
       <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
-      <li class="m-history-topics-list f-flex-content">
+      <li class="m-history-topics-list f-flex-content"  v-for="items in topicList">
         <div class="f-flex-item m-history-topics-list-file">
-          <div class="f-doc-icon fl"></div>
-          <div class="f-ellipsis">金湾区第七届人大常委会第24次会议方案.doc</div>
+          <div class="fl" :class="getType(items.filename)"></div>
+          <div class="f-ellipsis" v-text="items.filename"></div>
         </div>
         <div class="m-history-list-r">
-          <el-button size="mini" round>打开</el-button>
+          <el-button size="mini" round  @click.native="openView(items.filepath)">打开</el-button>
         </div>
       </li>
     </ul>
+    <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+      <i class="el-icon-loading" v-if="!busy"></i>
+      <span v-else>暂无更多数据</span>
+    </div>
   </div>
 </template>
 <script>
   import '@/assets/css/pcScrollBar.css'
+  import {mapState} from 'vuex'
+  import { fileType } from '@/utils/utils'
   export default{
     data(){
       return {
-        folderNameTxt:''
+        folderNameTxt:'',
+        topicList:[],
+        page:1,
+        busy:true,
+        fid:'',
       }
     },
+    computed: {
+      ...mapState(["mid"])
+  },
     mounted(){
       this.folderNameTxt = this.$route.query.f_name
+      this.fid = this.$route.query.id
+      this.getfile()
     },
     methods:{
+      getType(name){
+        var file = fileType(name,1)
+        return file;
+      },
+      getfile(flag){
+        this.$fetch('/wap/meeting/files',{
+          m_id:this.mid,
+          type:'stmpfile',
+          file_id:this.fid,
+          pagesize:10,
+          page:this.page
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          if(flag){
+            this.topicList = this.topicList.concat(res.data)
+            if(res.total<this.page*10){
+              this.busy=true
+            }else{
+              this.busy=false
+            }
+          }else{
+            this.topicList = res.data
+            this.busy=false
+          }
+        }else{
+          this.topicList = []
+        }
+      })
+      },
+      loadMore(){
+        this.busy = true;
+        setTimeout(() => {
+          this.page++;
+        this.getfile(true)
+      }, 500);
+      },
       goMain(){
         this.$router.push({path:'/list/historyList/stmpfile',query:{'id':2}})
+      },
+      openView(path) {
+        if(this.getType(path) == 'f-pdf-icon'){
+          this.$alert(" <iframe src='"+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+            dangerouslyUseHTMLString: true
+          });
+        }else{
+          this.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src="+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+            dangerouslyUseHTMLString: true
+          });
+        }
       }
     }
   }
@@ -110,5 +173,16 @@
     line-height: normal;
     padding-left: 0;
     font-size: 100%;
+  }
+  .el-message-box{
+    width: 90%;
+  }
+  .el-message-box__content,
+  .el-message-box__message ,
+  .el-message-box__message p{
+    height: 600px;
+  }
+  .el-message-box__btns{
+    padding-top: 22px;
   }
 </style>

@@ -15,10 +15,10 @@
         </el-form-item>
         <el-form-item>
           <el-input class="m-login-ipt" type="password" v-model="formLabelAlign.pwd" prefix-icon="pl-password iconfont" placeholder="请输入密码"></el-input>
-          <span class="m-login-fgpw" v-text="'忘记密码'"></span>
+          <!--<span class="m-login-fgpw" v-text="'忘记密码'"></span>-->
         </el-form-item>
         <div class="m-login-btn">
-          <el-button type="success" v-text="'登　录'" @click.native="goIndex"></el-button>
+          <el-button type="success" v-text="'登　录'" @click.native="login"></el-button>
         </div>
       </el-form>
     </div>
@@ -35,10 +35,32 @@
               }
             }
         },
+        mounted(){
+          sessionStorage.removeItem('accessToken')
+        },
         components: {
 
         },
         methods:{
+          login(){
+            if(this.formLabelAlign.name==''){
+              this.$message('用户名不能为空');
+            }else if(this.formLabelAlign.pwd==''){
+              this.$message('密码不能为空');
+            }else{
+              this.$post('/wap/User/login',{
+                account:this.formLabelAlign.name,
+                password:this.formLabelAlign.pwd
+              }).then(result=>{
+                if(result.msg == 'success'){
+                  sessionStorage.setItem('accessToken' , true)
+                  this.goIndex()
+                }else{
+                this.$message('请输入正确的用户名或密码!');
+                }
+              })
+            }
+          },
           goIndex(){
             this.$router.push({path:'/index'})
           }

@@ -10,42 +10,76 @@
             <span>汇报人：{{items.reporter}}   {{items.place}}</span>
           </div>
           <div class="m-history-list-r">
-            <span class="f-end-ico" v-if="items.status==1">
+            <span class="f-end-ico" v-if="items.status==2">
               <i>已结束</i>
+            </span>
+             <span class="f-restar" v-if="items.status==0">
+              <i>未开始</i>
             </span>
              <span class="f-load-ico" v-else>
               <i>进行中</i>
             </span>
-            <p @click.stop="goList(items.name)">查看资料(<em>1</em>) ></p>
+            <p @click.stop="goList(items.id)">查看资料(<em v-text="items.file_count"></em>) ></p>
           </div>
         </li>
       </ul>
+      <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+        <i class="el-icon-loading" v-if="!busy"></i>
+        <span v-else>暂无更多数据</span>
+      </div>
     </div>
 </template>
 <script>
     import '@/assets/css/pcScrollBar.css'
+    import {mapState} from 'vuex'
     export default{
-
         data(){
             return {
-              topicList:[{id:1,name:'一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；',reporter:'阿东',place:'金湾区政府',status:1},
-                {id:1,name:'二、审查金湾区政府关于2017年金湾区经济和社会发展计划执行情况与2018年金湾区社会发展报告；湾区社会发展报告；',reporter:'阿东',place:'金湾区政府',status:2}]
+              topicList:[],
+              page:1,
+              busy:true
             }
         },
-
-        mounted(){
-
+        computed: {
+          ...mapState(["mid"])
         },
-        components: {
-
+        mounted(){
+          this.getList()
         },
         methods:{
-          goList(name){
-            this.$router.push({path:'/list/historyList/topicsList',query:{id:'1','name':name}})
+          getList(flag){
+            this.$fetch('/wap/meeting/datum',{
+              m_id:this.mid,
+              pagesize:10,
+              page:this.page
+            }).then(result=>{
+              let res = result.data;
+            if(result.msg=='success'){
+              if(flag){
+                this.topicList = this.topicList.concat(res.data)
+                if(res.total<this.page*10){
+                  this.busy=true
+                }else{
+                  this.busy=false
+                }
+              }else{
+                this.topicList = res.data
+                this.busy=false
+              }
+            }else{
+              this.topicList = []
+            }
+            })
           },
-          goPath(item){
-            this.$store.commit("tapBreak",item)
-            this.$router.push({path:item.path})
+          loadMore(){
+            this.busy = true;
+            setTimeout(() => {
+              this.page++;
+              this.getList(true)
+            }, 500);
+          },
+          goList(id){
+            this.$router.push({path:'/list/historyList/topicsList',query:{did:id}})
           }
         }
     }

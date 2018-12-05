@@ -4,14 +4,14 @@ export const routerList = [
     path: '/',
     name: 'pcHome',
     meta:{
-      is_first:true
+      requiresAuth: true
     },
     component: resolve => require(["@/view/pcView/home"], resolve)
   },{
     path: '/index',
     name: 'pcHome',
     meta:{
-      is_first:true
+      requiresAuth: true
     },
     component: resolve => require(["@/view/pcView/home"], resolve)
   },{
@@ -21,19 +21,31 @@ export const routerList = [
   },{
     path: '/list/historyList',
     name: 'historyList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/pcView/list/historyList"], resolve),
     children: [
       {
         path: '/list/historyList/topics',
         name:'topics',
+        meta: {
+          requiresAuth: true
+        },
         component: resolve => require(["@/view/pcView/list/historyTopics"], resolve)
       },{
         path: '/list/historyList/topicsList',
         name:'topicsList',
+        meta: {
+          requiresAuth: true
+        },
         component: resolve => require(["@/view/pcView/list/historyTopicsList"], resolve)
       },{
         path: '/list/historyList/topicsDetails',
         name:'topicsDetails',
+        meta: {
+          requiresAuth: true
+        },
         component: resolve => require(["@/view/pcView/list/historyTopicsDetails"], resolve)
       },{
         path: '/list/historyList/stmpfile',
@@ -42,6 +54,9 @@ export const routerList = [
       },{
         path: '/list/historyList/stmpfileDetails',
         name:'stmpfileDetails',
+        meta: {
+          requiresAuth: true
+        },
         component: resolve => require(["@/view/pcView/list/historyStmpfileDetails"], resolve)
       }
     ]
@@ -52,6 +67,9 @@ export const routerList = [
   {
     path: '/list/meetingList',
     name: 'meetingList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/pcView/list/meetingList"], resolve)
   },
   //mobile路由
@@ -59,14 +77,14 @@ export const routerList = [
     path: '/wap',
     name: 'wapHome',
     meta:{
-      is_first:true
+      requiresAuth: true
     },
     component: resolve => require(["@/view/wapView/home"], resolve)
   },{
     path: '/wap/index',
     name: 'wapHome',
     meta:{
-      is_first:true
+      requiresAuth: true
     },
     component: resolve => require(["@/view/wapView/home"], resolve)
   },{
@@ -80,30 +98,51 @@ export const routerList = [
   },{
     path: '/wap/meetingList',
     name: 'wapMeetingList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/meetingList"], resolve)
   },{
     path: '/wap/functions',
     name: 'wapFunctions',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/functions"], resolve)
   },{
     path: '/wap/meetingMsg',
     name: 'wapMeetingMsg',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/meetingMsg"], resolve)
   },{
     path: '/wap/userList',
     name: 'wapUserList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/userList"], resolve)
   },{
     path: '/wap/topicList',
     name: 'wapTopicList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/topicList"], resolve)
   },{
     path: '/wap/topicFolderList',
     name: 'wapTopicFolderList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/topicFolderList"], resolve)
   },{
     path: '/wap/topicFileList',
     name: 'wapTopicFileList',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/topicFileList"], resolve)
   },{
     path: '/wap/vote',
@@ -112,14 +151,23 @@ export const routerList = [
   },{
     path: '/wap/voteSelect',
     name: 'wapVoteSelect',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/voteSelect"], resolve)
   },{
     path: '/wap/voteDetails',
     name: 'wapVoteDetails',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/voteDetails"], resolve)
   },{
     path: '/wap/board',
     name: 'wapBoard',
+    meta: {
+      requiresAuth: true
+    },
     component: resolve => require(["@/view/wapView/list/board"], resolve)
   }
 ]

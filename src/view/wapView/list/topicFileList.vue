@@ -1,34 +1,91 @@
 <template>
   <yd-layout>
-    <yd-navbar slot="navbar" :title="title">
+    <yd-navbar slot="navbar" :title="folderNameTxt">
       <div slot="left" @click.stop="back">
         <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
         <span>返回</span>
       </div>
     </yd-navbar>
     <yd-cell-group class="m-wap-folder-list-bd">
-      <yd-cell-item v-for="(n,index) in 4" :key="index">
-        <i class="f-wap-pdf-icon" slot="icon"></i>
-        <span slot="left">我的订我的订我的订我的订我的订我的订单</span>
+      <yd-cell-item v-for="(n,index) in topicList" :key="index">
+        <i  :class="getType(items.filename)" slot="icon"></i>
+        <span slot="left" v-text="n.filename"></span>
       </yd-cell-item>
     </yd-cell-group>
+    <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+      <i class="el-icon-loading" v-if="!busy"></i>
+      <span v-else>暂无更多数据</span>
+    </div>
   </yd-layout>
 </template>
 <script>
-
+  import { fileType } from '@/utils/utils'
   export default{
     data(){
       return {
         showType:'1',
-        title:''
+        folderNameTxt:'',
+        topicNameTxt:'',
+        did:'',
+        fid:'',
+        fileType:'',
+        page:1,
+        topicList:[],
+        busy:true,
+        fileType:''
       }
     },
     mounted(){
       var _self = this;
+      _self.folderNameTxt = _self.$route.query.f_name
+      _self.fid = _self.$route.query.id
       _self.showType = _self.$route.query.type
-      _self.title = _self.$route.query.title
+      if(_self.showType==1){
+        _self.did = _self.$route.query.did
+        _self.fileType = 'datum'
+      }else{
+        _self.fileType = 'stmpfile'
+        _self.did = 0
+      }
     },
     methods: {
+      getType(name){
+        var file = fileType(name,2)
+        return file;
+      },
+      getfile(flag){
+        this.$fetch('/wap/meeting/files',{
+          m_id:this.mid,
+          type: this.fileType,
+          file_id:this.fid,
+          pagesize:10,
+          page:this.page
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          if(flag){
+            this.topicList = this.topicList.concat(res.data)
+            if(res.total<this.page*10){
+              this.busy=true
+            }else{
+              this.busy=false
+            }
+          }else{
+            this.topicList = res.data
+            this.busy=false
+          }
+        }else{
+          this.topicList = []
+        }
+      })
+      },
+      loadMore(){
+        this.busy = true;
+        setTimeout(() => {
+          this.page++;
+        this.getfile(true)
+      }, 500);
+      },
       back(){
         var _self = this;
         _self.$router.push({path:'/wap/topicFolderList',query: {type: _self.showType}})

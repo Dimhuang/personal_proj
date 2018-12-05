@@ -33,7 +33,7 @@
        <!-- <p>
           <span>忘记密码?</span>
         </p>-->
-        <yd-button size="large" bgcolor="#8bc34a" shape="circle" @click.native="goIndex">登　录</yd-button>
+        <yd-button size="large" bgcolor="#8bc34a" shape="circle" @click.native="login()">登　录</yd-button>
       </div>
 
     </div>
@@ -48,7 +48,30 @@
               pwdTxt:''
             }
         },
+        created(){
+          sessionStorage.remove('userName')
+        },
         methods:{
+          login(){
+            if(this.userTxt==''){
+              this.$dialog.toast({mes: '用户名不能为空', timeout: 1500, icon: 'error' });
+            }else if(this.pwdTxt==''){
+              this.$dialog.toast({mes: '密码不能为空', timeout: 1500, icon: 'error' });
+            }else{
+              this.$post('/wap/User/login',{
+                account:this.userTxt,
+                password:this.pwdTxt
+              }).then(result=>{
+                if(result.msg == 'success'){
+                  sessionStorage.setItem('wapAccessToken' , true)
+                  sessionStorage.setItem('userName' , result.user.username)
+                  this.goIndex()
+                }else{
+                  this.$dialog.toast({mes: '请输入正确的用户名或密码', timeout: 1500, icon: 'error' });
+                }
+              })
+            }
+          },
           goRegister(){
             this.$router.push({path:'/wap/register'})
           },

@@ -9,48 +9,125 @@
       <yd-cell-group class="m-wap-folder-list-hd" v-if="showType==1">
         <yd-cell-item>
           <span slot="left">
-            <h2>一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；</h2>
+            <h2 v-text="topicTitle.name"></h2>
             <p class="f-flex-content f-ex">
               <span>汇报人：</span>
-              <span class="f-flex-item">阿东   金湾区政府</span>
+              <span class="f-flex-item" v-text="topicTitle.reporter"></span>
             </p>
              <p class="f-flex-content">
                <span>列席人员：</span>
-               <span class="f-flex-item">刘二、张三、李四、王五、赵六、朱七、 刘二、张三、李四、王五、赵六、朱七、刘二、</span>
+               <span class="f-flex-item" style="word-break: break-all" v-text="topicTitle.users"></span>
              </p>
           </span>
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd">
-        <yd-cell-item v-for="(n,index) in 4" :key="index" @click.native="goDetails('我的订我的订我的订我的订我的订我的订单')">
-          <i class="f-wap-wjj-icon" slot="icon"></i>
-          <span slot="left">我的订我的订我的订我的订我的订我的订单</span>
+        <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)"><!-- -->
+          <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
+          <i  v-else :class="getType(n.filename)" slot="icon"></i>
+          <span slot="left" v-text="n.filename"></span>
         </yd-cell-item>
       </yd-cell-group>
+      <yd-backtop></yd-backtop>
+      <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+        <i class="el-icon-loading" v-if="!busy"></i>
+        <span v-else>暂无更多数据</span>
+      </div>
     </yd-layout>
 </template>
 <script>
-
+    import {mapState} from 'vuex'
+    import { fileType } from '@/utils/utils'
     export default{
       data(){
         return {
           showType:'1',
-          title:''
+          title:'',
+          topicTitle:[],
+          did:'',
+          page:1,
+          topicList:[],
+          busy:true,
+          fileType:''
         }
+      },
+      computed: {
+        ...mapState(["wapFunType","mid"])
       },
       mounted(){
         var _self = this;
         _self.showType = _self.$route.query.type
         if(_self.showType==1){
+          _self.did = _self.$route.query.did
           _self.title = '会议议题'
+          _self.fileType = 'datum'
+          _self.getTitle()
         }else{
           _self.title = '临时文件'
+          _self.fileType = 'stmpfile'
+          _self.did = 0
         }
+
+          _self.getfile()
       },
       methods: {
-        goDetails(title){
+        getType(name){
+          var file = fileType(name,2)
+          return file;
+        },
+        getTitle(){
+          this.$fetch('/wap/meeting/datum',{
+            m_id:this.mid,
+            d_id:this.did
+          }).then(result=>{
+            let res = result.data;
+          if(result.msg=='success'){
+            this.topicTitle = res
+          }else{
+            this.topicTitle = []
+          }
+        })
+        },
+        getfile(flag){
+          this.$fetch('/wap/meeting/files',{
+            m_id:this.mid,
+            type:this.fileType,
+            d_id:this.did,
+            pagesize:10,
+            page:this.page
+          }).then(result=>{
+            let res = result.data;
+            if(result.msg=='success'){
+              if(flag){
+                this.topicList = this.topicList.concat(res.data)
+                if(res.total<this.page*10){
+                  this.busy=true
+                }else{
+                  this.busy=false
+                }
+              }else{
+                this.topicList = res.data
+                this.busy=false
+              }
+            }else{
+              this.topicList = []
+            }
+          })
+        },
+        loadMore(){
+          this.busy = true;
+          setTimeout(() => {
+            this.page++;
+            this.getfile(true)
+          }, 500);
+        },
+        goDetails(data){
           var _self = this;
-          _self.$router.push({path:'/wap/topicFileList',query: {type:_self.showType,title:title}});
+          if(data.is_directory==1){
+            _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,did:_self.did,type:_self.showType}})
+          }else{
+            alert('这是文档');
+          }
         },
         back(){
           var _self = this;

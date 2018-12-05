@@ -7,75 +7,143 @@
     <ul>
       <li class="m-history-topics-list f-flex-content">
         <div class="f-flex-item">
-          <h2 v-text="topicList.topicName"></h2>
-          <span>汇报人：{{topicList.topicReporter}}   {{topicList.topicPlace}}</span>
+          <h2 v-text="topicTitle.name"></h2>
+          <span>汇报人：{{topicTitle.reporter}}</span>
           <span class="f-topic-list-user">
             <span>列席人员：</span>
-            <p :class="{'f-ellipsis':toggleTap}">{{topicList.topicUsers}}</p>
+            <p :class="{'f-ellipsis':toggleTap}" v-text="topicTitle.users"></p>
           </span>
         </div>
         <div class="m-history-list-r">
-            <span class="f-end-ico" v-if="topicList.topicStatus==0">
+            <span class="f-end-ico" v-if="topicTitle.status==2">
               <i>已结束</i>
+            </span>
+           <span class="f-load-ico" v-else>
+              <i>进行中</i>
             </span>
           <p></p>
           <p class="f-fc-blue" v-text="toggleTap?'全部':'收起'" @click.stop="toggleTap = !toggleTap"></p>
         </div>
       </li>
-      <li class="m-history-topics-list f-flex-content" v-for="items in topicList.topicFiles">
+      <li class="m-history-topics-list f-flex-content" v-for="items in dtopicList">
         <div class="f-flex-item m-history-topics-list-file">
-          <div class="f-wjj-icon fl" :class="{'f-wjj-icon':items.filesType==1,'f-doc-icon':items.filesType==0}"></div>
-          <div class="f-ellipsis" v-text="items.filesName" :title="items.filesName"></div>
+          <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
+          <div class="fl" v-else :class="getType(items.filename)"></div>
+          <div class="f-ellipsis" v-text="items.filename" :title="items.filename"></div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round @click.native="goDetails(items)">打开</el-button>
         </div>
       </li>
     </ul>
+    <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+      <i class="el-icon-loading" v-if="!busy"></i>
+      <span v-else>暂无更多数据</span>
+    </div>
   </div>
 </template>
 <script>
   import '@/assets/css/pcScrollBar.css'
+  import {mapState} from 'vuex'
+  import { fileType } from '@/utils/utils'
   export default{
 
     data(){
       return {
+        did:'',
         topicNameTxt:'',
         toggleTap:true,
-        topicList:{
-            topicName:'一、听取金湾区区委副书记、区长李非凡关于2018上半年政府工作的报告；',
-            topicReporter:'阿东',
-            topicPlace:'金湾区政府',
-            topicUsers:'刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二刘二、张三、李四、王五、赵六、朱七、李四、王五、赵六、朱七、刘二七、李四二',
-            topicStatus:'0',
-            topicFiles:[{
-              filesName:'金湾区第七届人大常委会第24次会议方案',
-              filesType:'1'
-            },{
-              filesName:'会议方案.doc',
-              filesType:'0'
-            }]
-        }
+        topicTitle:{},
+        dtopicList:[],
+        page:1,
+        busy:true
       }
     },
+    computed: {
+      ...mapState(["mid"])
+  },
     mounted(){
-      console.log(JSON.stringify(this.$route.query))
-      this.topicNameTxt = this.$route.query.name
+      this.did = this.$route.query.did
+
+    this.getTitle()
+    this.getfile()
     },
     components: {
 
     },
     methods:{
+      getType(name){
+        var file = fileType(name,1)
+        return file;
+      },
+      getTitle(){
+        this.$fetch('/wap/meeting/datum',{
+          m_id:this.mid,
+          d_id:this.did
+        }).then(result=>{
+          let res = result.data;
+          if(result.msg=='success'){
+            this.topicNameTxt = res.name
+            this.topicTitle = res
+          }else{
+            this.topicTitle = []
+          }
+        })
+      },
+      getfile(flag){
+        this.$fetch('/wap/meeting/files',{
+          m_id:this.mid,
+          type:'datum',
+          d_id:this.did,
+          pagesize:10,
+          page:this.page
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          if(flag){
+            this.dtopicList = this.dtopicList.concat(res.data)
+            if(res.total<this.page*10){
+              this.busy=true
+            }else{
+              this.busy=false
+            }
+          }else{
+            this.dtopicList = res.data
+            this.busy=false
+          }
+          }else{
+            this.dtopicList = []
+          }
+        })
+      },
+      loadMore(){
+        this.busy = true;
+        setTimeout(() => {
+          this.page++;
+          this.getfile(true)
+        }, 500);
+      },
       goDetails(data){
         let _self = this;
-        if(data.filesType==1){
-          _self.$router.push({path:'/list/historyList/topicsDetails',query:{id:'1','name':_self.topicNameTxt,'f_name':data.filesName}})
+        if(data.is_directory==1){
+          _self.$router.push({path:'/list/historyList/topicsDetails',query:{id:data.id,name:_self.topicNameTxt,f_name:data.filename,did:_self.did}})
         }else{
-          _self.$message('这是文档');
+          _self.openView(data.filepath);
         }
       },
       goMain(){
         this.$router.push({path:'/list/historyList/topics'})
+      },
+      openView(path) {
+        if(this.getType(path) == 'f-pdf-icon'){
+          this.$alert(" <iframe src='"+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+            dangerouslyUseHTMLString: true
+          });
+        }else{
+          this.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src="+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+            dangerouslyUseHTMLString: true
+          });
+        }
       }
     }
   }
@@ -165,5 +233,15 @@
   display: inline-block;
   width: 802px;
 }
-
+  .el-message-box{
+    width: 90%;
+  }
+  .el-message-box__content,
+  .el-message-box__message ,
+  .el-message-box__message p{
+    height: 600px;
+  }
+  .el-message-box__btns{
+    padding-top: 22px;
+  }
 </style>

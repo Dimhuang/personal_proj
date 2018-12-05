@@ -9,7 +9,7 @@
             <i class="el-icon-arrow-left"></i>
             <em v-text="'返回'"></em>
           </span>
-          <el-tabs @tab-click="handleClick">
+          <el-tabs @tab-click="">
             <!--会议信息-->
             <el-tab-pane label="会议信息">
               <el-breadcrumb separator="/">
@@ -20,49 +20,49 @@
                   <i class="iconfont pl-hyxx_hymc_n"></i>
                   <div>
                     <span>会议名称：</span>
-                    <p>金湾区第七届人大常委会第24次会议</p>
+                    <p v-text="meetingMsg.name"></p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_time_n"></i>
                   <div>
                     <span>会议时间：</span>
-                    <p class="f-fc-orange">2018-12-10  10:30  开始</p>
+                    <p class="f-fc-orange" v-text="meetingMsg.start_time + '开始'"></p>
                   </div>
                 </li>
-                <li class="m-history-list">
+                <!--<li class="m-history-list">
                   <i class="iconfont pl-hyxx_hydd_n"></i>
                   <div>
                     <span>会议地点：</span>
                     <p>广东省珠海市金湾区区政府</p>
                   </div>
-                </li>
+                </li>-->
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hycs_n"></i>
                   <div>
                     <span>会议场所：</span>
-                    <p>区政府25号楼南阶梯会议室</p>
+                    <p v-text="meetingMsg.room_name"></p><p v-if="meetingMsg.room_name==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_zcr_n"></i>
                   <div>
                     <span>主持人：</span>
-                    <p>sfs</p>
+                    <p v-text="meetingMsg.moderator"></p><p v-if="meetingMsg.moderator==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hyjj_n"></i>
                   <div>
                     <span>会议简介：</span>
-                    <p>主要讨论重要领导人任免、政府工作报告、两院报告、财政预算、重要法律和区大政方针的制定。</p>
+                    <p v-text="meetingMsg.description"></p><p v-if="meetingMsg.description==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hymd_n"></i>
                   <div>
                     <span>参会名单：</span>
-                    <p>刘二、李四、王五、赵六、朱七、李四、王五、赵六、朱七、李四。</p>
+                    <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
               </ul>
@@ -77,17 +77,36 @@
   import mHeader from '@/components/header.vue'
   import mBody from '@/components/body.vue'
   import '@/assets/css/pcScrollBar.css'
+  import {mapState} from 'vuex'
   export default{
     data(){
       return{
-        msg:'hello vue',
+        meetingMsg:[],
         whiteBoardActive:'1'
       }
     },
-    created(){
-
+    computed: {
+      ...mapState(["mid"])
+     },
+    mounted(){
+      if(sessionStorage.getItem('keepMid')==null){
+        this.$store.commit('getMid',this.$route.query.mid)
+      }
+      this.getMsg(this.mid)
     },
     methods:{
+      getMsg(id){
+        this.$fetch('/wap/meeting/data',{
+          m_id:id
+        }).then(result=>{
+          let res = result.data;
+          if(result.msg=='success'){
+            this.meetingMsg = res
+          }else{
+            this.meetingMsg = []
+          }
+        })
+      },
       back(){
         this.$router.push({name:'pcHome'})
       }
@@ -178,9 +197,10 @@
   }
   .m-history-list p{
     font-size: 16px;
-    line-height: 20px;
+    line-height: 24px;
     color: #666;
     margin-top: 5px;
+    word-break: break-all;
   }
   .m-history-list p.f-fc-orange{
     color: #f36323;

@@ -12,47 +12,52 @@
       <yd-tab active-color="#1791ff">
         <yd-tab-panel label="会议列表">
           <div class="m-wap-index-tabs-content" ref="tabView1">
-            <div class="m-wap-main-nav-list" v-for="n in 3" @click.stop="goFunctionList(1)">
+            <div class="m-wap-main-nav-list" v-for="n in metList" @click.stop="goFunctionList(1,n.id)">
               <div class="m-wap-main-nav-list-hd">
                 <div class="m-wap-main-nav-list-hd-content">
                   <em></em>
-                  <i class="f-restart-ico" v-if="false">未开始</i>
+                  <i class="f-restart-ico" v-if="n.status==0">未开始</i>
                   <i class="f-load-ico" v-else>进行中</i>
-                  <h2>金湾区第七届人大常委会第22次会议</h2>
+                  <h2 v-text="n.name"></h2>
                 </div>
               </div>
               <div class="m-wap-main-nav-list-bd">
                 <p>
-                  <span class="fl"><span v-text="'时间:'"></span><span v-text="'2018-07-30 13:00'"></span></span>
-                  <span class="fr"><span v-text="'主持人:'"></span><span v-text="'啊飒飒'"></span></span>
+                  <span class="fl"><span v-text="'时间:'"></span><span v-text="n.start_time"></span></span>
+                  <span class="fr"><span v-text="'主持人:'"></span><span v-text="n.moderator"></span></span>
                 </p>
-                <p><span v-text="'会议室:'"></span><span v-text="'啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话'"></span></p>
+                <p><span v-text="'会议室:'"></span><span v-text="n.room_name"></span></p>
               </div>
             </div>
+          </div>
+          <yd-backtop></yd-backtop>
+          <div class="f-wap-load-box" v-infinite-scroll="loadMoreMet" infinite-scroll-disabled="metBusy" infinite-scroll-distance="30">
+            <i class="el-icon-loading" v-if="!metBusy"></i>
+            <span v-else>暂无更多数据</span>
           </div>
         </yd-tab-panel>
         <yd-tab-panel label="历史会议">
           <div class="m-wap-index-tabs-content" ref="tabView2">
-            <div class="m-wap-main-nav-list" v-for="n in 3" @click.stop="goFunctionList(2)">
+            <div class="m-wap-main-nav-list" v-for="n in hisList" @click.stop="goFunctionList(2,n.id)">
               <div class="m-wap-main-nav-list-hd f-history">
                 <div class="m-wap-main-nav-list-hd-content">
-                  <em>1111111111111111111111111111</em>
-                  <h2>金湾区第七届人大常委会第22次会议</h2>
+                  <em :class="{'f-visibility':n.is_secrect==0}">保密会议，需向管理员申请权限</em>
+                  <h2 v-text="n.name"></h2>
                   <div class="f-flex-content">
                         <span class="f-flex-item">
-                          <b>15</b>
+                          <b v-text="n.datum_count"></b>
                           <p>议题</p>
                         </span>
                         <span class="f-flex-item">
-                          <b>15</b>
+                          <b v-text="n.stmpfile_count"></b>
                           <p>资料</p>
                         </span>
                         <span class="f-flex-item">
-                          <b>15</b>
+                          <b v-text="n.annotation_count"></b>
                           <p>批注</p>
                         </span>
                         <span class="f-flex-item">
-                          <b>15</b>
+                          <b v-text="n.whiteboard_count"></b>
                           <p>白板</p>
                         </span>
                   </div>
@@ -60,12 +65,17 @@
               </div>
               <div class="m-wap-main-nav-list-bd">
                 <p>
-                  <span class="fl"><span v-text="'时间:'"></span><span v-text="'2018-07-30 13:00'"></span></span>
-                  <span class="fr"><span v-text="'主持人:'"></span><span v-text="'啊飒飒'"></span></span>
+                  <span class="fl"><span v-text="'时间:'"></span><span v-text="n.start_time"></span></span>
+                  <span class="fr"><span v-text="'主持人:'"></span><span v-text="n.moderator"></span></span>
                 </p>
-                <p><span v-text="'会议室:'"></span><span v-text="'啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话啥都会看见啊还是大家哈客家话'"></span></p>
+                <p><span v-text="'会议室:'"></span><span v-text="n.room_name"></span></p>
               </div>
             </div>
+          </div>
+          <yd-backtop></yd-backtop>
+          <div class="f-wap-load-box" v-infinite-scroll="loadMoreHis" infinite-scroll-disabled="hisBusy" infinite-scroll-distance="30">
+            <i class="el-icon-loading" v-if="!hisBusy"></i>
+            <span v-else>暂无更多数据</span>
           </div>
         </yd-tab-panel>
       </yd-tab>
@@ -77,23 +87,95 @@
     export default{
         data(){
             return {
-
+              hisPage:1,
+              hisList:[],
+              hisBusy:true,
+              metPage:1,
+              metList:[],
+              metBusy:true
             }
         },
       created(){
         var _self = this;
+        _self.getMeetingList()
+        _self.getHistorytList()
+        sessionStorage.removeItem('keepWapType')
+        sessionStorage.removeItem('keepMid')
         setTimeout(function(){
           let bodyH = document.getElementById('scrollView').clientHeight;
           let navH = document.querySelector('.yd-tab-nav').clientHeight;
           _self.$refs.tabView1.style.maxHeight = bodyH - navH + 'px'
           _self.$refs.tabView2.style.maxHeight = bodyH - navH + 'px'
         },100)
-
       },
       methods:{
-        goFunctionList(type){
+        getHistorytList(flag){
+          this.$fetch('/wap/meeting/data',{
+            status:2,
+            pagisize:6,
+            page:this.hisPage
+          }).then(result=>{
+            let res = result.data;
+          if(result.msg=='success'){
+            if(flag){
+              this.hisList = this.hisList.concat(res.data)
+              if(res.total<this.hisPage*6){
+                this.hisBusy=true
+              }else{
+                this.hisBusy=false
+              }
+            }else{
+              this.hisList = res.data
+              this.hisBusy=false
+            }
+          }else{
+            this.hisList = []
+          }
+        })
+        },
+        loadMoreHis(){
+          this.hisBusy = true;
+          setTimeout(() => {
+            this.hisPage++;
+          this.getHistorytList(true)
+        }, 500);
+        },
+        getMeetingList(flag){
+          this.$fetch('/wap/meeting/data',{
+            status:"0,1",
+            pagisize:6,
+            page:this.metPage
+          }).then(result=>{
+            let res = result.data;
+          if(result.msg=='success'){
+            if(flag){
+              this.metList = this.metList.concat(res.data)
+              if(res.total<this.metPage*6){
+                this.metBusy=true
+              }else{
+                this.metBusy=false
+              }
+            }else{
+              this.metList = res.data
+              this.metBusy=false
+            }
+          }else{
+            this.metList = []
+          }
+        })
+        },
+        loadMoreMet(){
+          this.metBusy = true;
+          setTimeout(() => {
+            this.metPage++;
+          this.getMeetingList(true)
+        }, 500);
+        },
+
+        goFunctionList(type,id){
           //type=1 =》会议列表，type=2 =》历史会议
           this.$store.commit("changeType",type)
+          this.$store.commit('getMid',id)
           this.$router.push({path:'/wap/functions'})
         }
       },
@@ -146,6 +228,12 @@
     box-shadow:0px 0px 4px 0px rgba(0, 0, 0, 0.2);
     margin-bottom: 0.4rem;
   }
+
+  .m-wap-main-nav-list:nth-last-of-type(1){
+    margin-bottom: 0.1rem;
+  }
+
+
   .m-wap-main-nav-list-hd{
     height: 2rem;
     background: url("../../../assets/img/meeting_bg.jpg") no-repeat;
@@ -253,5 +341,8 @@
     line-height: 0.4rem;
     width: 100%;
     position: relative;
+  }
+  .f-visibility{
+    visibility: hidden;
   }
 </style>

@@ -6,11 +6,11 @@
         <span>无纸化微终端</span>
       </div>
         <span slot="right" style="font-size: 0.24rem !important;">
-           欢迎您,<span style="font-size: 0.24rem !important;">下小时</span>
+           欢迎您,<span style="font-size: 0.24rem !important;" v-text="userName"></span>
           </span>
     </yd-navbar>
     <div class="m-wap-function-list-box">
-      <yd-grids-group :rows="3" title="金湾区第七届人大常委会第24次会议">
+      <yd-grids-group :rows="3" :title="mettingTitle">
         <yd-grids-item @click.native="goMsg">
           <img slot="icon" src="../../../assets/img/but_hyxx.png">
           <span slot="text">会议信息</span>
@@ -48,19 +48,29 @@
   export default{
     data(){
       return {
-
+        userName:sessionStorage.getItem('userName'),
+        mettingTitle:''
       }
     },
     computed: {
-      ...mapState(["wapFunType"])
+      ...mapState(["wapFunType","mid"])
     },
     mounted(){
-
-    },
-    created(){
-
+      this.getMetName()
     },
     methods:{
+      getMetName(){
+        this.$fetch('/wap/meeting/data',{
+          m_id:this.mid
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          this.mettingTitle = res.name
+        }else{
+          this.mettingTitle = ''
+        }
+      })
+      },
       goMsg(){
         var _self = this;
         _self.$router.push({path:'/wap/meetingMsg'});

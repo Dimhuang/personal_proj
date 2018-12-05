@@ -14,10 +14,19 @@
             </span>
             <span slot="left">
               <span>会议名称:</span>
-              <p>金湾区第七届人大常委会第24次会议</p>
+              <p v-text="meetingMsgList.name"></p>
             </span>
           </yd-cell-item>
           <yd-cell-item>
+            <span slot="left">
+                <yd-icon name="hyxx_time_n" custom size="0.42rem" color="#1791ff"></yd-icon>
+            </span>
+            <span slot="left">
+              <span>会议时间:</span>
+              <p class="f-fc-orange" v-text="meetingMsgList.start_time"></p>
+            </span>
+          </yd-cell-item>
+        <!--  <yd-cell-item>
             <span slot="left">
                 <yd-icon name="hyxx_hydd_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
@@ -25,14 +34,14 @@
               <span>会议地点:</span>
               <p>广东省珠海市金湾区区政府</p>
             </span>
-          </yd-cell-item>
+          </yd-cell-item>-->
           <yd-cell-item>
             <span slot="left">
                 <yd-icon name="hyxx_hycs_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
             <span slot="left">
               <span>会议场所:</span>
-              <p>区政府25号楼南阶梯会议室</p>
+              <p v-text="meetingMsgList.room_name"></p>
             </span>
           </yd-cell-item>
           <yd-cell-item>
@@ -41,7 +50,7 @@
             </span>
             <span slot="left">
               <span>主持人:</span>
-              <p>关吉宫</p>
+              <p v-text="meetingMsgList.moderator"></p>
             </span>
           </yd-cell-item>
           <yd-cell-item class="f-ex">
@@ -50,18 +59,18 @@
             </span>
             <span slot="left">
               <span>会议简介:</span>
-              <p>主要讨论重要领导人任免、政府工作报告、两院报告、财政预算、重要法律和区大政方针的制定，主要讨论重要领导人任免、政府工作报告、两院报告、财政预算、重要法律和区大政方针的制定，主要讨论重要领导人任免、政府工作报告、两院报告、财政预算、重要法律和区大政方针的制定，</p>
+              <p v-text="meetingMsgList.description"></p>
             </span>
           </yd-cell-item>
-          <yd-cell-item class="f-ex">
+          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''">
             <span slot="left">
                 <yd-icon name="hyxx_hyfa_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
             <span slot="left">
               <span>会议方案:</span>
                <div class="m-history-list-flie f-flex-content">
-                 <div class="f-wap-pdf-icon"></div>
-                 <div class="f-flex-item">金湾区第七届人大常委会第24次会议方案.pdf</div>
+                 <div :class="getType(meetingMsgList.agenda_name)"></div>
+                 <div class="f-flex-item" v-text="meetingMsgList.agenda_name"></div>
                </div>
             </span>
           </yd-cell-item>
@@ -70,16 +79,37 @@
     </yd-layout>
 </template>
 <script>
+  import {mapState} from 'vuex'
+  import { fileType } from '@/utils/utils'
     export default{
         data(){
             return {
-
+              meetingMsgList:[]
             }
         },
+        computed: {
+          ...mapState(["wapFunType","mid"])
+        },
         mounted(){
-
+          this.getMsg()
         },
         methods: {
+          getType(name){
+            var file = fileType(name,2)
+            return file;
+          },
+          getMsg(){
+            this.$fetch('/wap/meeting/data',{
+              m_id:this.mid
+            }).then(result=>{
+              let res = result.data;
+            if(result.msg=='success'){
+              this.meetingMsgList = res
+            }else{
+              this.meetingMsgList = []
+            }
+          })
+          },
           back(){
             this.$router.push({path:'/wap/functions'})
           }
@@ -100,6 +130,11 @@
   }
   .g-wap-welcome-content .f-ex .yd-cell-left{
     align-items: flex-start;
+    width: 100%;
+    padding-right: 0.2rem;
+  }
+  .g-wap-welcome-content .f-ex .yd-cell-right{
+    display: none;
   }
   .g-wap-welcome-content .f-ex .yd-cell-left span i{
     margin-top: 0.16rem;
@@ -107,6 +142,7 @@
   }
   .g-wap-welcome-content .yd-cell-left span:nth-of-type(2){
     margin-left: 0.2rem;
+    width: 100%;
   }
   .g-wap-welcome-content .yd-cell-left span:nth-of-type(2) span{
     font-size: 0.3rem;
