@@ -50,7 +50,7 @@ export const routerList = [
       },{
         path: '/list/historyList/stmpfile',
         name:'stmpfile',
-        component: resolve => require(["@/view/pcView/list/historyStmpfile"], resolve)
+        component: resolve => require(["@/view/pcView/list/historyStmpFiles"], resolve)
       },{
         path: '/list/historyList/stmpfileDetails',
         name:'stmpfileDetails',
