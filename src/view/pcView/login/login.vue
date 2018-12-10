@@ -37,6 +37,10 @@
         },
         mounted(){
           sessionStorage.removeItem('accessToken')
+          if((sessionStorage.getItem('objName')!=null)&&(sessionStorage.getItem('objPwd')!=null)){
+            sessionStorage.removeItem('objName')
+            sessionStorage.removeItem('objPwd')
+          }
         },
         components: {
 

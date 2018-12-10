@@ -8,46 +8,86 @@
     </yd-navbar>
     <div class="m-board-view">
       <yd-tab active-color="#1792ff">
-        <yd-tab-panel label="文档批注" badge="2">
+        <yd-tab-panel label="文档批注" :badge="fileNum">
           <div class="m-board-view-bd">
             <yd-cell-group>
-              <yd-cell-item v-for="(n,index) in 4" :key="index">
-                <i class="f-wap-pdf-icon" slot="icon"></i>
-                <span slot="left">我的订我的订我的订我的订我的订我的订单</span>
+              <yd-cell-item v-for="(n,index) in docList" :key="index" @click.native="openView(n.filepath)">
+                <i :class="getType(n.filename)" slot="icon"></i>
+                <span slot="left" v-text="n.filename"></span>
               </yd-cell-item>
             </yd-cell-group>
+            <yd-backtop></yd-backtop>
+            <div class="f-wap-load-box" v-infinite-scroll="loadMoreDoc" infinite-scroll-disabled="docBusy" infinite-scroll-distance="30">
+              <i class="el-icon-loading" v-if="!docBusy"></i>
+              <span v-else>暂无更多数据</span>
+            </div>
           </div>
         </yd-tab-panel>
-        <yd-tab-panel label="手写批注" badge="1">
+        <yd-tab-panel label="手写批注" :badge="handNum">
           <div class="m-board-view-bd">
-            <yd-lightbox>
+            <yd-lightbox :num="handList.length">
               <yd-grids-group :rows="2">
-                <yd-grids-item v-for="item, key in list" :key="key">
-                  <yd-lightbox-img slot="icon" :src="item.src"></yd-lightbox-img>
+                <yd-grids-item v-for="item, key in handList" :key="key">
+                  <yd-lightbox-img slot="icon" :src="item.filepath"></yd-lightbox-img>
                 </yd-grids-item>
               </yd-grids-group>
             </yd-lightbox>
+            <yd-backtop></yd-backtop>
+            <div class="f-wap-load-box" v-infinite-scroll="loadMoreHand" infinite-scroll-disabled="handBusy" infinite-scroll-distance="30">
+              <i class="el-icon-loading" v-if="!handBusy"></i>
+              <span v-else>暂无更多数据</span>
+            </div>
           </div>
         </yd-tab-panel>
-        <yd-tab-panel label="电子白板" badge="3">
+        <yd-tab-panel label="电子白板" :badge="elecNum">
           <div class="m-board-view-bd">
-            <yd-lightbox>
+            <yd-lightbox :num="elecList.length">
               <yd-grids-group :rows="2">
-                <yd-grids-item v-for="item, key in list" :key="key">
-                  <yd-lightbox-img slot="icon" :src="item.src"></yd-lightbox-img>
+                <yd-grids-item v-for="item, key in elecList" :key="key">
+                  <yd-lightbox-img slot="icon" :src="item.filepath"></yd-lightbox-img>
                 </yd-grids-item>
               </yd-grids-group>
             </yd-lightbox>
+            <yd-backtop></yd-backtop>
+            <div class="f-wap-load-box" v-infinite-scroll="loadMoreElec" infinite-scroll-disabled="elecBusy" infinite-scroll-distance="30">
+              <i class="el-icon-loading" v-if="!elecBusy"></i>
+              <span v-else>暂无更多数据</span>
+            </div>
           </div>
         </yd-tab-panel>
       </yd-tab>
+      <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
+        <yd-navbar slot="top" title="查看">
+          <div slot="left" @click.stop="cencel">
+            <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
+            <span>返回</span>
+          </div>
+        </yd-navbar>
+        <iframe :src='srcPath' width='100%' height='100%' frameborder='1'></iframe>
+      </yd-popup>
     </div>
   </yd-layout>
 </template>
 <script>
+  import { fileType } from '@/utils/utils'
+  import {mapState} from 'vuex'
   export default{
     data(){
       return {
+        fileNum:'0',
+        handNum:'0',
+        elecNum:'0',
+        docPage:1,
+        docList:[],
+        docBusy:true,
+        handPage:1,
+        handList:[],
+        handBusy:true,
+        elecPage:1,
+        elecList:[],
+        elecBusy:true,
+        srcPath:'',
+        showRight:false,
         list: [
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s1.jpg'},
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s2.jpg'},
@@ -58,17 +98,170 @@
         ]
       }
     },
+    computed: {
+      ...mapState(["mid"])
+  },
     mounted(){
       var _self = this;
-
+    _self.getFileNum(5,()=>{
+        _self.getDocFile()
+      })
+    _self.getFileNum(7,()=>{
+      _self.getElecFile()
+      })
+    _self.getFileNum(11,()=>{
+      _self.getHandFile()
+      })
     },
     methods: {
-
+      getType(name){
+        var file = fileType(name,2)
+        return file;
+      },
+      getFileNum(num,func){
+        var _self = this;
+        _self.$fetch('/wap/meeting/fileCount',{
+          m_id:_self.mid,
+          file_use:num
+        }).then(result=>{
+          let res = result.data;
+        if(num == '5'){
+          if(res.length==0){
+            _self.fileNum = '0'
+          }else{
+            _self.fileNum = res[num].toString()
+          }
+        }else if(num == '7'){
+          if(res.length==0){
+            _self.elecNum =  '0'
+          }else{
+            _self.elecNum = res[num].toString()
+          }
+        }else if(num == '11'){
+          if(res.length==0){
+            _self.handNum =  '0'
+          }else{
+            _self.handNum = res[num].toString()
+          }
+        }
+        func()
+      })
+      },
+      getDocFile(flag){
+        this.$fetch('/wap/meeting/files',{
+          m_id:this.mid,
+          type:'whiteboard',
+          file_use:5,
+          pagesize:9,
+          page:this.docPage
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          if(flag){
+            this.docList = this.docList.concat(res.data)
+            if(res.total<this.docPage*9){
+              this.docBusy=true
+            }else{
+              this.docBusy=false
+            }
+          }else{
+            this.docList = res.data
+            this.docBusy=false
+          }
+        }else{
+          this.docList = []
+        }
+      })
+      },
+      loadMoreDoc(){
+        this.docBusy = true;
+        setTimeout(() => {
+          this.docPage++;
+        this.getDocFile(true)
+      }, 500);
+      },
+      getElecFile(flag){
+        this.$fetch('/wap/meeting/files',{
+          m_id:this.mid,
+          type:'whiteboard',
+          file_use:7,
+          pagesize:9,
+          page:this.elecPage
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          if(flag){
+            this.elecList = this.elecList.concat(res.data)
+            if(res.total<this.elecPage*9){
+              this.elecBusy=true
+            }else{
+              this.elecBusy=false
+            }
+          }else{
+            this.elecList = res.data
+            this.elecBusy=false
+          }
+        }else{
+          this.elecList = []
+        }
+      })
+      },
+      loadMoreElec(){
+        this.elecBusy = true;
+        setTimeout(() => {
+          this.elecPage++;
+        this.getElecFile(true)
+      }, 500);
+      },
+      getHandFile(flag){
+        this.$fetch('/wap/meeting/files',{
+          m_id:this.mid,
+          type:'whiteboard',
+          file_use:11,
+          pagesize:9,
+          page:this.handPage
+        }).then(result=>{
+          let res = result.data;
+        if(result.msg=='success'){
+          if(flag){
+            this.handList = this.handList.concat(res.data)
+            if(res.total<this.handPage*9){
+              this.handBusy=true
+            }else{
+              this.handBusy=false
+            }
+          }else{
+            this.handList = res.data
+            this.handBusy=false
+          }
+        }else{
+          this.handList = []
+        }
+      })
+      },
+      loadMoreHand(){
+        this.handBusy = true;
+        setTimeout(() => {
+          this.handPage++;
+          this.getHandFile(true)
+        }, 500);
+      },
       back(){
         var _self = this;
         _self.$router.push({path:'/wap/functions'})
-      }
+      },
+      openView(path) {
+        var _self = this;
+        if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+          _self.srcPath = path
+          _self.showRight = true
+        }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
 
+        }else {
+          _self.srcPath = path
+          window.location.href = _self.srcPath
+        }
+      }
     }
   }
 </script>

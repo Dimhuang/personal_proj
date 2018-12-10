@@ -122,9 +122,23 @@
             console.log(item.id)
           })*/
 
-          sessionStorage.removeItem('keepMid')
-          this.getHistorytList()
-          this.getMeetingList()
+          if((sessionStorage.getItem('objName')!=null)&&(sessionStorage.getItem('objPwd')!=null)){
+            console.log(sessionStorage.getItem('objName'))
+            console.log(sessionStorage.getItem('objPwd'))
+            this.$post('/wap/User/login',{
+              account:sessionStorage.getItem('objName'),
+              password:sessionStorage.getItem('objPwd')
+            }).then(result=>{
+                sessionStorage.setItem('accessToken' , true)
+                sessionStorage.removeItem('keepMid')
+                this.getHistorytList()
+                this.getMeetingList()
+            })
+          }else{
+            sessionStorage.removeItem('keepMid')
+            this.getHistorytList()
+            this.getMeetingList()
+          }
         },
         methods:{
           getHistorytList(flag){

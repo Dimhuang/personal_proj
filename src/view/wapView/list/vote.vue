@@ -41,17 +41,54 @@
     </yd-layout>
 </template>
 <script>
+    import {mapState} from 'vuex'
     export default{
       data(){
         return {
-
+          page:1,
+          busy:true,
+          voteList:[]
         }
+      },
+      computed: {
+        ...mapState(["mid"])
       },
       mounted(){
         var _self = this;
-
+        _self.getList()
       },
       methods: {
+        getList(flag){
+          this.$fetch('/wap/meeting/vote',{
+            m_id:this.mid,
+            pagesize:10,
+            page:this.page
+          }).then(result=>{
+            let res = result.data;
+          if(result.msg=='success'){
+            if(flag){
+              this.voteList = this.voteList.concat(res.data)
+              if(res.total<this.page*10){
+                this.busy=true
+              }else{
+                this.busy=false
+              }
+            }else{
+              this.voteList = res.data
+              this.busy=false
+            }
+          }else{
+            this.voteList = []
+          }
+        })
+        },
+        loadMore(){
+          this.busy = true;
+          setTimeout(() => {
+            this.page++;
+            this.getList(true)
+          }, 500);
+        },
         goSelect(){
           var _self = this;
           _self.$router.push({path:'/wap/voteSelect'})

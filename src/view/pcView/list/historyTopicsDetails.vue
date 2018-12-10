@@ -13,7 +13,12 @@
           <div class="f-ellipsis" v-text="items.filename"></div>
         </div>
         <div class="m-history-list-r">
-          <el-button size="mini" round @click.native="openView(items.filepath)")>打开</el-button>
+          <el-button size="mini" round  @click.native="openView(items.filepath)">
+           <!-- <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
+            <span v-else>打开</span>-->
+            <span>打开</span>
+          </el-button>
+          <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
         </div>
       </li>
     </ul>
@@ -36,12 +41,13 @@
         page:1,
         busy:true,
         fid:'',
-        did:''
+        did:'',
+        srcPath:' '
       }
     },
     computed: {
       ...mapState(["mid"])
-  },
+    },
     mounted(){
       this.topicNameTxt = this.$route.query.name
       this.folderNameTxt = this.$route.query.f_name
@@ -52,7 +58,7 @@
     methods:{
       getType(name){
         var file = fileType(name,1)
-        return file;
+        return file
       },
       getfile(flag){
         this.$fetch('/wap/meeting/files',{
@@ -63,29 +69,29 @@
           page:this.page
         }).then(result=>{
           let res = result.data;
-        if(result.msg=='success'){
-          if(flag){
-            this.topicList = this.topicList.concat(res.data)
-            if(res.total<this.page*10){
-              this.busy=true
+          if(result.msg=='success'){
+            if(flag){
+              this.topicList = this.topicList.concat(res.data)
+              if(res.total<this.page*10){
+                this.busy=true
+              }else{
+                this.busy=false
+              }
             }else{
+              this.topicList = res.data
               this.busy=false
             }
           }else{
-            this.topicList = res.data
-            this.busy=false
+            this.topicList = []
           }
-        }else{
-          this.topicList = []
-        }
-      })
+        })
       },
       loadMore(){
         this.busy = true;
-        setTimeout(() => {
+        setTimeout(()=>{
           this.page++;
-        this.getfile(true)
-      }, 500);
+          this.getfile(true)
+        }, 500)
       },
       goMain(){
         this.$router.push({path:'/list/historyList/topics'})
@@ -94,14 +100,25 @@
         this.$router.push({path:'/list/historyList/topicsList',query:{did: this.did}})
       },
       openView(path) {
-        if(this.getType(path) == 'f-pdf-icon'){
-          this.$alert(" <iframe src='"+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+        var _self = this;
+        if (_self.getType(path) == 'f-pdf-icon'||_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+          _self.srcPath = path
+
+          _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
             dangerouslyUseHTMLString: true
-          });
-        }else{
-          this.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src="+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-            dangerouslyUseHTMLString: true
-          });
+          }).then(action => {
+            _self.srcPath = ''
+        }).catch(action => {
+            _self.srcPath = ''
+        });
+        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+
+        }else {
+          /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           });*/
+          _self.srcPath = path
+          window.location.href = _self.srcPath
         }
       }
     }
@@ -185,7 +202,7 @@
     font-size: 100%;
   }
   .el-message-box{
-    width: 90%;
+    width: 90% !important;
   }
   .el-message-box__content,
   .el-message-box__message ,

@@ -49,7 +49,9 @@
             }
         },
         created(){
-          sessionStorage.remove('userName')
+          if(sessionStorage.getItem('userName')!=null){
+            sessionStorage.remove('userName')
+          }
         },
         methods:{
           login(){

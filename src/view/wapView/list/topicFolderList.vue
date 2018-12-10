@@ -22,13 +22,25 @@
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd">
-        <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)"><!-- -->
+        <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)">
+          <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+            <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
+          </yd-lightbox>
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"></i>
           <span slot="left" v-text="n.filename"></span>
         </yd-cell-item>
       </yd-cell-group>
       <yd-backtop></yd-backtop>
+      <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
+        <yd-navbar slot="top" title="查看">
+          <div slot="left" @click.stop="cencel">
+            <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
+            <span>返回</span>
+          </div>
+        </yd-navbar>
+        <iframe :src='srcPath' width='100%' height='100%' frameborder='1'></iframe>
+      </yd-popup>
       <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
         <i class="el-icon-loading" v-if="!busy"></i>
         <span v-else>暂无更多数据</span>
@@ -48,7 +60,9 @@
           page:1,
           topicList:[],
           busy:true,
-          fileType:''
+          fileType:'',
+          srcPath:'',
+          showRight:false
         }
       },
       computed: {
@@ -67,7 +81,6 @@
           _self.fileType = 'stmpfile'
           _self.did = 0
         }
-
           _self.getfile()
       },
       methods: {
@@ -126,7 +139,8 @@
           if(data.is_directory==1){
             _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,did:_self.did,type:_self.showType}})
           }else{
-            alert('这是文档');
+           // alert('这是文档');
+            _self.openView(data.filepath)
           }
         },
         back(){
@@ -135,6 +149,23 @@
             _self.$router.push({path:'/wap/topicList'})
           }else{
             _self.$router.push({path:'/wap/functions'})
+          }
+        },
+        cencel:function(){
+          var _self = this;
+          _self.srcPath = ''
+          _self.showRight = false
+        },
+        openView(path) {
+          var _self = this;
+          if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+            _self.srcPath = path
+            _self.showRight = true
+          }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
+
+          }else {
+            _self.srcPath = path
+            window.location.href = _self.srcPath
           }
         }
       }

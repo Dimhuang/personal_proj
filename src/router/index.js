@@ -35,6 +35,28 @@ router.beforeEach((to, from, next)=>{
         }
       })
     }else {*/
+     /* if (to.path === '/login' || to.path === '/wap/login') {next() } else {
+        isMobile(function (is_mobile) {
+          if (is_mobile) {
+            if (to.meta.requiresAuth && !sessionStorage.getItem('wapAccessToken')) {
+              next({path: '/wap/login'})
+            }
+            else {
+              next()
+            }
+          } else {
+            if (to.meta.requiresAuth && !sessionStorage.getItem('accessToken')) {
+              next({path: '/login'})
+            }
+            else {
+              next()
+            }
+          }
+        })
+      }*/
+    //}
+  //客户端
+    if(typeof jsObj === "undefined") {
       if (to.path === '/login' || to.path === '/wap/login') {next() } else {
         isMobile(function (is_mobile) {
           if (is_mobile) {
@@ -54,12 +76,15 @@ router.beforeEach((to, from, next)=>{
           }
         })
       }
-    //}
-  //客户端
-    if(typeof jsObj === "undefined") {
-      console.log("你没有对象，不好意思")
     }else {
-      var token= jsObj.getUser();
+      var token= JSON.parse(jsObj.getUser())
       console.log(token)
+      console.log(token.userJson.userName)
+      console.log(token.userJson.passWord)
+      sessionStorage.setItem('objName' , token.userJson.userName)
+      sessionStorage.setItem('objPwd' ,token.userJson.passWord)
+      next()
     }
+
+
 })

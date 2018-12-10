@@ -7,11 +7,24 @@
       </div>
     </yd-navbar>
     <yd-cell-group class="m-wap-folder-list-bd">
-      <yd-cell-item v-for="(n,index) in topicList" :key="index">
-        <i  :class="getType(items.filename)" slot="icon"></i>
+      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="openView(n.filepath)">
+        <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+          <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
+        </yd-lightbox>
+        <i :class="getType(n.filepath)" slot="icon"></i>
         <span slot="left" v-text="n.filename"></span>
       </yd-cell-item>
     </yd-cell-group>
+    <yd-backtop></yd-backtop>
+    <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
+      <yd-navbar slot="top" title="查看">
+        <div slot="left" @click.stop="cencel">
+          <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
+          <span>返回</span>
+        </div>
+      </yd-navbar>
+      <iframe :src='srcPath' width='100%' height='100%' frameborder='1'></iframe>
+    </yd-popup>
     <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else>暂无更多数据</span>
@@ -20,6 +33,7 @@
 </template>
 <script>
   import { fileType } from '@/utils/utils'
+  import {mapState} from 'vuex'
   export default{
     data(){
       return {
@@ -32,8 +46,13 @@
         page:1,
         topicList:[],
         busy:true,
-        fileType:''
+        fileType:'',
+        srcPath:'',
+        showRight:false
       }
+    },
+    computed: {
+      ...mapState(["wapFunType","mid"])
     },
     mounted(){
       var _self = this;
@@ -47,6 +66,7 @@
         _self.fileType = 'stmpfile'
         _self.did = 0
       }
+    _self.getfile()
     },
     methods: {
       getType(name){
@@ -83,12 +103,29 @@
         this.busy = true;
         setTimeout(() => {
           this.page++;
-        this.getfile(true)
-      }, 500);
+          this.getfile(true)
+        }, 500);
       },
       back(){
         var _self = this;
-        _self.$router.push({path:'/wap/topicFolderList',query: {type: _self.showType}})
+        _self.$router.push({path:'/wap/topicFolderList',query: {type: _self.showType,did:_self.did}})
+      },
+      cencel:function(){
+        var _self = this;
+        _self.srcPath = ''
+        _self.showRight = false
+      },
+      openView(path) {
+        var _self = this;
+        if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+          _self.srcPath = path
+          _self.showRight = true
+        }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
+
+        }else {
+          _self.srcPath = path
+          window.location.href = _self.srcPath
+        }
       }
     }
   }

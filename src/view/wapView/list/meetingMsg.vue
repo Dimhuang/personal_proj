@@ -62,7 +62,7 @@
               <p v-text="meetingMsgList.description"></p>
             </span>
           </yd-cell-item>
-          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''">
+          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''"  @click.native="openView(meetingMsgList.agenda_path)">
             <span slot="left">
                 <yd-icon name="hyxx_hyfa_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
@@ -75,6 +75,16 @@
             </span>
           </yd-cell-item>
         </yd-cell-group>
+        <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
+          <yd-navbar slot="top" title="查看">
+            <div slot="left" @click.stop="cencel">
+              <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
+              <span>返回</span>
+            </div>
+          </yd-navbar>
+          <iframe :src='srcPath' width='100%' height='100%' frameborder='1' v-show="!is_pdf"></iframe>
+          <embed width="100%" height="100%" name="plugin" id="plugin" :src="srcPath" type="application/pdf" internalinstanceid="3" v-show="is_pdf">
+        </yd-popup>
       </div>
     </yd-layout>
 </template>
@@ -84,7 +94,10 @@
     export default{
         data(){
             return {
-              meetingMsgList:[]
+              meetingMsgList:[],
+              srcPath:'',
+              showRight:false,
+              is_pdf:true
             }
         },
         computed: {
@@ -112,6 +125,23 @@
           },
           back(){
             this.$router.push({path:'/wap/functions'})
+          },
+          cencel:function(){
+            var _self = this;
+            _self.srcPath = ''
+            _self.showRight = false
+          },
+          openView(path) {
+            var _self = this;
+            if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+              _self.srcPath = path
+              _self.showRight = true
+            }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
+
+            }else {
+              _self.srcPath = path
+              window.location.href = _self.srcPath
+            }
           }
         }
     }

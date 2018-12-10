@@ -19,6 +19,7 @@ import {post,fetch,patch,put} from '@/axios/request'
 //import apiConfig from '../config/api.config'
 import infiniteScroll from 'vue-infinite-scroll'
 
+
 Vue.use(VueRouter);
 Vue.use(ElementUI);
 Vue.use(YDUI);

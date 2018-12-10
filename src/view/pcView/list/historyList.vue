@@ -51,7 +51,8 @@
                     <p v-text="meetingMsg.description"></p><p v-if="meetingMsg.description==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
-                <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click.stop="openView(meetingMsg.agenda_path)">
+                <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openView(meetingMsg.agenda_path)">
+                  <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon'">
                   <i class="iconfont pl-hyxx_hyfa_n"></i>
                   <div>
                     <span>会议方案：</span>
@@ -180,7 +181,8 @@
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s4.jpg'},
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s5.jpg'},
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s6.jpg'}
-        ]
+        ],
+        srcPath:''
       }
     },
     computed: {
@@ -225,19 +227,19 @@
         }).then(result=>{
           let res = result.data;
           if(num == '5'){
-            if(res=={}){
+            if(res.length==0){
               this.fileNum = 0
             }else{
               this.fileNum = res[num]
             }
           }else if(num == '7'){
-            if(res=={}){
+            if(res.length==0){
               this.elecNum = 0
             }else{
               this.elecNum = res[num]
             }
           }else if(num == '11'){
-            if(res=={}){
+            if(res.length==0){
               this.handNum = 0
             }else{
               this.handNum = res[num]
@@ -356,14 +358,25 @@
         this.$router.push({path:'/index'})
       },
       openView(path) {
-        if(this.getType(path) == 'f-pdf-icon'){
-          this.$alert(" <iframe src='"+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+        var _self = this;
+        if (_self.getType(path) == 'f-pdf-icon'||_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+          _self.srcPath = path
+
+            _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
             dangerouslyUseHTMLString: true
+          }).then(action => {
+              _self.srcPath = ''
+          }).catch(action => {
+            _self.srcPath = ''
           });
-        }else{
-          this.$alert(" <iframe src='http://view.officeapps.live.com/op/view.aspx?src="+path+"' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-            dangerouslyUseHTMLString: true
-          });
+          }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+
+          }else {
+          /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           });*/
+          _self.srcPath = path
+          window.location.href = _self.srcPath
         }
       }
     },
@@ -503,6 +516,13 @@
   .m-white-view .el-col{
     margin-bottom: 20px;
     cursor: pointer;
+    height: 150px;
+    /*overflow: hidden;*/
+  }
+  .m-white-view .el-col .el-card,
+  .m-white-view .el-col .el-card__body,
+  .m-white-view .el-col .el-card__body img{
+    height: 100%;
   }
   .m-white-view .el-card{
     border: 0;
@@ -554,7 +574,7 @@
   }
 
   .el-message-box{
-    width: 90%;
+    width: 90% !important;
   }
   .el-message-box__content,
   .el-message-box__message ,
@@ -564,5 +584,15 @@
 
   .el-message-box__btns{
     padding-top: 22px;
+  }
+  .f-msg-hide-img{
+    width: 100%;
+    height:100%;
+    position: absolute;
+    right:0;top:0;
+    filter:alpha(opacity=0); /* IE */
+    -moz-opacity:0; /* 老版Mozilla */
+    -khtml-opacity:0; /* 老版Safari */
+    opacity: 0; /* 支持opacity的浏览器*/
   }
 </style>
