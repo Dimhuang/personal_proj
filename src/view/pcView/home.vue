@@ -135,7 +135,9 @@
                 this.getMeetingList()
             })
           }else{
-            sessionStorage.removeItem('keepMid')
+            if(sessionStorage.getItem('keepMid')!=null){
+              sessionStorage.removeItem('keepMid')
+            }
             this.getHistorytList()
             this.getMeetingList()
           }

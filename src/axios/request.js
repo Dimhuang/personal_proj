@@ -26,10 +26,10 @@ axios.interceptors.request.use(
 //http response 拦截器
 axios.interceptors.response.use(
   response => {
-    if(response.data.errCode ==2){
+    if(response.data.status ==2){
       router.push({
         path:"/login",
-        querry:{redirect:router.currentRoute.fullPath}//从哪个页面跳转
+        query:{redirect:router.currentRoute.fullPath}//从哪个页面跳转
       })
     }
     return response;

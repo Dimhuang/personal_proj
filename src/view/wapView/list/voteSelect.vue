@@ -8,31 +8,35 @@
     </yd-navbar>
     <div class="m-wap-vote-select-view">
       <div class="m-wap-vote-select-title">
-        <h2 class="f-clamp-line-2">关于关吉宫担任保伦大酒店首席掌勺的表决</h2>
+        <h2 class="f-clamp-line-2" v-text="voteList.vote_title"></h2>
         <div class="m-wap-vote-select-title-bd">
           <div>
             <span class="fl">投票描述</span>
             <span class="fr">
-               <yd-button size="large" type="hollow" shape="circle" @click.native="titleToggle=!titleToggle">
+               <yd-button size="large" type="hollow" shape="circle" @click.native="titleToggle=!titleToggle" v-if="voteList.description!=''">
                  <span v-if="titleToggle">展开</span>
                  <span v-else>收起</span>
                </yd-button>
             </span>
           </div>
-          <p :class="{'f-clamp-line-2':titleToggle}">s1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1d</p>
+          <p :class="{'f-clamp-line-2':titleToggle}" v-text="voteList.description"></p>
         </div>
       </div>
       <div class="m-wap-vote-select-content">
         <div class="m-wap-vote-select-content-title">
           <span>投票选项</span>
           <span>单选</span>
-          <span>00:00:30</span>
+          <span>
+
+            <yd-countdown :time="voteTime" format="{%s}秒】{%m}分】{%h}时】{%d}天】"></yd-countdown>
+
+          </span>
         </div>
         <!--单选-->
         <div v-show="true">
           <yd-radio-group v-model="voteRadio">
-            <yd-radio :val="items.id" v-for="items,index in selectList" :key="index" :class="{'f-active':items.id == voteRadio}">
-              <span>{{items.name}}</span>
+            <yd-radio :val="items.id" v-for="items,index in voteList.options" :key="index" :class="{'f-active':items.id == voteRadio}">
+              <span>{{items.o_name}}</span>
               <yd-icon name="yes_line" custom color="#fff"></yd-icon>
             </yd-radio>
           </yd-radio-group>
@@ -40,8 +44,8 @@
         <!--多选-->
         <div v-show="false">
           <yd-checkbox-group v-model="voteCheckbox">
-            <yd-checkbox :val="items.id" v-for="items,index in selectList" :key="index" :class="'f-active-'+items.id">
-              <span>{{items.name}}</span>
+            <yd-checkbox :val="items.id" v-for="items,index in voteList.options" :key="index" :class="'f-active-'+items.id">
+              <span>{{items.o_name}}</span>
               <yd-icon name="yes_line" custom color="#fff"></yd-icon>
             </yd-checkbox>
           </yd-checkbox-group>
@@ -52,20 +56,37 @@
   </yd-layout>
 </template>
 <script>
+  import {mapState} from 'vuex'
   export default{
     data(){
       return {
         titleToggle:true,
         voteRadio:'',
-        selectList:[{'id':1,'name':'嘻嘻'},{'id':2,'name':'呵呵'},{'id':3,'name':'哈哈'},{'id':4,'name':'嘿嘿'}],
-        voteCheckbox:[]
+        voteList:[],
+        voteCheckbox:[],
+        v_id:'',
+        voteTime:'2019/06/06 06:06:06'
       }
     },
+    computed: {
+      ...mapState(["mid"])
+   },
     mounted(){
       var _self = this;
-
+      _self.v_id = _self.$route.query.id
+      _self.getList()
     },
     methods: {
+      getList(){
+        this.$fetch('/wap/meeting/vote',{
+          m_id:this.mid,
+          v_id:this.v_id
+        }).then(result=>{
+          let res = result.data
+
+          this.voteList = res
+        })
+      },
       confirm(){
         var _self = this;
         _self.$router.push({path:'/wap/voteDetails'})

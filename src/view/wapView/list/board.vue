@@ -39,7 +39,7 @@
             </div>
           </div>
         </yd-tab-panel>
-        <yd-tab-panel label="电子白板" :badge="elecNum">
+        <!--<yd-tab-panel label="电子白板" :badge="elecNum">
           <div class="m-board-view-bd">
             <yd-lightbox :num="elecList.length">
               <yd-grids-group :rows="2">
@@ -54,7 +54,7 @@
               <span v-else>暂无更多数据</span>
             </div>
           </div>
-        </yd-tab-panel>
+        </yd-tab-panel>-->
       </yd-tab>
       <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
         <yd-navbar slot="top" title="查看">

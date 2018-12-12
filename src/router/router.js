@@ -99,7 +99,8 @@ export const routerList = [
     path: '/wap/meetingList',
     name: 'wapMeetingList',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAd:false
     },
     component: resolve => require(["@/view/wapView/list/meetingList"], resolve)
   },{

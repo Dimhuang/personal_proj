@@ -7,36 +7,43 @@
         </div>
       </yd-navbar>
       <div class="m-wap-vote-list-content">
-        <yd-cell-group title="这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题这里是一个标题" v-for="(items,index) in 3" :key="index">
-          <yd-cell-item>
+        <yd-cell-group :title="items.datum_title" v-for="(items,index) in voteList" :key="index">
+          <yd-cell-item v-for="n in items.votes">
             <span slot="left">
-              <span class="f-fc-black f-ex">我的订单我的订单我的订单我的订单我的订单我的订单我的订单我的订单</span>
+              <span class="f-fc-black f-ex" v-text="n.vote_title"></span>
               <div>
-                <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="true">进行中</yd-badge>
+                <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="n.status==1">进行中</yd-badge>
                 <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
               </div>
 
             </span>
             <span slot="right">
-              <yd-button bgcolor="#28b464" color="#FFF" shape="circle" v-if="true" @click.native="goSelect">投票</yd-button>
-              <yd-button bgcolor="transparent" color="#0092ff" shape="circle" class="f-ex" v-else @click.native="goDetails">查看详情</yd-button>
-            </span>
-          </yd-cell-item>
-          <yd-cell-item>
-            <span slot="left">
-              <span class="f-fc-grey-black f-ex">我的订单我的订单我的订单我的订单我的订单我的订单我的订单我的订单</span>
-              <div>
-                <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="false">进行中</yd-badge>
-                <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
-              </div>
-
-            </span>
-            <span slot="right">
-              <yd-button bgcolor="#28b464" color="#FFF" shape="circle" v-if="false">投票</yd-button>
-              <yd-button color="#0092ff" shape="circle" class="f-ex" v-else @click.native="goDetails">查看详情</yd-button>
+              <yd-button bgcolor="#28b464" color="#FFF" shape="circle" v-if="n.status==1" @click.native="goSelect(n.id)">投票</yd-button>
+              <yd-button color="#0092ff" shape="circle" class="f-ex" v-else @click.native="goDetails(n.id)">查看详情</yd-button>
             </span>
           </yd-cell-item>
         </yd-cell-group>
+
+        <yd-cell-group title="默认投票">
+          <yd-cell-item v-for="item in voteNorList">
+            <span slot="left">
+              <span class="f-fc-black f-ex" v-text="item.vote_title"></span>
+              <div>
+                <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="item.status==1">进行中</yd-badge>
+                <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
+              </div>
+            </span>
+            <span slot="right">
+              <yd-button bgcolor="#28b464" color="#FFF" shape="circle" v-if="item.status==1" @click.native="goSelect(item.id)">投票</yd-button>
+              <yd-button color="#0092ff" shape="circle" class="f-ex" v-else @click.native="goDetails(item.id)">查看详情</yd-button>
+            </span>
+          </yd-cell-item>
+        </yd-cell-group>
+        <yd-backtop></yd-backtop>
+        <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+          <i class="el-icon-loading" v-if="!busy"></i>
+          <span v-else>暂无更多数据</span>
+        </div>
       </div>
     </yd-layout>
 </template>
@@ -47,7 +54,8 @@
         return {
           page:1,
           busy:true,
-          voteList:[]
+          voteList:[],
+          voteNorList:[],
         }
       },
       computed: {
@@ -67,18 +75,28 @@
             let res = result.data;
           if(result.msg=='success'){
             if(flag){
-              this.voteList = this.voteList.concat(res.data)
+              if(res.datum!=undefined){
+                this.voteList = this.voteList.concat(res.datum)
+              }
+              this.voteNorList = res.normal
               if(res.total<this.page*10){
                 this.busy=true
               }else{
                 this.busy=false
               }
             }else{
-              this.voteList = res.data
+              if(res.datum!=undefined){
+                this.voteList = res.datum
+              }else{
+                this.voteList = []
+              }
+
+              this.voteNorList = res.normal
               this.busy=false
             }
           }else{
             this.voteList = []
+            this.voteNorList = []
           }
         })
         },
@@ -89,13 +107,13 @@
             this.getList(true)
           }, 500);
         },
-        goSelect(){
+        goSelect(id){
           var _self = this;
-          _self.$router.push({path:'/wap/voteSelect'})
+          _self.$router.push({path:'/wap/voteSelect',query:{id:id}})
         },
-        goDetails(){
+        goDetails(id){
           var _self = this;
-          _self.$router.push({path:'/wap/voteDetails'})
+          _self.$router.push({path:'/wap/voteDetails',query:{id:id}})
         },
         back(){
           var _self = this;

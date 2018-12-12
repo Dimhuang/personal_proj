@@ -10,15 +10,16 @@
             <span>汇报人：{{items.reporter}}   {{items.place}}</span>
           </div>
           <div class="m-history-list-r">
-            <span class="f-end-ico" v-if="items.status==2">
-              <i>已结束</i>
+            <!--<span class="f-end-ico" v-if="items.status==2">
+              <i> </i>
             </span>
              <span class="f-restar" v-if="items.status==0">
-              <i>未开始</i>
+              <i> </i>
             </span>
              <span class="f-load-ico" v-else>
-              <i>进行中</i>
-            </span>
+              <i> </i>
+            </span>-->
+            <span></span>
             <p @click.stop="goList(items.id)">查看资料(<em v-text="items.file_count"></em>) ></p>
           </div>
         </li>

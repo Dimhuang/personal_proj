@@ -25,7 +25,9 @@
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else>暂无更多数据</span>
     </div>
-
+    <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="90%">
+      <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -40,7 +42,8 @@
         dtopicList:[],
         page:1,
         busy:true,
-        srcPath:' '
+        srcPath:' ',
+        dialogTableVisible:false
       }
     },
     computed: {
@@ -99,15 +102,28 @@
       },
       openView(path) {
         var _self = this;
-        if (_self.getType(path) == 'f-pdf-icon'||_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+        if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
-          _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+          _self.dialogTableVisible=true
+         /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
             dangerouslyUseHTMLString: true
           }).then(action => {
             _self.srcPath = ''
+          }).catch(action => {
+              _self.srcPath = ''
+          });*/
+        }else if(_self.getType(path) == 'f-pdf-icon'){
+          _self.srcPath = path
+          _self.dialogTableVisible=true
+         /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+            dangerouslyUseHTMLString: true
+          }).then(action => {
+            var elem = document.querySelector('.pswp');
+          elem.parentNode.removeChild(elem);
         }).catch(action => {
-            _self.srcPath = ''
-        });
+            var elem = document.querySelector('.pswp');
+          elem.parentNode.removeChild(elem);
+        });*/
         }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
 
         }else {
@@ -210,7 +226,8 @@
   }
   .el-message-box__content,
   .el-message-box__message ,
-  .el-message-box__message p{
+  .el-message-box__message p,
+  .el-dialog__body{
     height: 600px;
   }
   .el-message-box__btns{

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import {routers ,routerList} from './router'
-import { isMobile } from '../utils/utils'
+import { isMobile ,getRequest} from '../utils/utils'
 
 Vue.use(Router)
 
@@ -56,10 +56,19 @@ router.beforeEach((to, from, next)=>{
       }*/
     //}
   //客户端
+
+
+
     if(typeof jsObj === "undefined") {
       if (to.path === '/login' || to.path === '/wap/login') {next() } else {
         isMobile(function (is_mobile) {
           if (is_mobile) {
+            getRequest(function(item){
+              if(item.username!=null&&item.pwd!=null){
+                sessionStorage.setItem('adName' , item.username)
+                sessionStorage.setItem('adPwd' ,item.pwd)
+              }
+            })
             if (to.meta.requiresAuth && !sessionStorage.getItem('wapAccessToken')) {
               next({path: '/wap/login'})
             }

@@ -123,7 +123,7 @@
                       </div>
                     </div>
                   </el-tab-pane>
-                  <el-tab-pane label="电子白板" name="3">
+                  <!--<el-tab-pane label="电子白板" name="3">
                     <div slot="label">
                       <span v-text="elecNum"></span>
                       <p>电子白板</p>
@@ -141,11 +141,17 @@
                         <span v-else>暂无更多数据</span>
                       </div>
                     </div>
-                  </el-tab-pane>
+                  </el-tab-pane>-->
                 </el-tabs>
               </div>
             </el-tab-pane>
           </el-tabs>
+
+          <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="90%">
+            <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
+          </el-dialog>
+
+
         </div>
       </div>
     </m-body>
@@ -174,6 +180,7 @@
         elecPage:1,
         elecList:[],
         elecBusy:true,
+        dialogTableVisible:false,
         list: [
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s1.jpg'},
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s2.jpg'},
@@ -359,17 +366,23 @@
       },
       openView(path) {
         var _self = this;
-        if (_self.getType(path) == 'f-pdf-icon'||_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+        if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
-
-            _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+          _self.dialogTableVisible=true
+        /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
             dangerouslyUseHTMLString: true
           }).then(action => {
-              _self.srcPath = ''
-          }).catch(action => {
             _self.srcPath = ''
-          });
-          }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+          }).catch(action => {
+              _self.srcPath = ''
+          });*/
+        }else if(_self.getType(path) == 'f-pdf-icon'){
+          _self.srcPath = path
+          /*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+            dangerouslyUseHTMLString: true
+          })*/
+          _self.dialogTableVisible=true
+        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
 
           }else {
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
@@ -578,7 +591,8 @@
   }
   .el-message-box__content,
   .el-message-box__message ,
-  .el-message-box__message p{
+  .el-message-box__message p,
+  .el-dialog__body{
     height: 600px;
   }
 

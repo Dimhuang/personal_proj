@@ -52,6 +52,11 @@
           if(sessionStorage.getItem('userName')!=null){
             sessionStorage.remove('userName')
           }
+          if(sessionStorage.getItem('adName')!=null&&sessionStorage.getItem('adPwd')!=null){
+            this.userTxt = sessionStorage.getItem('adName')
+            this.pwdTxt = sessionStorage.getItem('adPwd')
+            this.login()
+          }
         },
         methods:{
           login(){
