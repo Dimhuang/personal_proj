@@ -25,15 +25,14 @@
       <div class="m-wap-vote-select-content">
         <div class="m-wap-vote-select-content-title">
           <span>投票选项</span>
-          <span>单选</span>
-          <span>
-
-            <yd-countdown :time="voteTime" format="{%s}秒】{%m}分】{%h}时】{%d}天】"></yd-countdown>
-
+          <span v-if="voteList.is_multiple==0">单选</span>
+          <span v-else>多选</span>
+          <span v-if="voteList.is_countdown==1">
+            <yd-countdown :time="voteTime" format="{%d}天  {%h}:{%m}:{%s}" :callback="timeOff()"></yd-countdown>
           </span>
         </div>
         <!--单选-->
-        <div v-show="true">
+        <div v-show="voteList.is_multiple==0">
           <yd-radio-group v-model="voteRadio">
             <yd-radio :val="items.id" v-for="items,index in voteList.options" :key="index" :class="{'f-active':items.id == voteRadio}">
               <span>{{items.o_name}}</span>
@@ -42,7 +41,7 @@
           </yd-radio-group>
         </div>
         <!--多选-->
-        <div v-show="false">
+        <div v-show="voteList.is_multiple==1">
           <yd-checkbox-group v-model="voteCheckbox">
             <yd-checkbox :val="items.id" v-for="items,index in voteList.options" :key="index" :class="'f-active-'+items.id">
               <span>{{items.o_name}}</span>
@@ -65,7 +64,7 @@
         voteList:[],
         voteCheckbox:[],
         v_id:'',
-        voteTime:'2019/06/06 06:06:06'
+        voteTime:''
       }
     },
     computed: {
@@ -83,13 +82,41 @@
           v_id:this.v_id
         }).then(result=>{
           let res = result.data
-
           this.voteList = res
+         if(res.is_countdown==1){
+            this.voteTime = res.time_limit.replace(/-/g,"/")
+          }
         })
       },
       confirm(){
         var _self = this;
-        _self.$router.push({path:'/wap/voteDetails'})
+        var parmes = {}
+        if(_self.voteList.is_multiple==0){
+          parmes = {
+            v_id:_self.v_id,
+            o_id:_self.voteRadio
+          }
+        }else{
+          parmes = {
+            v_id:_self.v_id,
+            o_id:_self.voteCheckbox
+          }
+        }
+
+        _self.$post('/wap/meeting/cast_vote',parmes).then(result=>{
+          if(result.msg=='success'){
+            _self.$router.push({path:'/wap/voteDetails',query:{id:_self.v_id}})
+          }else{
+            _self.$dialog.notify({
+              mes: result.message,
+              timeout: 2000,})
+          }
+        })
+      },
+      timeOff(){
+        if(this.voteList.is_countdown==1){
+          _self.$router.push({path:'/wap/voteDetails',query:{id:_self.v_id}})
+        }
       },
       back(){
         var _self = this;
@@ -100,15 +127,15 @@
       'voteCheckbox'(){
         var _self = this;
         if(_self.voteCheckbox.length!=0){
-          for(var j=0;j<_self.selectList.length;j++){
-            document.querySelector('.f-active-'+_self.selectList[j].id).classList.remove('f-active')
+          for(var j=0;j<_self.voteList.options.length;j++){
+            document.querySelector('.f-active-'+_self.voteList.options[j].id).classList.remove('f-active')
             for(var i=0;i<_self.voteCheckbox.length;i++){
               document.querySelector('.f-active-'+_self.voteCheckbox[i]).classList.add('f-active')
             }
           }
         }else{
-          for(var j=0;j<_self.selectList.length;j++){
-            document.querySelector('.f-active-'+_self.selectList[j].id).classList.remove('f-active')
+          for(var j=0;j<_self.voteList.options.length;j++){
+            document.querySelector('.f-active-'+_self.voteList.options[j].id).classList.remove('f-active')
           }
         }
       }

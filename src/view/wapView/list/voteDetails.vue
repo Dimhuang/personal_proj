@@ -13,32 +13,31 @@
           <div>
             <span class="fl">投票描述</span>
             <span class="fr">
-               <yd-button size="large" type="hollow" shape="circle" @click.native="titleToggle=!titleToggle">
+               <yd-button size="large" type="hollow" shape="circle" @click.native="titleToggle=!titleToggle" v-if="voteList.description!=''">
                  <span v-if="titleToggle">展开</span>
                  <span v-else>收起</span>
                </yd-button>
             </span>
           </div>
-          <p :class="{'f-clamp-line-2':titleToggle}">s1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1ds1d</p>
+          <p :class="{'f-clamp-line-2':titleToggle}" v-text="voteList.description"></p>
         </div>
       </div>
       <div class="m-wap-vote-select-content">
         <div class="m-wap-vote-select-content-title">
           <span>投票选项</span>
-          <span>单选</span>
-          <span>00:00:30</span>
-          <span class="f-ex">
-            <em>未投 :</em>
-            <em>3</em>
+          <span v-if="voteList.is_multiple==0">单选</span>
+          <span v-else>多选</span>
+          <span v-if="voteList.is_countdown==1">
+            <yd-countdown :time="voteTime" format="{%d}天  {%h}:{%m}:{%s}"></yd-countdown>
           </span>
         </div>
         <div>
           <ul>
-            <li class="vote-detail-progressbar-list" v-for="item in totalList" >
-              <yd-progressbar type="line" :progress="(item.num/100)" trail-width="10" trail-color="#8bc34a"> </yd-progressbar>
+            <li class="vote-detail-progressbar-list" v-for="item in voteList.options" >
+              <yd-progressbar type="line" :progress="(item.num/voteList.all_user)" trail-width="10" trail-color="#8bc34a"> </yd-progressbar>
               <div class="f-text">
-                <span v-text="item.name"></span>
-                <span class="f-ex" v-text="item.num+'% ('+item.user+')'"></span>
+                <span v-text="item.o_name"></span>
+                <span class="f-ex" v-text="(item.num/voteList.all_user).toFixed(2)+'% ('+item.num+')'"></span>
               </div>
             </li>
           </ul>
@@ -46,23 +45,40 @@
 
       </div>
     </div>
-    <yd-button size="large" bgcolor="#1791ff" color="#fff" shape="angle" slot="bottom" class="f-bottom-btn">备注</yd-button>
+    <!--<yd-button size="large" bgcolor="#1791ff" color="#fff" shape="angle" slot="bottom" class="f-bottom-btn">备注</yd-button>-->
   </yd-layout>
 </template>
 <script>
+  import {mapState} from 'vuex'
   export default{
     data(){
       return {
         titleToggle:true,
-        totalList:[{'id':1,'name':'嘻嘻','num':'50','user':7},{'id':2,'name':'呵呵','num':'10','user':1},{'id':3,'name':'哈哈','num':'20','user':2},{'id':4,'name':'嘿嘿','num':'10','user':1}],
+        voteList:[],
+        v_id:''
       }
+    },
+    computed: {
+      ...mapState(["mid"])
     },
     mounted(){
       var _self = this;
-
+      _self.v_id = _self.$route.query.id
+      _self.getList()
     },
     methods: {
-
+      getList(){
+        this.$fetch('/wap/meeting/vote',{
+          m_id:this.mid,
+          v_id:this.v_id
+        }).then(result=>{
+          let res = result.data
+          this.voteList = res
+          if(res.is_countdown==1){
+            this.voteTime = res.time_limit.replace(/-/g,"/")
+          }
+        })
+      },
       back(){
         var _self = this;
         _self.$router.push({path:'/wap/vote'})

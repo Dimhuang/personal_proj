@@ -77,6 +77,8 @@
             if(flag){
               if(res.datum!=undefined){
                 this.voteList = this.voteList.concat(res.datum)
+              }else{
+
               }
               this.voteNorList = res.normal
               if(res.total<this.page*10){
