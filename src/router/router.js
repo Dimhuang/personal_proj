@@ -50,7 +50,17 @@ export const routerList = [
       },{
         path: '/list/historyList/stmpfile',
         name:'stmpfile',
+        meta: {
+          requiresAuth: true
+        },
         component: resolve => require(["@/view/pcView/list/historyStmpFiles"], resolve)
+      },{
+        path: '/list/historyList/stmpfileFolder',
+        name:'stmpfileFolder',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyStmpfileFolder"], resolve)
       },{
         path: '/list/historyList/stmpfileDetails',
         name:'stmpfileDetails',
@@ -138,6 +148,13 @@ export const routerList = [
       requiresAuth: true
     },
     component: resolve => require(["@/view/wapView/list/topicFolderList"], resolve)
+  },{
+    path: '/wap/stmpFileFolder',
+    name: 'wapStmpFileFolder',
+    meta: {
+      requiresAuth: true
+    },
+    component: resolve => require(["@/view/wapView/list/stmpFileFolder"], resolve)
   },{
     path: '/wap/topicFileList',
     name: 'wapTopicFileList',

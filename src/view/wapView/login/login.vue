@@ -49,9 +49,13 @@
             }
         },
         created(){
-          if(sessionStorage.getItem('userName')!=null){
+        /*  if(sessionStorage.getItem('userName')!=null){
             sessionStorage.remove('userName')
           }
+
+          console.log(sessionStorage.getItem('adName'))*/
+
+
           if(sessionStorage.getItem('adName')!=null&&sessionStorage.getItem('adPwd')!=null){
             this.userTxt = sessionStorage.getItem('adName')
             this.pwdTxt = sessionStorage.getItem('adPwd')
@@ -70,7 +74,8 @@
                 password:this.pwdTxt
               }).then(result=>{
                 if(result.msg == 'success'){
-                  sessionStorage.setItem('wapAccessToken' , true)
+                sessionStorage.setItem('wapAccessToken' , true)
+                sessionStorage.setItem('accessToken' , true)
                   sessionStorage.setItem('userName' , result.user.username)
                   this.goIndex()
                 }else{

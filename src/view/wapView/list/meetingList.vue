@@ -44,7 +44,7 @@
                   <em :class="{'f-visibility':n.is_secrect==0}">保密会议，需向管理员申请权限</em>
                   <h2 v-text="n.name"></h2>
                   <div class="f-flex-content">
-                        <span class="f-flex-item">
+                       <!-- <span class="f-flex-item">
                           <b v-text="n.datum_count"></b>
                           <p>议题</p>
                         </span>
@@ -59,7 +59,7 @@
                         <span class="f-flex-item">
                           <b v-text="n.whiteboard_count"></b>
                           <p>白板</p>
-                        </span>
+                        </span>-->
                   </div>
                 </div>
               </div>

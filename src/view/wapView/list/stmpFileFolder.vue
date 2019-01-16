@@ -1,17 +1,33 @@
 <template>
   <yd-layout>
-    <yd-navbar slot="navbar" :title="folderNameTxt">
+    <yd-navbar slot="navbar" :title="title">
       <div slot="left" @click.stop="back">
         <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
         <span>返回</span>
       </div>
     </yd-navbar>
+    <yd-cell-group class="m-wap-folder-list-hd" v-if="showType==1">
+      <yd-cell-item>
+          <span slot="left">
+            <h2 v-text="topicTitle.name"></h2>
+            <p class="f-flex-content f-ex">
+              <span>汇报人：</span>
+              <span class="f-flex-item" v-text="topicTitle.reporter"></span>
+            </p>
+             <p class="f-flex-content">
+               <span>列席人员：</span>
+               <span class="f-flex-item" style="word-break: break-all" v-text="topicTitle.users"></span>
+             </p>
+          </span>
+      </yd-cell-item>
+    </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd">
-      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="openView(n.filepath)">
+      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)">
         <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
         </yd-lightbox>
-        <i :class="getType(n.filepath)" slot="icon"></i>
+        <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
+        <i  v-else :class="getType(n.filename)" slot="icon"></i>
         <span slot="left" v-text="n.filename"></span>
       </yd-cell-item>
     </yd-cell-group>
@@ -32,111 +48,104 @@
   </yd-layout>
 </template>
 <script>
-  import { fileType } from '@/utils/utils'
   import {mapState} from 'vuex'
+  import { fileType } from '@/utils/utils'
   export default{
     data(){
       return {
         showType:'1',
-        folderNameTxt:'',
-        topicNameTxt:'',
+        title:'',
+        topicTitle:[],
         did:'',
-        fid:'',
-        fileType:'',
         page:1,
         topicList:[],
         busy:true,
         fileType:'',
         srcPath:'',
-        showRight:false,
-        o_fid:'',
-        o_f_name:''
+        showRight:false
       }
     },
     computed: {
       ...mapState(["wapFunType","mid"])
-    },
-    mounted(){
-      var _self = this;
-      _self.folderNameTxt = _self.$route.query.f_name
-      _self.fid = _self.$route.query.id
-      _self.showType = _self.$route.query.type
-      if(_self.showType==1){
-        _self.did = _self.$route.query.did
-        _self.fileType = 'datum'
-      }else{
-        _self.o_f_name = _self.$route.query.o_f_name
-        _self.o_fid = _self.$route.query.o_fid
-        _self.fileType = 'stmpfile'
-        _self.did = 0
-      }
+  },
+  mounted(){
+    var _self = this;
+    _self.showType = _self.$route.query.type
+      _self.title = _self.$route.query.f_name
+      _self.fileType = 'stmpfile'
+      _self.fid =_self.$route.query.fid
     _self.getfile()
+  },
+  methods: {
+    getType(name){
+      var file = fileType(name,2)
+      return file;
     },
-    methods: {
-      getType(name){
-        var file = fileType(name,2)
-        return file;
-      },
-      getfile(flag){
-        this.$fetch('/wap/meeting/files',{
-          m_id:this.mid,
-          type: this.fileType,
-          file_id:this.fid,
-          pagesize:10,
-          page:this.page
-        }).then(result=>{
-          let res = result.data;
-        if(result.msg=='success'){
-          if(flag){
-            this.topicList = this.topicList.concat(res.data)
-            if(res.total<this.page*10){
-              this.busy=true
-            }else{
-              this.busy=false
-            }
+    getfile(flag){
+      this.$fetch('/wap/meeting/files',{
+        m_id:this.mid,
+        type: 'stmpfile',
+        d_id:0,
+        file_id:this.fid,
+        pagesize:10,
+        page:this.page
+      }).then(result=>{
+        let res = result.data;
+      if(result.msg=='success'){
+        if(flag){
+          this.topicList = this.topicList.concat(res.data)
+          if(res.total<this.page*10){
+            this.busy=true
           }else{
-            this.topicList = res.data
             this.busy=false
           }
         }else{
-          this.topicList = []
+          this.topicList = res.data
+          this.busy=false
         }
-      })
-      },
-      loadMore(){
-        this.busy = true;
-        setTimeout(() => {
-          this.page++;
-          this.getfile(true)
-        }, 500);
-      },
-      back(){
-        var _self = this;
-        if(_self.showType==1){
-          _self.$router.push({path:'/wap/topicFolderList',query: {type: _self.showType,did:_self.did}})
-        }else{
-          _self.$router.push({path:'/wap/stmpFileFolder',query:{fid:_self.o_fid,f_name:_self.o_f_name,type:_self.showType}})
-        }
+      }else{
+        this.topicList = []
+      }
+    })
+    },
+    loadMore(){
+      this.busy = true;
+      setTimeout(() => {
+        this.page++;
+      this.getfile(true)
+    }, 500);
+    },
+    goDetails(data){
+      var _self = this;
+      if(data.is_directory==1){
+        _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,o_f_name:_self.title,o_fid:_self.fid,did:_self.fid,type:_self.showType}})
+      }else{
+        // alert('这是文档');
+        _self.openView(data.filepath)
+      }
+    },
+    back(){
+      var _self = this;
+      _self.$router.push({path:'/wap/topicFolderList',query: { type:2}})
+    },
+    cencel:function(){
+      var _self = this;
+      _self.srcPath = ''
+      _self.showRight = false
+    },
+    openView(path) {
+      var _self = this;
+      if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+        _self.srcPath = path
+        _self.showRight = true
+      }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
 
-      },
-      cencel:function(){
-        var _self = this;
-        _self.srcPath = ''
-        _self.showRight = false
-      },
-      openView(path) {
-        var _self = this;
-        if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
-          _self.srcPath = path
-          _self.showRight = true
-        }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
-
-        }else {
-          _self.srcPath = path
-          window.location.href = _self.srcPath
-        }
+      }else {
+        _self.srcPath = path
+        window.location.href = _self.srcPath
       }
     }
+  }
   }
 </script>
 <style>
@@ -144,6 +153,9 @@
     padding:0.2rem 0.5rem;
     background-color: #fff;
     margin-bottom: 0;
+  }
+  .m-wap-folder-list-hd .yd-cell:after{
+    height: 0;
   }
   .m-wap-folder-list-hd .yd-cell-item,
   .m-wap-folder-list-hd .yd-cell-right,

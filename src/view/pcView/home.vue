@@ -29,7 +29,7 @@
                       <em :class="{'f-visibility':items.is_secrect==0}">保密会议，需向管理员申请权限</em><!---->
                       <h2 v-text="items.name"></h2>
                       <div class="f-flex-content">
-                        <span class="f-flex-item">
+                       <!-- <span class="f-flex-item">
                           <b v-text="items.datum_count"></b>
                           <p>议题</p>
                         </span>
@@ -44,7 +44,7 @@
                         <span class="f-flex-item">
                            <b v-text="items.whiteboard_count"></b>
                           <p>白板</p>
-                        </span>
+                        </span>-->
                       </div>
                     </div>
                   </div>
@@ -123,11 +123,18 @@
           })*/
 
           if((sessionStorage.getItem('objName')!=null)&&(sessionStorage.getItem('objPwd')!=null)){
+            var noPw = '';
             console.log(sessionStorage.getItem('objName'))
             console.log(sessionStorage.getItem('objPwd'))
+            if(sessionStorage.getItem('objPwd') == ''){
+              noPw=1
+            }else{
+              noPw=0
+            }
             this.$post('/wap/User/login',{
               account:sessionStorage.getItem('objName'),
-              password:sessionStorage.getItem('objPwd')
+              password:sessionStorage.getItem('objPwd'),
+              density_free:noPw
             }).then(result=>{
                 sessionStorage.setItem('accessToken' , true)
                 sessionStorage.removeItem('keepMid')

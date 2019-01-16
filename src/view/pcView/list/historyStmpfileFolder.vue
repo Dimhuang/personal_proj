@@ -2,19 +2,19 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click.native="goMain">临时资料</el-breadcrumb-item>
-      <el-breadcrumb-item @click.native="goList">{{outFolderNameTxt}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content"  v-for="items in topicList">
         <div class="f-flex-item m-history-topics-list-file">
-          <div class="fl" :class="getType(items.filename)"></div>
+          <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
+          <div class="fl" v-else :class="getType(items.filename)"></div>
           <div class="f-ellipsis" v-text="items.filename"></div>
         </div>
         <div class="m-history-list-r">
-          <el-button size="mini" round  @click.native="openView(items.filepath)">
-           <!-- <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
-            <span v-else>打开</span>-->
+          <el-button size="mini" round  @click.native="goDetails(items)">
+            <!-- <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
+             <span v-else>打开</span>-->
             <span>打开</span>
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
@@ -38,12 +38,10 @@
     data(){
       return {
         folderNameTxt:'',
-        outFolderNameTxt:'',
         topicList:[],
         page:1,
         busy:true,
         fid:'',
-        o_fid:'',
         srcPath:' ',
         dialogTableVisible:false
       }
@@ -51,96 +49,96 @@
     computed: {
       ...mapState(["mid"])
   },
-    mounted(){
-      this.fid = this.$route.query.id
-      this.folderNameTxt = this.$route.query.f_name
-      this.outFolderNameTxt = this.$route.query.name
-      this.o_fid = this.$route.query.o_fid
-
-
-      this.getfile()
+  mounted(){
+    this.folderNameTxt = this.$route.query.f_name
+    this.fid = this.$route.query.id
+    this.getfile()
+  },
+  methods:{
+    getType(name){
+      var file = fileType(name,1)
+      return file;
     },
-    methods:{
-      getType(name){
-        var file = fileType(name,1)
-        return file;
-      },
-      getfile(flag){
-        this.$fetch('/wap/meeting/files',{
-          m_id:this.mid,
-          type:'stmpfile',
-          file_id:this.fid,
-          pagesize:10,
-          page:this.page
-        }).then(result=>{
-          let res = result.data;
-        if(result.msg=='success'){
-          if(flag){
-            this.topicList = this.topicList.concat(res.data)
-            if(res.total<this.page*10){
-              this.busy=true
-            }else{
-              this.busy=false
-            }
+    getfile(flag){
+      this.$fetch('/wap/meeting/files',{
+        m_id:this.mid,
+        type:'stmpfile',
+        file_id:this.fid,
+        pagesize:10,
+        page:this.page
+      }).then(result=>{
+        let res = result.data;
+      if(result.msg=='success'){
+        if(flag){
+          this.topicList = this.topicList.concat(res.data)
+          if(res.total<this.page*10){
+            this.busy=true
           }else{
-            this.topicList = res.data
             this.busy=false
           }
         }else{
-          this.topicList = []
+          this.topicList = res.data
+          this.busy=false
         }
-      })
-      },
-      loadMore(){
-        this.busy = true;
-        setTimeout(() => {
-          this.page++;
-          this.getfile(true)
-        }, 500);
-      },
-      goList(){
-        var _self = this;
-        _self.$router.push({path:'/list/historyList/stmpfileFolder',query:{id:_self.o_fid,'f_name':_self.outFolderNameTxt}})
-      },
-      goMain(){
-        this.$router.push({path:'/list/historyList/stmpfile'})
-      },
-      openView(path) {
-        var _self = this;
-        if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
-          _self.srcPath = path
-          _self.dialogTableVisible=true
+      }else{
+        this.topicList = []
+      }
+    })
+    },
+    loadMore(){
+      this.busy = true;
+      setTimeout(() => {
+        this.page++;
+        this.getfile(true)
+      }, 500);
+    },
+    goMain(){
+      this.$router.push({path:'/list/historyList/stmpfile'})
+    },
+    goDetails(data){
+      let _self = this;
+      if(data.is_directory==1){
+        _self.$router.push({path:'/list/historyList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
+      }else{
+        _self.openView(data.filepath);
+      }
+    },
+    openView(path) {
+      var _self = this;
+      if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+        _self.srcPath = path
+        _self.dialogTableVisible=true
 
-         /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-            dangerouslyUseHTMLString: true
-          }).then(action => {
-            _self.srcPath = ''
-        }).catch(action => {
-            _self.srcPath = ''
-        });*/
-        }else if(_self.getType(path) == 'f-pdf-icon'){
-          _self.srcPath = path
-          _self.dialogTableVisible=true
+        /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+         dangerouslyUseHTMLString: true
+         }).then(action => {
+         _self.srcPath = ''
+         }).catch(action => {
+         _self.srcPath = ''
+         });*/
+      }else if(_self.getType(path) == 'f-pdf-icon'){
+        _self.srcPath = path
+        _self.dialogTableVisible=true
         /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-            dangerouslyUseHTMLString: true
-          }).then(action => {
-            var elem = document.querySelector('.pswp');
-          elem.parentNode.removeChild(elem);
-        }).catch(action => {
-            var elem = document.querySelector('.pswp');
-          elem.parentNode.removeChild(elem);
-        });*/
-        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+         dangerouslyUseHTMLString: true
+         }).then(action => {
+         var elem = document.querySelector('.pswp');
+         elem.parentNode.removeChild(elem);
+         }).catch(action => {
+         var elem = document.querySelector('.pswp');
+         elem.parentNode.removeChild(elem);
+         });*/
+      }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
 
-        }else {
-          /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-           dangerouslyUseHTMLString: true
-           });*/
-          _self.srcPath = path
-          window.location.href = _self.srcPath
-        }
+      }else {
+        /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+         dangerouslyUseHTMLString: true
+         });*/
+        _self.srcPath = path
+        window.location.href = _self.srcPath
       }
     }
+  }
   }
 </script>
 <style>

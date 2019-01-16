@@ -46,7 +46,7 @@
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else>暂无更多数据</span>
     </div>
-    <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="90%">
+    <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
       <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
     </el-dialog>
   </div>

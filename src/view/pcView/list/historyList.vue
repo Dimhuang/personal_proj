@@ -31,6 +31,13 @@
                   </div>
                 </li>-->
                 <li class="m-history-list">
+                  <i class="iconfont pl-hyxx_time_n"></i>
+                  <div>
+                    <span>会议时间：</span>
+                    <p class="f-fc-orange" v-text="meetingMsg.start_time + '开始'"></p>
+                  </div>
+                </li>
+                <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hycs_n"></i>
                   <div>
                     <span>会议场所：</span>
@@ -49,6 +56,13 @@
                   <div>
                     <span>会议简介：</span>
                     <p v-text="meetingMsg.description"></p><p v-if="meetingMsg.description==''" style="visibility: hidden">a</p>
+                  </div>
+                </li>
+                <li class="m-history-list">
+                  <i class="iconfont pl-hyxx_hymd_n"></i>
+                  <div>
+                    <span>参会名单：</span>
+                    <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
                 <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openView(meetingMsg.agenda_path)">
@@ -147,7 +161,7 @@
             </el-tab-pane>
           </el-tabs>
 
-          <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="90%">
+          <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
             <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
           </el-dialog>
 
@@ -587,7 +601,7 @@
   }
 
   .el-message-box{
-    width: 90% !important;
+    width: 70% !important;
   }
   .el-message-box__content,
   .el-message-box__message ,

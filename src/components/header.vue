@@ -7,7 +7,7 @@
     </div>
     <div class="f-right-box">
       <!--<span><i class="iconfont pl-user"></i></span>-->
-      <span @click.stop="login"><i class="iconfont pl-icon_sign_out_n"></i></span>
+      <span @click.stop="login" v-if="false"><i class="iconfont pl-icon_sign_out_n"></i></span>
     </div>
   </div>
 </template>
@@ -16,10 +16,17 @@
     export default{
         data(){
             return {
-                msg: 'hello vue'
+              msg: 'hello vue',
+              aaaa:false
             }
         },
         components: {
+
+        },
+        created(){
+          var _self = this
+          console.log('1'+sessionStorage.getItem('showLogin'))
+          _self.aaaa = sessionStorage.getItem('showLogin')
 
         },
         methods:{

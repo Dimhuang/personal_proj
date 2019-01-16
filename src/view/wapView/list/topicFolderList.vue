@@ -137,7 +137,11 @@
         goDetails(data){
           var _self = this;
           if(data.is_directory==1){
-            _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,did:_self.did,type:_self.showType}})
+            if( _self.fileType == 'datum'){
+              _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,did:_self.did,type:_self.showType}})
+            }else{
+              _self.$router.push({path:'/wap/stmpFileFolder',query:{fid:data.id,f_name:data.filename,type:_self.showType}})
+            }
           }else{
            // alert('这是文档');
             _self.openView(data.filepath)

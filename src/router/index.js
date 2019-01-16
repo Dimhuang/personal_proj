@@ -55,11 +55,16 @@ router.beforeEach((to, from, next)=>{
         })
       }*/
     //}
+
+  if(to.path === '/'){
+    sessionStorage.removeItem('wapAccessToken')
+    sessionStorage.removeItem('accessToken')
+  }
+
   //客户端
-
-
-
+  sessionStorage.removeItem('showLogin')
     if(typeof jsObj === "undefined") {
+      sessionStorage.setItem('showLogin' ,true)
       if (to.path === '/login' || to.path === '/wap/login') {next() } else {
         isMobile(function (is_mobile) {
           if (is_mobile) {
@@ -85,6 +90,7 @@ router.beforeEach((to, from, next)=>{
           }
         })
       }
+
     }else {
       var token= JSON.parse(jsObj.getUser())
       console.log(token)
@@ -92,6 +98,7 @@ router.beforeEach((to, from, next)=>{
       console.log(token.userJson.passWord)
       sessionStorage.setItem('objName' , token.userJson.userName)
       sessionStorage.setItem('objPwd' ,token.userJson.passWord)
+      sessionStorage.setItem('showLogin' ,false)
       next()
     }
 
