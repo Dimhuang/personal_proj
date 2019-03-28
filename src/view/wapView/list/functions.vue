@@ -27,10 +27,10 @@
           <img slot="icon" src="../../../assets/img/but_lswj.png">
           <span slot="text">临时文件</span>
         </yd-grids-item>
-        <!--<yd-grids-item @click.native="goVote" v-if="wapFunType==1">
+        <yd-grids-item @click.native="goVote" v-if="wapFunType==1">
           <img slot="icon" src="../../../assets/img/but_hytp.png">
           <span slot="text">会议投票</span>
-        </yd-grids-item>-->
+        </yd-grids-item>
         <yd-grids-item @click.native="goBoard" v-if="wapFunType==2">
           <img slot="icon" src="../../../assets/img/but_pzbb.png">
           <span slot="text">批注白板</span>

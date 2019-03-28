@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Message } from 'element-ui';
 
 axios.defaults.timeout = 5000;
-//axios.defaults.baseURL ='/api';
+//axios.defaults.baseURL ='/api'; // 打包时需隐藏
 
 
 //http request 拦截器
