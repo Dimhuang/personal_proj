@@ -30,6 +30,7 @@
               <span class="f-fc-black f-ex" v-text="item.vote_title"></span>
               <div>
                 <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="item.status==1">进行中</yd-badge>
+                <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="item.status==0">未开启</yd-badge>
                 <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
               </div>
             </span>

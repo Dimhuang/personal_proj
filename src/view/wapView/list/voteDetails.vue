@@ -8,18 +8,19 @@
     </yd-navbar>
     <div class="m-wap-vote-select-view">
       <div class="m-wap-vote-select-title">
-        <h2 class="f-clamp-line-2">关于关吉宫担任保伦大酒店首席掌勺的表决</h2>
+        <h2 class="f-clamp-line-2" v-text="voteList.vote_title"></h2>
         <div class="m-wap-vote-select-title-bd">
           <div>
             <span class="fl">投票描述</span>
-            <span class="fr">
+            <span class="fr" v-if="false">
                <yd-button size="large" type="hollow" shape="circle" @click.native="titleToggle=!titleToggle" v-if="voteList.description!=''">
                  <span v-if="titleToggle">展开</span>
                  <span v-else>收起</span>
                </yd-button>
             </span>
           </div>
-          <p :class="{'f-clamp-line-2':titleToggle}" v-text="voteList.description"></p>
+          <!--<p :class="{'f-clamp-line-2':titleToggle}" v-text="voteList.description"></p>-->
+          <p v-text="voteList.description"></p>
         </div>
       </div>
       <div class="m-wap-vote-select-content">

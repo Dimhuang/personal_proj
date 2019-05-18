@@ -7,11 +7,11 @@
       </div>
     </yd-navbar>
     <yd-cell-group class="m-wap-folder-list-bd">
-      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="openView(n.filepath)">
-        <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="openView(n.filepath,n)">
+       <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
-        </yd-lightbox>
-        <i :class="getType(n.filepath)" slot="icon"></i>
+        </yd-lightbox>-->
+        <i :class="getType(n.filename)" slot="icon"></i>
         <span slot="left" v-text="n.filename"></span>
       </yd-cell-item>
     </yd-cell-group>
@@ -124,8 +124,21 @@
         _self.srcPath = ''
         _self.showRight = false
       },
-      openView(path) {
+      openView(path,data) {
         var _self = this;
+        if(_self.getType(data.filename) == 'f-wap-na-icon'){
+          _self.$dialog.toast({
+            mes: '格式不支持！',
+            timeout: 1500
+          });
+        }else{
+          if(data.filepathex==''){
+            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+          }else{
+            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+          }
+        }
+        return
         if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
           _self.srcPath = path
           _self.showRight = true

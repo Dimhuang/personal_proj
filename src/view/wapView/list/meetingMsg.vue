@@ -62,7 +62,7 @@
               <p v-text="meetingMsgList.description"></p>
             </span>
           </yd-cell-item>
-          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''"  @click.native="openView(meetingMsgList.agenda_path)">
+          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''"  @click.native="openView(meetingMsgList.agenda_path,meetingMsgList.agenda_id)">
             <span slot="left">
                 <yd-icon name="hyxx_hyfa_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
@@ -131,8 +131,17 @@
             _self.srcPath = ''
             _self.showRight = false
           },
-          openView(path) {
+          openView(path,id,data) {
             var _self = this;
+            if(_self.getType(meetingMsgList.agenda_name) == 'f-wap-na-icon'){
+              _self.$dialog.toast({
+                mes: '格式不支持！',
+                timeout: 1500
+              });
+            }else{
+              window.location.href = 'wzh://itc?id='+id+'&path='+path
+            }
+            return
             if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
               _self.srcPath = path
               _self.showRight = true

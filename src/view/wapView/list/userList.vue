@@ -20,8 +20,8 @@
             <span class="f-flex-item" v-text="index<9?('0'+(index+1)):(index+1)"></span>
             <span class="f-flex-item" v-text="n.username"></span>
             <span class="f-flex-item">
-              <span v-if="n.is_chairman==1">管理</span>
-              <span v-else-if="n.secretary==1">管理</span>
+              <span v-if="n.is_chairman==1">主持</span>
+              <span v-else-if="n.secretary==1">秘书</span>
               <span v-else>参会</span>
             </span>
             <span class="f-flex-item2" v-text="n.unit"></span>

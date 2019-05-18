@@ -12,10 +12,10 @@
           <div class="f-ellipsis" v-text="items.filename"></div>
         </div>
         <div class="m-history-list-r">
-          <el-button size="mini" round  @click.native="openView(items.filepath)">
-           <!-- <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
-            <span v-else>打开</span>-->
-            <span>打开</span>
+          <el-button size="mini" round  @click.native="openView(items.filepath,items)">
+            <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
+            <span v-else>打开</span>
+            <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
         </div>
@@ -105,7 +105,7 @@
       goMain(){
         this.$router.push({path:'/list/historyList/stmpfile'})
       },
-      openView(path) {
+      openView(path,data) {
         var _self = this;
         if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
@@ -136,8 +136,13 @@
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
            dangerouslyUseHTMLString: true
            });*/
-          _self.srcPath = path
-          window.location.href = _self.srcPath
+          if(typeof jsObj === "undefined") {
+            _self.srcPath = data.path
+            window.location.href = _self.srcPath
+          }else{
+            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
+            jsObj.downloadFile(JSON.stringify(parems))
+          }
         }
       }
     }

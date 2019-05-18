@@ -23,9 +23,9 @@
     </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd">
       <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)">
-        <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+       <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
-        </yd-lightbox>
+        </yd-lightbox>-->
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
         <i  v-else :class="getType(n.filename)" slot="icon"></i>
         <span slot="left" v-text="n.filename"></span>
@@ -121,7 +121,21 @@
         _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,o_f_name:_self.title,o_fid:_self.fid,did:_self.fid,type:_self.showType}})
       }else{
         // alert('这是文档');
-        _self.openView(data.filepath)
+        //_self.openView(data.filepath)
+        //window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath + data.filepathex
+        if(_self.getType(data.filename) == 'f-wap-na-icon'){
+          _self.$dialog.toast({
+            mes: '格式不支持！',
+            timeout: 1500
+          });
+        }else{
+          if(data.filepathex==''){
+            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+          }else{
+            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+          }
+        }
+
       }
     },
     back(){

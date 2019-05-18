@@ -16,6 +16,9 @@
                   <p>会议列表</p>
                 </span>
               </div>
+              <div class="m-main-nav-btn">
+                <el-button type="primary" round @click.native="refreshList()">刷新列表</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -150,6 +153,12 @@
           }
         },
         methods:{
+          refreshList(){
+            this.hisPage = 1
+            this.metPage = 1
+            this.getHistorytList(false)
+            this.getMeetingList(false)
+          },
           getHistorytList(flag){
             this.$fetch('/wap/meeting/data',{
               status:2,
@@ -166,7 +175,10 @@
                     this.hisBusy=false
                   }
                 }else{
+
                   this.hisList = res.data
+                  console.log(res.data)
+                  console.log(this.hisList)
                   this.hisBusy=false
                 }
               }else{
@@ -391,5 +403,10 @@
 
   .f-visibility{
     visibility: hidden;
+  }
+  .m-main-nav-btn{
+    position: absolute;
+    right: 0;
+    top:20px;
   }
 </style>

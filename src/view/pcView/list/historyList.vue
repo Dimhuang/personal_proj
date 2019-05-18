@@ -65,7 +65,7 @@
                     <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
-                <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openView(meetingMsg.agenda_path)">
+                <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openViewA(meetingMsg.agenda_path,meetingMsg)">
                   <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon'">
                   <i class="iconfont pl-hyxx_hyfa_n"></i>
                   <div>
@@ -137,7 +137,7 @@
                       </div>
                     </div>
                   </el-tab-pane>
-                  <!--<el-tab-pane label="电子白板" name="3">
+                  <el-tab-pane label="电子白板" name="3">
                     <div slot="label">
                       <span v-text="elecNum"></span>
                       <p>电子白板</p>
@@ -155,7 +155,7 @@
                         <span v-else>暂无更多数据</span>
                       </div>
                     </div>
-                  </el-tab-pane>-->
+                  </el-tab-pane>
                 </el-tabs>
               </div>
             </el-tab-pane>
@@ -378,7 +378,7 @@
       back(){
         this.$router.push({path:'/index'})
       },
-      openView(path) {
+      openView(path,data) {
         var _self = this;
         if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
@@ -402,8 +402,46 @@
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
            dangerouslyUseHTMLString: true
            });*/
+          if(typeof jsObj === "undefined") {
+            _self.srcPath = data.path
+            window.location.href = _self.srcPath
+          }else{
+            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
+            jsObj.downloadFile(JSON.stringify(parems))
+          }
+        }
+      },
+      openViewA(path,data) {
+        var _self = this;
+        if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
-          window.location.href = _self.srcPath
+          _self.dialogTableVisible=true
+          /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           }).then(action => {
+           _self.srcPath = ''
+           }).catch(action => {
+           _self.srcPath = ''
+           });*/
+        }else if(_self.getType(path) == 'f-pdf-icon'){
+          _self.srcPath = path
+          /*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           })*/
+          _self.dialogTableVisible=true
+        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+
+        }else {
+          /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           });*/
+          if(typeof jsObj === "undefined") {
+            _self.srcPath = path
+            window.location.href = _self.srcPath
+          }else{
+            var parems = {"fileName":data.agenda_name,"fileId":data.id,"downloadPath":data.agenda_path,"iSize":0}
+            jsObj.downloadFile(JSON.stringify(parems))
+          }
         }
       }
     },

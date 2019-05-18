@@ -11,7 +11,7 @@
         <yd-tab-panel label="文档批注" :badge="fileNum">
           <div class="m-board-view-bd">
             <yd-cell-group>
-              <yd-cell-item v-for="(n,index) in docList" :key="index" @click.native="openView(n.filepath)">
+              <yd-cell-item v-for="(n,index) in docList" :key="index" @click.native="openView(n.filepath,n)">
                 <i :class="getType(n.filename)" slot="icon"></i>
                 <span slot="left" v-text="n.filename"></span>
               </yd-cell-item>
@@ -25,9 +25,9 @@
         </yd-tab-panel>
         <yd-tab-panel label="手写批注" :badge="handNum">
           <div class="m-board-view-bd">
-            <yd-lightbox :num="handList.length">
+            <yd-lightbox>
               <yd-grids-group :rows="2">
-                <yd-grids-item v-for="item, key in handList" :key="key">
+                <yd-grids-item v-for="item, key in handList" @click.native="openView(item.filepath,item)">
                   <yd-lightbox-img slot="icon" :src="item.filepath"></yd-lightbox-img>
                 </yd-grids-item>
               </yd-grids-group>
@@ -39,11 +39,11 @@
             </div>
           </div>
         </yd-tab-panel>
-        <!--<yd-tab-panel label="电子白板" :badge="elecNum">
+        <yd-tab-panel label="电子白板" :badge="elecNum">
           <div class="m-board-view-bd">
-            <yd-lightbox :num="elecList.length">
+            <yd-lightbox>
               <yd-grids-group :rows="2">
-                <yd-grids-item v-for="item, key in elecList" :key="key">
+                <yd-grids-item v-for="item, key in elecList"  @click.native="openView(item.filepath,item)">>
                   <yd-lightbox-img slot="icon" :src="item.filepath"></yd-lightbox-img>
                 </yd-grids-item>
               </yd-grids-group>
@@ -54,7 +54,7 @@
               <span v-else>暂无更多数据</span>
             </div>
           </div>
-        </yd-tab-panel>-->
+        </yd-tab-panel>
       </yd-tab>
       <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
         <yd-navbar slot="top" title="查看">
@@ -106,10 +106,10 @@
     _self.getFileNum(5,()=>{
         _self.getDocFile()
       })
-    _self.getFileNum(7,()=>{
+    _self.getFileNum(12,()=>{
       _self.getElecFile()
       })
-    _self.getFileNum(11,()=>{
+    _self.getFileNum(13,()=>{
       _self.getHandFile()
       })
     },
@@ -131,13 +131,13 @@
           }else{
             _self.fileNum = res[num].toString()
           }
-        }else if(num == '7'){
+        }else if(num == '12'){
           if(res.length==0){
             _self.elecNum =  '0'
           }else{
             _self.elecNum = res[num].toString()
           }
-        }else if(num == '11'){
+        }else if(num == '13'){
           if(res.length==0){
             _self.handNum =  '0'
           }else{
@@ -184,7 +184,7 @@
         this.$fetch('/wap/meeting/files',{
           m_id:this.mid,
           type:'whiteboard',
-          file_use:7,
+          file_use:12,
           pagesize:9,
           page:this.elecPage
         }).then(result=>{
@@ -217,7 +217,7 @@
         this.$fetch('/wap/meeting/files',{
           m_id:this.mid,
           type:'whiteboard',
-          file_use:11,
+          file_use:13,
           pagesize:9,
           page:this.handPage
         }).then(result=>{
@@ -250,7 +250,13 @@
         var _self = this;
         _self.$router.push({path:'/wap/functions'})
       },
-      openView(path) {
+      openView(path,data) {
+        if(data.filepathex==''){
+          window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+        }else{
+          window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+        }
+        return
         var _self = this;
         if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
           _self.srcPath = path

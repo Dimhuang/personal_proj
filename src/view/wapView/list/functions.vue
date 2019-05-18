@@ -25,7 +25,7 @@
         </yd-grids-item>
         <yd-grids-item @click.native="goFolder">
           <img slot="icon" src="../../../assets/img/but_lswj.png">
-          <span slot="text">临时文件</span>
+          <span slot="text">临时资料</span>
         </yd-grids-item>
         <yd-grids-item @click.native="goVote" v-if="wapFunType==1">
           <img slot="icon" src="../../../assets/img/but_hytp.png">

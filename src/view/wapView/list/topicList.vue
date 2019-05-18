@@ -11,7 +11,7 @@
           <yd-list-item v-for="item, key in topicList" :key="key" @click.native="goList(item.id)">
             <span slot="title" v-text="item.name"></span>
             <yd-list-other class="f-ex" slot="other">
-              <div>
+              <div v-show="item.reporter!=''">
                 <span>汇报人：</span>
                 <span v-text="item.reporter"></span>
               </div>

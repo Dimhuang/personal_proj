@@ -333,6 +333,7 @@ body,html{
 .yd-navbar span.yd-navbar-center-title{
   color: #fff !important;
   font-size: 0.34rem !important;
+  line-height: 0.4rem;
 }
 
 .yd-navbar .yd-navbar-item span{
