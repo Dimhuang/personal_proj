@@ -98,6 +98,7 @@
         if(data.is_directory==1){
           _self.$router.push({path:'/list/historyList/stmpfileFolder',query:{id:data.id,'f_name':data.filename}})
         }else{
+          console.log('s='+JSON.stringify(data))
           _self.openView(data.filepath,data);
         }
       },
@@ -135,10 +136,10 @@
 
 
           if(typeof jsObj === "undefined") {
-            _self.srcPath = data.path
+            _self.srcPath = data.filepath
             window.location.href = _self.srcPath
           }else{
-            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
+            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.filepath,"iSize":0}
             jsObj.downloadFile(JSON.stringify(parems))
           }
 

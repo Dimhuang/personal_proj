@@ -8,9 +8,9 @@
       <li class="m-history-topics-list f-flex-content">
         <div class="f-flex-item">
           <h2 v-text="topicTitle.name"></h2>
-          <span>汇报人：{{topicTitle.reporter}}</span>
+          <span>汇报：{{topicTitle.reporter}}</span>
           <span class="f-topic-list-user">
-            <span>列席人员：</span>
+            <span>参会：</span>
             <p :class="{'f-ellipsis':toggleTap}" v-text="topicTitle.users"></p>
           </span>
         </div>
@@ -168,10 +168,10 @@
            dangerouslyUseHTMLString: true
            });*/
           if(typeof jsObj === "undefined") {
-            _self.srcPath = data.path
+            _self.srcPath = data.filepath
             window.location.href = _self.srcPath
           }else{
-            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
+            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.filepath,"iSize":0}
             jsObj.downloadFile(JSON.stringify(parems))
           }
         }

@@ -11,11 +11,11 @@
           <span slot="left">
             <h2 v-text="topicTitle.name"></h2>
             <p class="f-flex-content f-ex">
-              <span>汇报人：</span>
+              <span>汇报：</span>
               <span class="f-flex-item" v-text="topicTitle.reporter"></span>
             </p>
              <p class="f-flex-content">
-               <span>列席人员：</span>
+               <span>参会：</span>
                <span class="f-flex-item" style="word-break: break-all" v-text="topicTitle.users"></span>
              </p>
           </span>

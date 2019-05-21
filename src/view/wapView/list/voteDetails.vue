@@ -38,7 +38,7 @@
               <yd-progressbar type="line" :progress="(item.num/voteList.all_user)" trail-width="10" trail-color="#8bc34a"> </yd-progressbar>
               <div class="f-text">
                 <span v-text="item.o_name"></span>
-                <span class="f-ex" v-text="(item.num/voteList.all_user).toFixed(2)+'% ('+item.num+')'"></span>
+                <span class="f-ex" v-text="(item.num/voteList.all_user*100).toFixed(2)+'% ('+item.num+')'"></span>
               </div>
             </li>
           </ul>
