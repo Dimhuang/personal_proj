@@ -132,24 +132,27 @@
             _self.showRight = false
           },
           openView(path,id,data) {
-            var _self = this;
-            if(_self.getType(meetingMsgList.agenda_name) == 'f-wap-na-icon'){
+            var _self = this
+            if(_self.getType(_self.meetingMsgList.agenda_name) == 'f-wap-na-icon'){
               _self.$dialog.toast({
                 mes: '格式不支持！',
                 timeout: 1500
               });
             }else{
-              window.location.href = 'wzh://itc?id='+id+'&path='+path
-            }
-            return
-            if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
-              _self.srcPath = path
-              _self.showRight = true
-            }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
+              if(sessionStorage.getItem('adType')!=null){
+                window.location.href = 'wzh://itc?id='+id+'&path='+path
+                return
+              }else{
+                if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+                  _self.srcPath = path
+                  _self.showRight = true
+                }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
 
-            }else {
-              _self.srcPath = path
-              window.location.href = _self.srcPath
+                }else {
+                  _self.srcPath = path
+                  window.location.href = _self.srcPath
+                }
+              }
             }
           }
         }

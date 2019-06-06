@@ -365,6 +365,21 @@ body,html{
   height: 100%;
   overflow: hidden;
 }
+
+
+.pswp__button--arrow--right:before,
+.pswp__button--arrow--left:before{
+  background-size: 600px 155px !important;
+  height: 155px !important;
+  width: 50px !important;
+}
+.pswp__button--arrow--left:before{
+  background-position: -320px -89px !important;
+}
+
+.pswp__button--arrow--right:before{
+  background-position: -232px -89px !important;
+}
 /*字体图标*/
 
 @font-face {font-family: "iconfont";

@@ -72,6 +72,7 @@ router.beforeEach((to, from, next)=>{
               if(item.username!=null&&item.pwd!=null){
                 sessionStorage.setItem('adName' , item.username)
                 sessionStorage.setItem('adPwd' ,item.pwd)
+                sessionStorage.setItem('adType' ,item.device)
               }
             })
             if (to.meta.requiresAuth && !sessionStorage.getItem('wapAccessToken')) {

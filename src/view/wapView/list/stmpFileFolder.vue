@@ -21,11 +21,21 @@
           </span>
       </yd-cell-item>
     </yd-cell-group>
-    <yd-cell-group class="m-wap-folder-list-bd">
+    <yd-cell-group class="m-wap-folder-list-bd" v-if="is_ad">
       <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)">
        <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
         </yd-lightbox>-->
+        <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
+        <i  v-else :class="getType(n.filename)" slot="icon"></i>
+        <span slot="left" v-text="n.filename"></span>
+      </yd-cell-item>
+    </yd-cell-group>
+    <yd-cell-group class="m-wap-folder-list-bd" v-else>
+      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="goDetails(n)">
+         <yd-lightbox :num="topicList.length" slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
+         </yd-lightbox>
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
         <i  v-else :class="getType(n.filename)" slot="icon"></i>
         <span slot="left" v-text="n.filename"></span>
@@ -62,7 +72,8 @@
         busy:true,
         fileType:'',
         srcPath:'',
-        showRight:false
+        showRight:false,
+        is_ad:sessionStorage.getItem('adType')==null?false:true
       }
     },
     computed: {
@@ -129,13 +140,17 @@
             timeout: 1500
           });
         }else{
-          if(data.filepathex==''){
-            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+          if(sessionStorage.getItem('adType')!=null){
+            if(data.filepathex==''){
+              window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+            }else{
+              window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+            }
+            return
           }else{
-            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+            _self.openView(data.filepath)
           }
         }
-
       }
     },
     back(){

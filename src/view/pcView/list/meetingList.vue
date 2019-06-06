@@ -108,7 +108,7 @@
         })
       },
       back(){
-        this.$router.push({name:'pcHome'})
+        this.$router.push({path:'/index'})
       }
     },
     components: {
