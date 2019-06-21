@@ -10,10 +10,11 @@
         <yd-cell-group :title="items.datum_title" v-for="(items,index) in voteList" :key="index" v-show="items.votes.length!==0">
           <yd-cell-item v-for="n in items.votes">
             <span slot="left">
-              <span class="f-fc-black f-ex" v-text="n.vote_title"></span>
+              <span class="f-fc-black f-ex">{{n.vote_title.replace(/\s/g,'&nbsp;')}}</span>
               <div>
                 <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="n.status==1">进行中</yd-badge>
-                <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-else>已结束</yd-badge>
+                <yd-badge bgcolor="#f36323" color="#FFF" scale="0.8" v-if="n.status==0">未开启</yd-badge>
+                <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8" v-if="n.status==2">已结束</yd-badge>
               </div>
 
             </span>
@@ -27,10 +28,10 @@
         <yd-cell-group title="默认投票" v-show="voteNorList.length!==0">
           <yd-cell-item v-for="item in voteNorList">
             <span slot="left">
-              <span class="f-fc-black f-ex" v-text="item.vote_title"></span>
+              <span class="f-fc-black f-ex">{{item.vote_title.replace(/\s/g,'&nbsp;')}}</span>
               <div>
                 <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="item.status==1">进行中</yd-badge>
-                <yd-badge bgcolor="#28b464" color="#FFF" scale="0.8" v-if="item.status==0">未开启</yd-badge>
+                <yd-badge bgcolor="#f36323" color="#FFF" scale="0.8" v-if="item.status==0">未开启</yd-badge>
                 <yd-badge bgcolor="#bbbbbb" color="#FFF" scale="0.8"  v-if="item.status==2">已结束</yd-badge>
               </div>
             </span>

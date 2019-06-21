@@ -2,8 +2,8 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
-      <el-breadcrumb-item @click.native="goList">{{topicNameTxt}}</el-breadcrumb-item>
-      <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goList">{{topicNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
       <!--<el-breadcrumb-item v-for="(n,index) in breakList" :key="index" @click.native="goPath(n)">{{n.name}}</el-breadcrumb-item>-->
     </el-breadcrumb>
     <ul>

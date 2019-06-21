@@ -1,6 +1,7 @@
 <template>
   <yd-layout>
-    <yd-navbar slot="navbar" :title="folderNameTxt">
+    <yd-navbar slot="navbar">
+      <span class="yd-navbar-center-title" slot="center">{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</span>
       <div slot="left" @click.stop="back">
         <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
         <span>返回</span>

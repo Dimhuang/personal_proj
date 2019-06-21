@@ -9,7 +9,7 @@
       <yd-cell-group class="m-wap-folder-list-hd" v-if="showType==1">
         <yd-cell-item>
           <span slot="left">
-            <h2 v-text="topicTitle.name"></h2>
+            <h2 v-html="name"></h2>
             <p class="f-flex-content f-ex">
               <span>汇报：</span>
               <span class="f-flex-item" v-text="topicTitle.reporter"></span>
@@ -28,7 +28,7 @@
           </yd-lightbox>-->
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"></i>
-          <span slot="left" v-text="n.filename"></span>
+          <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd" v-else>
@@ -38,7 +38,7 @@
           </yd-lightbox>
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"></i>
-          <span slot="left" v-text="n.filename"></span>
+          <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
         </yd-cell-item>
       </yd-cell-group>
       <yd-backtop></yd-backtop>
@@ -73,7 +73,8 @@
           fileType:'',
           srcPath:'',
           showRight:false,
-          is_ad:sessionStorage.getItem('adType')==null?false:true
+          is_ad:sessionStorage.getItem('adType')==null?false:true,
+          name:''
         }
       },
       computed: {
@@ -107,6 +108,7 @@
             let res = result.data;
           if(result.msg=='success'){
             this.topicTitle = res
+            this.name = res.name.replace(/\s/g,'&nbsp;')
           }else{
             this.topicTitle = []
           }

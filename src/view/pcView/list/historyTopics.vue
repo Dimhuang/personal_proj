@@ -6,7 +6,7 @@
       <ul>
         <li class="m-history-topics-list f-flex-content" v-for="items in topicList">
           <div class="f-flex-item">
-            <h2 v-text="items.name"></h2>
+            <h2>{{items.name.replace(/\s/g,'&nbsp;')}}</h2>
             <span>汇报人：{{items.reporter}}   {{items.place}}</span>
           </div>
           <div class="m-history-list-r">

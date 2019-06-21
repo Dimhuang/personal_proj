@@ -8,7 +8,7 @@
     </yd-navbar>
     <div class="m-wap-vote-select-view">
       <div class="m-wap-vote-select-title">
-        <h2 class="f-clamp-line-2" v-text="voteList.vote_title"></h2>
+        <h2 class="f-clamp-line-2" v-html="name"></h2>
         <div class="m-wap-vote-select-title-bd">
           <div>
             <span class="fl">投票描述</span>
@@ -37,7 +37,7 @@
             <li class="vote-detail-progressbar-list" v-for="item in voteList.options" >
               <yd-progressbar type="line" :progress="(item.num/voteList.all_user)" trail-width="10" trail-color="#8bc34a"> </yd-progressbar>
               <div class="f-text">
-                <span v-text="item.o_name"></span>
+                <span>{{item.o_name.replace(/\s/g,'&nbsp;')}}</span>
                 <span class="f-ex" v-text="(item.num/voteList.all_user*100).toFixed(2)+'% ('+item.num+')'"></span>
               </div>
             </li>
@@ -56,6 +56,7 @@
       return {
         titleToggle:true,
         voteList:[],
+        name:'',
         v_id:''
       }
     },
@@ -75,6 +76,7 @@
         }).then(result=>{
           let res = result.data
           this.voteList = res
+          this.name = res.vote_title.replace(/\s/g,'&nbsp;')
           if(res.is_countdown==1){
             this.voteTime = res.time_limit.replace(/-/g,"/")
           }

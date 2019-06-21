@@ -20,7 +20,7 @@
                   <i class="iconfont pl-hyxx_hymc_n"></i>
                   <div>
                     <span>会议名称：</span>
-                    <p v-text="meetingMsg.name"></p>
+                    <p v-html="name"></p>
                   </div>
                 </li>
               <!--  <li class="m-history-list">
@@ -181,6 +181,7 @@
     data(){
       return{
         meetingMsg:[],
+        name:'',
         whiteBoardActive:'1',
         fileNum:'0',
         handNum:'0',
@@ -217,10 +218,10 @@
       this.getFileNum(5,()=>{
         this.getDocFile()
       })
-      this.getFileNum(7,()=>{
+      this.getFileNum("7,13",()=>{
         this.getElecFile()
       })
-      this.getFileNum(11,()=>{
+      this.getFileNum("11,12",()=>{
         this.getHandFile()
       })
     },
@@ -236,34 +237,48 @@
             let res = result.data;
             if(result.msg=='success'){
               this.meetingMsg = res
+              this.name = res.name.replace(/\s/g,'&nbsp;')
             }else{
               this.meetingMsg = []
             }
           })
       },
       getFileNum(num,func){
-        this.$fetch('/wap/meeting/fileCount',{
-          m_id:this.mid,
+        let _self = this;
+        _self.$fetch('/wap/meeting/fileCount',{
+          m_id:_self.mid,
           file_use:num
         }).then(result=>{
           let res = result.data;
           if(num == '5'){
             if(res.length==0){
-              this.fileNum = 0
+              _self.fileNum = 0
             }else{
-              this.fileNum = res[num]
+              _self.fileNum = res[num]
             }
-          }else if(num == '7'){
+          }else if(num == '7,13'){
             if(res.length==0){
-              this.elecNum = 0
+              _self.elecNum =  '0'
             }else{
-              this.elecNum = res[num]
+              if(res[13]==undefined){
+                _self.elecNum =  res[7].toString()
+              }else if(res[7]==undefined){
+                _self.elecNum =  res[13].toString()
+              }else{
+                _self.elecNum = res[13].toString() + res[7].toString()
+              }
             }
-          }else if(num == '11'){
+          }else if(num == '11,12'){
             if(res.length==0){
-              this.handNum = 0
+              _self.handNum =  '0'
             }else{
-              this.handNum = res[num]
+              if(res[11]==undefined){
+                _self.handNum = res[12].toString()
+              }else if(res[12]==undefined){
+                _self.handNum = res[11].toString()
+              }else{
+                _self.handNum = res[11].toString() + res[12].toString()
+              }
             }
           }
           func()
@@ -306,7 +321,7 @@
         this.$fetch('/wap/meeting/files',{
           m_id:this.mid,
           type:'whiteboard',
-          file_use:7,
+          file_use:"7,13",
           pagesize:9,
           page:this.elecPage
         }).then(result=>{
@@ -339,7 +354,7 @@
         this.$fetch('/wap/meeting/files',{
           m_id:this.mid,
           type:'whiteboard',
-          file_use:11,
+          file_use:"11,12",
           pagesize:9,
           page:this.handPage
         }).then(result=>{

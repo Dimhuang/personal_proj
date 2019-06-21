@@ -14,7 +14,7 @@
             </span>
             <span slot="left">
               <span>会议名称:</span>
-              <p v-text="meetingMsgList.name"></p>
+              <p v-html="name"></p>
             </span>
           </yd-cell-item>
           <yd-cell-item>
@@ -97,7 +97,8 @@
               meetingMsgList:[],
               srcPath:'',
               showRight:false,
-              is_pdf:true
+              is_pdf:true,
+              name:''
             }
         },
         computed: {
@@ -118,6 +119,7 @@
               let res = result.data;
             if(result.msg=='success'){
               this.meetingMsgList = res
+              this.name = res.name.replace(/\s/g,'&nbsp;')
             }else{
               this.meetingMsgList = []
             }

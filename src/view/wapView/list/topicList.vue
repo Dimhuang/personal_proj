@@ -9,7 +9,7 @@
       <div class="m-wap-topic-list-view">
         <yd-list theme="5">
           <yd-list-item v-for="item, key in topicList" :key="key" @click.native="goList(item.id)">
-            <span slot="title" v-text="item.name"></span>
+            <span slot="title">{{item.name.replace(/\s/g,'&nbsp;')}}</span>
             <yd-list-other class="f-ex" slot="other">
               <div v-show="item.reporter!=''">
                 <span>汇报人：</span>

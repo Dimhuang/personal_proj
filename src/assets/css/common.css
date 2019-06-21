@@ -370,15 +370,19 @@ body,html{
 .pswp__button--arrow--right:before,
 .pswp__button--arrow--left:before{
   background-size: 600px 155px !important;
-  height: 155px !important;
+  height: 60px !important;
   width: 50px !important;
 }
 .pswp__button--arrow--left:before{
-  background-position: -320px -89px !important;
+  background-position: -320px -72px !important;
 }
 
 .pswp__button--arrow--right:before{
-  background-position: -232px -89px !important;
+  background-position: -232px -72px !important;
+}
+
+.pswp__button.pswp__button--fs{
+  display: none !important;
 }
 /*字体图标*/
 

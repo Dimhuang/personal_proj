@@ -5,13 +5,13 @@
         <div class="m-main-nav">
           <div class="f-view-width">
             <img src="../../assets/img/banner.png">
-            <div class="m-main-nav-tabbar">
+            <div class="m-main-nav-tabbar" :class="{'f-is-kehu':is_kehu}">
               <div class="f-flex-content">
                 <span class="f-flex-item" @click="indexActive=1" :class="{'f-active':indexActive==1}">
                   <i class="iconfont pl-icon_lshy_n"></i>
                   <p>历史会议</p>
                 </span>
-                <span class="f-flex-item" @click="indexActive=2" :class="{'f-active':indexActive==2}">
+                <span class="f-flex-item" @click="indexActive=2" :class="{'f-active':indexActive==2}" v-if="!is_kehu">
                   <i class="iconfont pl-icon_hylb_n"></i>
                   <p>会议列表</p>
                 </span>
@@ -30,7 +30,7 @@
                   <div class="m-main-nav-list-hd">
                     <div class="m-main-nav-list-hd-content">
                       <em :class="{'f-visibility':items.is_secrect==0}">保密会议，需向管理员申请权限</em><!---->
-                      <h2 v-text="items.name"></h2>
+                      <h2 v-html="items.name.replace(/\s/g,'&nbsp;')"></h2>
                       <div class="f-flex-content">
                        <!-- <span class="f-flex-item">
                           <b v-text="items.datum_count"></b>
@@ -77,7 +77,7 @@
                     <em></em>
                     <i class="f-restart-ico" v-if="items.status==0">未开始</i>
                     <i class="f-load-ico" v-else>进行中</i>
-                    <h2 v-text="items.name"></h2>
+                    <h2 v-html="items.name.replace(/\s/g,'&nbsp;')"></h2>
                   </div>
                 </div>
                 <div class="m-main-nav-list-bd">
@@ -116,7 +116,8 @@
               hisBusy:true,
               metBusy:true,
               hisPage:1,
-              metPage:1
+              metPage:1,
+              is_kehu:false
             }
         },
         created(){
@@ -151,6 +152,13 @@
             this.getHistorytList()
             this.getMeetingList()
           }
+
+          if(typeof jsObj === "undefined"){
+            this.is_kehu = false
+          }else{
+            this.is_kehu = true
+          }
+
         },
         methods:{
           refreshList(){
@@ -268,6 +276,12 @@
     background-color: #dddddd;
 
   }
+  .m-main-nav-tabbar.f-is-kehu:after{
+    content:'';
+    width: 0;
+
+  }
+
   .m-main-nav-tabbar .f-flex-content{
     text-align: center;
   }

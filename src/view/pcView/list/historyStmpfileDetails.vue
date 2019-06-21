@@ -2,8 +2,8 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click.native="goMain">临时资料</el-breadcrumb-item>
-      <el-breadcrumb-item @click.native="goList">{{outFolderNameTxt}}</el-breadcrumb-item>
-      <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goList">{{outFolderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content"  v-for="items in topicList">

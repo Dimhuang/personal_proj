@@ -8,7 +8,7 @@
     </yd-navbar>
     <div class="m-wap-vote-select-view">
       <div class="m-wap-vote-select-title">
-        <h2 class="f-clamp-line-2" v-text="voteList.vote_title"></h2>
+        <h2 class="f-clamp-line-2" v-html="name"></h2>
         <div class="m-wap-vote-select-title-bd">
           <div>
             <span class="fl">投票描述</span>
@@ -35,7 +35,7 @@
         <div v-show="voteList.is_multiple==0">
           <yd-radio-group v-model="voteRadio">
             <yd-radio :val="items.id" v-for="items,index in voteList.options" :key="index" :class="{'f-active':items.id == voteRadio}">
-              <span>{{items.o_name}}</span>
+              <span>{{items.o_name.replace(/\s/g,'&nbsp;')}}</span>
               <yd-icon name="yes_line" custom color="#fff"></yd-icon>
             </yd-radio>
           </yd-radio-group>
@@ -44,7 +44,7 @@
         <div v-show="voteList.is_multiple==1">
           <yd-checkbox-group v-model="voteCheckbox">
             <yd-checkbox :val="items.id" v-for="items,index in voteList.options" :key="index" :class="'f-active-'+items.id">
-              <span>{{items.o_name}}</span>
+              <span>{{items.o_name.replace(/\s/g,'&nbsp;')}}</span>
               <yd-icon name="yes_line" custom color="#fff"></yd-icon>
             </yd-checkbox>
           </yd-checkbox-group>
@@ -63,6 +63,7 @@
         voteRadio:'',
         voteList:[],
         voteCheckbox:[],
+        name:'',
         v_id:'',
         voteTime:''
       }
@@ -83,6 +84,7 @@
         }).then(result=>{
           let res = result.data
           this.voteList = res
+          this.name = res.vote_title.replace(/\s/g,'&nbsp;')
          if(res.is_countdown==1){
             this.voteTime = res.time_limit.replace(/-/g,"/")
           }

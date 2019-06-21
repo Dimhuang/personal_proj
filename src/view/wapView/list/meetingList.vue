@@ -10,7 +10,7 @@
           </span>-->
       </yd-navbar>
       <yd-tab active-color="#1791ff">
-        <yd-tab-panel label="会议列表">
+        <yd-tab-panel label="会议列表" v-if="!is_ad">
           <div class="m-wap-index-tabs-content" ref="tabView1">
             <div class="m-wap-main-nav-list" v-for="n in metList" @click.stop="goFunctionList(1,n.id)">
               <div class="m-wap-main-nav-list-hd">
@@ -18,7 +18,7 @@
                   <em></em>
                   <i class="f-restart-ico" v-if="n.status==0">未开始</i>
                   <i class="f-load-ico" v-else>进行中</i>
-                  <h2 v-text="n.name"></h2>
+                  <h2>{{n.name.replace(/\s/g,'&nbsp;')}}</h2>
                 </div>
               </div>
               <div class="m-wap-main-nav-list-bd">
@@ -42,7 +42,7 @@
               <div class="m-wap-main-nav-list-hd f-history">
                 <div class="m-wap-main-nav-list-hd-content">
                   <em :class="{'f-visibility':n.is_secrect==0}">保密会议，需向管理员申请权限</em>
-                  <h2 v-text="n.name"></h2>
+                  <h2>{{n.name.replace(/\s/g,'&nbsp;')}}</h2>
                   <div class="f-flex-content">
                        <!-- <span class="f-flex-item">
                           <b v-text="n.datum_count"></b>
@@ -92,7 +92,8 @@
               hisBusy:true,
               metPage:1,
               metList:[],
-              metBusy:true
+              metBusy:true,
+              is_ad:sessionStorage.getItem('adType')==null?false:true
             }
         },
       created(){
@@ -104,7 +105,9 @@
         setTimeout(function(){
           let bodyH = document.getElementById('scrollView').clientHeight;
           let navH = document.querySelector('.yd-tab-nav').clientHeight;
-          _self.$refs.tabView1.style.maxHeight = bodyH - navH + 'px'
+          if(sessionStorage.getItem('adType')==null){
+            _self.$refs.tabView1.style.maxHeight = bodyH - navH + 'px'
+          }
           _self.$refs.tabView2.style.maxHeight = bodyH - navH + 'px'
         },100)
       },

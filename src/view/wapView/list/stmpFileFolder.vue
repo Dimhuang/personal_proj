@@ -1,6 +1,7 @@
 <template>
   <yd-layout>
-    <yd-navbar slot="navbar" :title="title">
+    <yd-navbar slot="navbar">
+      <span class="yd-navbar-center-title" slot="center">{{title.replace(/\s/g,'&nbsp;')}}</span>
       <div slot="left" @click.stop="back">
         <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
         <span>返回</span>
@@ -28,7 +29,7 @@
         </yd-lightbox>-->
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
         <i  v-else :class="getType(n.filename)" slot="icon"></i>
-        <span slot="left" v-text="n.filename"></span>
+        <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
       </yd-cell-item>
     </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd" v-else>
@@ -38,7 +39,7 @@
          </yd-lightbox>
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
         <i  v-else :class="getType(n.filename)" slot="icon"></i>
-        <span slot="left" v-text="n.filename"></span>
+        <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
       </yd-cell-item>
     </yd-cell-group>
     <yd-backtop></yd-backtop>

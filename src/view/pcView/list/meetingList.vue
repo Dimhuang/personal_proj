@@ -20,7 +20,7 @@
                   <i class="iconfont pl-hyxx_hymc_n"></i>
                   <div>
                     <span>会议名称：</span>
-                    <p v-text="meetingMsg.name"></p>
+                    <p v-html="name"></p>
                   </div>
                 </li>
                 <li class="m-history-list">
@@ -82,7 +82,8 @@
     data(){
       return{
         meetingMsg:[],
-        whiteBoardActive:'1'
+        whiteBoardActive:'1',
+        name:''
       }
     },
     computed: {
@@ -102,6 +103,7 @@
           let res = result.data;
           if(result.msg=='success'){
             this.meetingMsg = res
+            this.name = res.name.replace(/\s/g,'&nbsp;')
           }else{
             this.meetingMsg = []
           }

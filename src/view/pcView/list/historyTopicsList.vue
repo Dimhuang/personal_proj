@@ -2,12 +2,12 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
-      <el-breadcrumb-item>{{topicNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{topicNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content">
         <div class="f-flex-item">
-          <h2 v-text="topicTitle.name"></h2>
+          <h2>{{topicTitle.name.replace(/\s/g,'&nbsp;')}}</h2>
           <span>汇报：{{topicTitle.reporter}}</span>
           <span class="f-topic-list-user">
             <span>参会：</span>
@@ -30,7 +30,7 @@
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
           <div class="fl" v-else :class="getType(items.filename)"></div>
-          <div class="f-ellipsis" v-text="items.filename" :title="items.filename"></div>
+          <div class="f-ellipsis"  :title="items.filename">{{items.filename.replace(/\s/g,'&nbsp;')}}</div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round @click.native="goDetails(items)">

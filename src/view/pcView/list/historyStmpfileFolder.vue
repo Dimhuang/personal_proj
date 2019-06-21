@@ -2,14 +2,14 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click.native="goMain">临时资料</el-breadcrumb-item>
-      <el-breadcrumb-item>{{folderNameTxt}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content"  v-for="items in topicList">
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
           <div class="fl" v-else :class="getType(items.filename)"></div>
-          <div class="f-ellipsis" v-text="items.filename"></div>
+          <div class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round  @click.native="goDetails(items)">

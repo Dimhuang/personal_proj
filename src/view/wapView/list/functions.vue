@@ -10,7 +10,8 @@
           </span>
     </yd-navbar>
     <div class="m-wap-function-list-box">
-      <yd-grids-group :rows="3" :title="mettingTitle">
+      <div class="yd-gridstitle">{{mettingTitle.replace(/\s/g,'&nbsp;')}}</div>
+      <yd-grids-group :rows="3">
         <yd-grids-item @click.native="goMsg">
           <img slot="icon" src="../../../assets/img/but_hyxx.png">
           <span slot="text">会议信息</span>
@@ -41,6 +42,10 @@
         </yd-grids-item>
       </yd-grids-group>
     </div>
+
+    <yd-tabbar slot="tabbar" style="padding: 0;">
+      <yd-button size="large" :type="signBtnType" shape="angle" style="margin: 0" v-text="signTxt" v-if="is_start" @click.native="signIn()"></yd-button>
+    </yd-tabbar>
   </yd-layout>
 </template>
 <script>
@@ -49,7 +54,11 @@
     data(){
       return {
         userName:sessionStorage.getItem('userName'),
-        mettingTitle:''
+        mettingTitle:'',
+        signBtnType:'blue',
+        signTxt:'签到',
+        is_sign:true,
+        is_start:false
       }
     },
     computed: {
@@ -57,6 +66,7 @@
     },
     mounted(){
       this.getMetName()
+    this.getSignStatus()
     },
     methods:{
       getMetName(){
@@ -64,12 +74,44 @@
           m_id:this.mid
         }).then(result=>{
           let res = result.data;
-        if(result.msg=='success'){
-          this.mettingTitle = res.name
-        }else{
-          this.mettingTitle = ''
+          if(result.msg=='success'){
+            this.mettingTitle = res.name
+          }else{
+            this.mettingTitle = ''
+          }
+        })
+      },
+      getSignStatus(){
+        var _self = this;
+        _self.$fetch('/wap/Sign/sign_flag',{
+          m_id:_self.mid
+        }).then(result=>{
+          let res = result.data;
+          if(res.status==0){
+            _self.is_start = false
+          }else{
+            _self.is_start = true
+            if(res.is_sign==0){
+              _self.signBtnType = 'blue'
+              _self.signTxt = '签到'
+              _self.is_sign = true
+            }else{
+              _self.signBtnType = 'disabled'
+              _self.signTxt = '已签到'
+              _self.is_sign = false
+            }
+          }
+        })
+      },
+      signIn(){
+        var _self = this;
+        if(_self.is_sign == true){
+          _self.$fetch('/wap/Sign/sign',{
+            m_id:_self.mid
+          }).then(result=>{
+            _self.getSignStatus()
+          })
         }
-      })
       },
       goMsg(){
         var _self = this;
@@ -162,5 +204,11 @@
     margin-top: 0.2rem;
     height: 0.4rem;
     line-height: 0.4rem;
+  }
+  .yd-btn-blue:not(.yd-btn-loading) {
+    background-color: #1791ff;
+  }
+  .yd-btn-blue{
+    color: #fff;
   }
 </style>

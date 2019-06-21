@@ -167,10 +167,10 @@
     _self.getFileNum(5,()=>{
         _self.getDocFile()
       })
-    _self.getFileNum(13,()=>{
+    _self.getFileNum("7,13",()=>{
       _self.getElecFile()
       })
-    _self.getFileNum(12,()=>{
+    _self.getFileNum("11,12",()=>{
       _self.getHandFile()
       })
     },
@@ -192,17 +192,29 @@
           }else{
             _self.fileNum = res[num].toString()
           }
-        }else if(num == '13'){
+        }else if(num == '7,13'){
           if(res.length==0){
             _self.elecNum =  '0'
           }else{
-            _self.elecNum = res[num].toString()
+            if(res[13]==undefined){
+              _self.elecNum =  res[7].toString()
+            }else if(res[7]==undefined){
+              _self.elecNum =  res[13].toString()
+            }else{
+              _self.elecNum = res[13].toString() + res[7].toString()
+            }
           }
-        }else if(num == '12'){
+        }else if(num == '11,12'){
           if(res.length==0){
             _self.handNum =  '0'
           }else{
-            _self.handNum = res[num].toString()
+            if(res[11]==undefined){
+              _self.handNum = res[12].toString()
+            }else if(res[12]==undefined){
+              _self.handNum = res[11].toString()
+            }else{
+              _self.handNum = res[11].toString() + res[12].toString()
+            }
           }
         }
         func()
@@ -213,14 +225,14 @@
           m_id:this.mid,
           type:'whiteboard',
           file_use:5,
-          pagesize:9,
+          pagesize:8,
           page:this.docPage
         }).then(result=>{
           let res = result.data;
         if(result.msg=='success'){
           if(flag){
             this.docList = this.docList.concat(res.data)
-            if(res.total<this.docPage*9){
+            if(res.total<this.docPage*8){
               this.docBusy=true
             }else{
               this.docBusy=false
@@ -245,15 +257,15 @@
         this.$fetch('/wap/meeting/files',{
           m_id:this.mid,
           type:'whiteboard',
-          file_use:13,
-          pagesize:9,
+          file_use:"7,13",
+          pagesize:8,
           page:this.elecPage
         }).then(result=>{
           let res = result.data;
         if(result.msg=='success'){
           if(flag){
             this.elecList = this.elecList.concat(res.data)
-            if(res.total<this.elecPage*9){
+            if(res.total<this.elecPage*8){
               this.elecBusy=true
             }else{
               this.elecBusy=false
@@ -278,15 +290,15 @@
         this.$fetch('/wap/meeting/files',{
           m_id:this.mid,
           type:'whiteboard',
-          file_use:12,
-          pagesize:9,
+          file_use:"11,12",
+          pagesize:8,
           page:this.handPage
         }).then(result=>{
           let res = result.data;
         if(result.msg=='success'){
           if(flag){
             this.handList = this.handList.concat(res.data)
-            if(res.total<this.handPage*9){
+            if(res.total<this.handPage*8){
               this.handBusy=true
             }else{
               this.handBusy=false
@@ -415,6 +427,7 @@
     height: 2.4rem;
     padding: 0.1rem;
     background-color: #fff;
+    overflow: hidden;
   }
 
 

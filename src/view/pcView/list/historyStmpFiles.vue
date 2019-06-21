@@ -9,7 +9,7 @@
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
           <div class="fl" v-else :class="getType(items.filename)"></div>
-          <div class="f-ellipsis" v-text="items.filename"></div>
+          <div class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round @click.native="goDetails(items)">
