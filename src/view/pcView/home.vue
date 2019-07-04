@@ -4,20 +4,21 @@
       <m-body>
         <div class="m-main-nav">
           <div class="f-view-width">
-            <img src="../../assets/img/banner.png">
+            <img src="@/assets/img/banner_ch.png" v-if="is_ch">
+            <img src="@/assets/img/banner_en.png" v-else>
             <div class="m-main-nav-tabbar" :class="{'f-is-kehu':is_kehu}">
               <div class="f-flex-content">
                 <span class="f-flex-item" @click="indexActive=1" :class="{'f-active':indexActive==1}">
                   <i class="iconfont pl-icon_lshy_n"></i>
-                  <p>历史会议</p>
+                  <p v-text="$lang.index.title.his"></p>
                 </span>
                 <span class="f-flex-item" @click="indexActive=2" :class="{'f-active':indexActive==2}" v-if="!is_kehu">
                   <i class="iconfont pl-icon_hylb_n"></i>
-                  <p>会议列表</p>
+                  <p v-text="$lang.index.title.meet"></p>
                 </span>
               </div>
               <div class="m-main-nav-btn">
-                <el-button type="primary" round @click.native="refreshList()">刷新列表</el-button>
+                <el-button type="primary" round @click.native="refreshList()" v-text="$lang.index.tips.refresh"></el-button>
               </div>
             </div>
           </div>
@@ -29,7 +30,7 @@
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
                   <div class="m-main-nav-list-hd">
                     <div class="m-main-nav-list-hd-content">
-                      <em :class="{'f-visibility':items.is_secrect==0}">保密会议，需向管理员申请权限</em><!---->
+                      <em :class="{'f-visibility':items.is_secrect==0}" v-text="$lang.index.title.weight_tips"></em><!---->
                       <h2 v-html="items.name.replace(/\s/g,'&nbsp;')"></h2>
                       <div class="f-flex-content">
                        <!-- <span class="f-flex-item">
@@ -53,17 +54,17 @@
                   </div>
                   <div class="m-main-nav-list-bd">
                     <p>
-                      <span class="fl"><span v-text="'时间:'"></span><span v-text="items.start_time"></span></span>
-                      <span class="fr"><span v-text="'主持人:'"></span><span v-text="items.moderator"></span></span>
+                      <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
+                      <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span v-text="items.moderator"></span></span>
                     </p>
-                    <p><span v-text="'会议室:'"></span><span v-text="items.room_name"></span></p>
+                    <p><span v-text="$lang.index.title.room+':'"></span><span v-text="items.room_name"></span></p>
                   </div>
               </el-card>
             </el-col>
           </el-row>
           <div class="f-load-box" v-infinite-scroll="loadMoreHis" infinite-scroll-disabled="hisBusy" infinite-scroll-distance="30">
             <i class="el-icon-loading" v-if="!hisBusy"></i>
-            <span v-else>暂无更多数据</span>
+            <span v-else v-text="$lang.tips.no_data"></span>
           </div>
 
         </div>
@@ -75,24 +76,24 @@
                 <div class="m-main-nav-list-hd">
                   <div class="m-main-nav-list-hd-content">
                     <em></em>
-                    <i class="f-restart-ico" v-if="items.status==0">未开始</i>
-                    <i class="f-load-ico" v-else>进行中</i>
+                    <i class="f-restart-ico" v-if="items.status==0" v-text="$lang.index.status.not_start"></i>
+                    <i class="f-load-ico" v-else v-text="$lang.index.status.start"></i>
                     <h2 v-html="items.name.replace(/\s/g,'&nbsp;')"></h2>
                   </div>
                 </div>
                 <div class="m-main-nav-list-bd">
                   <p>
-                    <span class="fl"><span v-text="'时间:'"></span><span v-text="items.start_time"></span></span>
-                    <span class="fr"><span v-text="'主持人:'"></span><span v-text="items.moderator"></span></span>
+                    <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
+                    <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span v-text="items.moderator"></span></span>
                   </p>
-                  <p><span v-text="'会议室:'"></span><span v-text="items.room_name"></span></p>
+                  <p><span v-text="$lang.index.title.room+':'"></span><span v-text="items.room_name"></span></p>
                 </div>
               </el-card>
             </el-col>
           </el-row>
           <div class="f-load-box" v-infinite-scroll="loadMoreMet" infinite-scroll-disabled="metBusy" infinite-scroll-distance="30">
             <i class="el-icon-loading" v-if="!metBusy"></i>
-            <span v-else>暂无更多数据</span>
+            <span v-else v-text="$lang.tips.no_data"></span>
           </div>
         </div>
       </m-body>
@@ -117,7 +118,8 @@
               metBusy:true,
               hisPage:1,
               metPage:1,
-              is_kehu:false
+              is_kehu:false,
+              is_ch:true
             }
         },
         created(){
@@ -126,6 +128,7 @@
             console.log(item.id)
           })*/
 
+          this.is_ch = sessionStorage.getItem('lang') == 'chinese'?true:false;
           if((sessionStorage.getItem('objName')!=null)&&(sessionStorage.getItem('objPwd')!=null)){
             var noPw = '';
             console.log(sessionStorage.getItem('objName'))
@@ -196,10 +199,10 @@
           },
           loadMoreHis(){
             this.hisBusy = true;
-            setTimeout(() => {
+            /*setTimeout(() => {
               this.hisPage++;
               this.getHistorytList(true)
-            }, 500);
+            }, 500);*/
           },
 
           getMeetingList(flag){
@@ -228,14 +231,14 @@
           },
           loadMoreMet(){
             this.metBusy = true;
-            setTimeout(() => {
+           /* setTimeout(() => {
               this.metPage++;
             this.getMeetingList(true)
-          }, 500);
+          }, 500);*/
           },
           goHistory(id,secrect){
             if(secrect==1){
-              this.$message('保密会议，需向管理员申请权限');
+              this.$message(this.$lang.index.title.weight_tips);
             }else{
               this.$router.push({path:'/list/historyList',query:{mid:id}})
             }

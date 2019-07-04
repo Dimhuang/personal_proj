@@ -138,10 +138,10 @@
         },
         loadMoreHis(){
           this.hisBusy = true;
-          setTimeout(() => {
+          /*setTimeout(() => {
             this.hisPage++;
           this.getHistorytList(true)
-        }, 500);
+        }, 500);*/
         },
         getMeetingList(flag){
           this.$fetch('/wap/meeting/data',{
@@ -169,10 +169,10 @@
         },
         loadMoreMet(){
           this.metBusy = true;
-          setTimeout(() => {
+         /* setTimeout(() => {
             this.metPage++;
-          this.getMeetingList(true)
-        }, 500);
+            this.getMeetingList(true)
+          }, 500);*/
         },
 
         goFunctionList(type,id){

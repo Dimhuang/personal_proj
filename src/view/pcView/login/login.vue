@@ -11,14 +11,14 @@
 
       <el-form class="m-login-content" :label-position="labelPosition" :model="formLabelAlign">
         <el-form-item>
-          <el-input class="m-login-ipt" v-model="formLabelAlign.name" prefix-icon="pl-user iconfont" placeholder="请输入用户名"></el-input>
+          <el-input class="m-login-ipt" v-model="formLabelAlign.name" prefix-icon="pl-user iconfont" :placeholder="$lang.login.tips.name_txt"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input class="m-login-ipt" type="password" v-model="formLabelAlign.pwd" prefix-icon="pl-password iconfont" placeholder="请输入密码"></el-input>
+          <el-input class="m-login-ipt" type="password" v-model="formLabelAlign.pwd" prefix-icon="pl-password iconfont" :placeholder="$lang.login.tips.pwd_txt"></el-input>
           <!--<span class="m-login-fgpw" v-text="'忘记密码'"></span>-->
         </el-form-item>
         <div class="m-login-btn">
-          <el-button type="success" v-text="'登　录'" @click.native="login"></el-button>
+          <el-button type="success" v-text="$lang.login.tips.login_btn" @click.native="login"></el-button>
         </div>
       </el-form>
     </div>
@@ -48,9 +48,9 @@
         methods:{
           login(){
             if(this.formLabelAlign.name==''){
-              this.$message('用户名不能为空');
+              this.$message(this.$lang.login.tips.name_tips);
             }else if(this.formLabelAlign.pwd==''){
-              this.$message('密码不能为空');
+              this.$message(this.$lang.login.tips.pwd_tips);
             }else{
               this.$post('/wap/User/login',{
                 account:this.formLabelAlign.name,
@@ -60,7 +60,7 @@
                   sessionStorage.setItem('accessToken' , true)
                   this.goIndex()
                 }else{
-                this.$message('请输入正确的用户名或密码!');
+                  this.$message(this.$lang.login.tips.pwd_tips);
                 }
               })
             }

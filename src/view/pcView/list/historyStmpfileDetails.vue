@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item @click.native="goMain">临时资料</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_stmpfiles}}</el-breadcrumb-item>
       <el-breadcrumb-item @click.native="goList">{{outFolderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -13,8 +13,8 @@
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round  @click.native="openView(items.filepath,items)">
-            <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
-            <span v-else>打开</span>
+            <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.stmpfiles.form.download"></span>
+            <span v-else v-text="$lang.stmpfiles.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
@@ -23,9 +23,9 @@
     </ul>
     <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
       <i class="el-icon-loading" v-if="!busy"></i>
-      <span v-else>暂无更多数据</span>
+      <span v-else v-text="$lang.tips.no_data"></span>
     </div>
-    <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
+    <el-dialog :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
       <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
     </el-dialog>
   </div>

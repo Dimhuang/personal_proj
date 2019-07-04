@@ -10,6 +10,7 @@ const RouterConfig = {
 }
 export const router = new Router(RouterConfig)
 router.beforeEach((to, from, next)=>{
+    sessionStorage.setItem('lang' ,'chinese')
    /* if(to.meta.is_first != undefined){
       isMobile(function(is_mobile){
         if(is_mobile){
@@ -55,7 +56,6 @@ router.beforeEach((to, from, next)=>{
         })
       }*/
     //}
-
   if(to.path === '/'){
     sessionStorage.removeItem('wapAccessToken')
     sessionStorage.removeItem('accessToken')
@@ -97,11 +97,12 @@ router.beforeEach((to, from, next)=>{
       console.log(token)
       console.log(token.userJson.userName)
       console.log(token.userJson.passWord)
+      sessionStorage.removeItem('lang')
       sessionStorage.setItem('objName' , token.userJson.userName)
       sessionStorage.setItem('objPwd' ,token.userJson.passWord)
+      sessionStorage.setItem('lang' ,token.userJson.language)
       sessionStorage.setItem('showLogin' ,false)
       next()
     }
-
 
 })

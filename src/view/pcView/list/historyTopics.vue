@@ -1,13 +1,13 @@
 <template>
     <div>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>会议议题</el-breadcrumb-item>
+        <el-breadcrumb-item>{{$lang.history.title.meet_topic}}</el-breadcrumb-item>
       </el-breadcrumb>
       <ul>
         <li class="m-history-topics-list f-flex-content" v-for="items in topicList">
           <div class="f-flex-item">
             <h2>{{items.name.replace(/\s/g,'&nbsp;')}}</h2>
-            <span>汇报人：{{items.reporter}}   {{items.place}}</span>
+            <span>{{$lang.topic.form.reporter}}：{{items.reporter}}   {{items.place}}</span>
           </div>
           <div class="m-history-list-r">
             <!--<span class="f-end-ico" v-if="items.status==2">
@@ -20,13 +20,13 @@
               <i> </i>
             </span>-->
             <span></span>
-            <p @click.stop="goList(items.id)">查看资料(<em v-text="items.file_count"></em>) ></p>
+            <p @click.stop="goList(items.id)">{{$lang.topic.form.watch_file}}(<em v-text="items.file_count"></em>) ></p>
           </div>
         </li>
       </ul>
       <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
         <i class="el-icon-loading" v-if="!busy"></i>
-        <span v-else>暂无更多数据</span>
+        <span v-else v-text="$lang.tips.no_data"></span>
       </div>
     </div>
 </template>
@@ -96,7 +96,7 @@
     font-size: 18px;
     line-height: 44px;
     color: #333;
-    width: 850px;
+    width: 790px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

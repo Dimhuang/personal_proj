@@ -1,16 +1,16 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item @click.native="goMain">会议议题</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_topic}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{topicNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
       <li class="m-history-topics-list f-flex-content">
         <div class="f-flex-item">
-          <h2>{{topicTitle.name.replace(/\s/g,'&nbsp;')}}</h2>
-          <span>汇报：{{topicTitle.reporter}}</span>
+          <h2>{{topicNameTxt.replace(/\s/g,'&nbsp;')}}</h2>
+          <span>{{$lang.topic.form.report}}：{{topicTitle.reporter}}</span>
           <span class="f-topic-list-user">
-            <span>参会：</span>
+            <span>{{$lang.topic.form.join}}：</span>
             <p :class="{'f-ellipsis':toggleTap}" v-text="topicTitle.users"></p>
           </span>
         </div>
@@ -23,7 +23,7 @@
               <i>进行中</i>
             </span>-->
           <p></p>
-          <p class="f-fc-blue" v-text="toggleTap?'全部':'收起'" @click.stop="toggleTap = !toggleTap"></p>
+          <p class="f-fc-blue" v-text="toggleTap?$lang.topic.form.all:$lang.topic.form.slide_up" @click.stop="toggleTap = !toggleTap"></p>
         </div>
       </li>
       <li class="m-history-topics-list f-flex-content" v-for="items in dtopicList">
@@ -34,8 +34,8 @@
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round @click.native="goDetails(items)">
-            <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0">下载</span>
-            <span v-else>打开</span>
+            <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.topic.form.download"></span>
+            <span v-else v-text="$lang.topic.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
@@ -44,9 +44,9 @@
     </ul>
     <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
       <i class="el-icon-loading" v-if="!busy"></i>
-      <span v-else>暂无更多数据</span>
+      <span v-else v-text="$lang.tips.no_data"></span>
     </div>
-    <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
+    <el-dialog :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
       <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
     </el-dialog>
   </div>

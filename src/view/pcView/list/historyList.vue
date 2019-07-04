@@ -7,19 +7,19 @@
         <div class="f-view-width">
           <span class="m-back-btn" @click.stop="back">
             <i class="el-icon-arrow-left"></i>
-            <em v-text="'返回'"></em>
+            <em v-text="$lang.tips.back"></em>
           </span>
           <el-tabs @tab-click="handleClick">
             <!--会议信息-->
-            <el-tab-pane label="会议信息">
+            <el-tab-pane :label="$lang.history.title.meet_msg">
               <el-breadcrumb separator="/">
-                <el-breadcrumb-item>会议信息</el-breadcrumb-item>
+                <el-breadcrumb-item>{{$lang.history.title.meet_msg}}</el-breadcrumb-item>
               </el-breadcrumb>
               <ul>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hymc_n"></i>
                   <div>
-                    <span>会议名称：</span>
+                    <span v-text="$lang.history.title.m_name+'：'"></span>
                     <p v-html="name"></p>
                   </div>
                 </li>
@@ -33,35 +33,35 @@
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_time_n"></i>
                   <div>
-                    <span>会议时间：</span>
-                    <p class="f-fc-orange" v-text="meetingMsg.start_time + '开始'"></p>
+                    <span v-text="$lang.history.title.m_time+'：'"></span>
+                    <p class="f-fc-orange" v-text="meetingMsg.start_time + $lang.history.title.begin_txt"></p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hycs_n"></i>
                   <div>
-                    <span>会议场所：</span>
+                    <span v-text="$lang.history.title.m_place+'：'"></span>
                     <p v-text="meetingMsg.room_name"></p><p v-if="meetingMsg.room_name==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_zcr_n"></i>
                   <div>
-                    <span>主持人：</span>
+                    <span v-text="$lang.history.title.m_host+'：'"></span>
                     <p v-text="meetingMsg.moderator"></p><p v-if="meetingMsg.moderator==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hyjj_n"></i>
                   <div>
-                    <span>会议简介：</span>
+                    <span v-text="$lang.history.title.m_mark+'：'"></span>
                     <p v-text="meetingMsg.description"></p><p v-if="meetingMsg.description==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hymd_n"></i>
                   <div>
-                    <span>参会名单：</span>
+                    <span v-text="$lang.history.title.m_users+'：'"></span>
                     <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
@@ -69,7 +69,7 @@
                   <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon'">
                   <i class="iconfont pl-hyxx_hyfa_n"></i>
                   <div>
-                    <span>会议方案：</span>
+                    <span v-text="$lang.history.title.m_case+'：'"></span>
                     <div class="m-history-list-flie f-flex-content">
                       <div :class="getType(meetingMsg.agenda_name)"></div>
                       <div class="f-flex-item">
@@ -81,17 +81,17 @@
               </ul>
             </el-tab-pane>
             <!--会议议题-->
-            <el-tab-pane label="会议议题">
+            <el-tab-pane :label="$lang.history.title.meet_topic">
               <router-view/>
             </el-tab-pane>
             <!--临时资料-->
-            <el-tab-pane label="临时资料">
+            <el-tab-pane :label="$lang.history.title.meet_stmpfiles">
               <router-view/>
             </el-tab-pane>
             <!--批注白板-->
-            <el-tab-pane label="批注白板">
+            <el-tab-pane :label="$lang.history.title.meet_white">
               <el-breadcrumb separator="/">
-                <el-breadcrumb-item>批注白板</el-breadcrumb-item>
+                <el-breadcrumb-item>{{$lang.history.title.meet_white}}</el-breadcrumb-item>
               </el-breadcrumb>
 
               <div class="m-white-view">
@@ -99,7 +99,7 @@
                   <el-tab-pane  name="1">
                     <div slot="label">
                       <span v-text="fileNum"></span>
-                      <p>文档批注</p>
+                      <p v-text="$lang.history.title.m_file"></p>
                     </div>
                     <div>
                       <el-row :gutter="12">
@@ -114,14 +114,14 @@
                       </el-row>
                       <div class="f-load-box" v-infinite-scroll="loadMoreDoc" infinite-scroll-disabled="docBusy" infinite-scroll-distance="30">
                         <i class="el-icon-loading" v-if="!docBusy"></i>
-                        <span v-else>暂无更多数据</span>
+                        <span v-else v-text="$lang.tips.no_data"></span>
                       </div>
                     </div>
                   </el-tab-pane>
                   <el-tab-pane name="2">
                     <div slot="label">
                       <span v-text="handNum"></span>
-                      <p>手写批注</p>
+                      <p v-text="$lang.history.title.m_hand"></p>
                     </div>
                     <div class="m-ele-white-view">
                       <el-row :gutter="12">
@@ -133,14 +133,14 @@
                       </el-row>
                       <div class="f-load-box" v-infinite-scroll="loadMoreHand" infinite-scroll-disabled="handBusy" infinite-scroll-distance="30">
                         <i class="el-icon-loading" v-if="!handBusy"></i>
-                        <span v-else>暂无更多数据</span>
+                        <span v-else v-text="$lang.tips.no_data"></span>
                       </div>
                     </div>
                   </el-tab-pane>
-                  <el-tab-pane label="电子白板" name="3">
+                  <el-tab-pane name="3">
                     <div slot="label">
                       <span v-text="elecNum"></span>
-                      <p>电子白板</p>
+                      <p v-text="$lang.history.title.m_elec"></p>
                     </div>
                     <div class="m-ele-white-view">
                       <el-row :gutter="12">
@@ -152,7 +152,7 @@
                       </el-row>
                       <div class="f-load-box" v-infinite-scroll="loadMoreElec" infinite-scroll-disabled="elecBusy" infinite-scroll-distance="30">
                         <i class="el-icon-loading" v-if="!elecBusy"></i>
-                        <span v-else>暂无更多数据</span>
+                        <span v-else v-text="$lang.tips.no_data"></span>
                       </div>
                     </div>
                   </el-tab-pane>
@@ -161,7 +161,7 @@
             </el-tab-pane>
           </el-tabs>
 
-          <el-dialog title="查看" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
+          <el-dialog :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
             <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
           </el-dialog>
 
@@ -384,9 +384,9 @@
         }, 500);
       },
       handleClick(tab, event){
-        if(tab.label == "会议议题"){
+        if(tab.label == this.$lang.history.title.meet_topic){
           this.$router.push({path:'/list/historyList/topics'})
-        }else if(tab.label == "临时资料"){
+        }else if(tab.label == this.$lang.history.title.meet_stmpfiles){
           this.$router.push({path:'/list/historyList/stmpfile'})
         }
       },

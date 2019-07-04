@@ -11,23 +11,23 @@
           </span>
           <el-tabs @tab-click="">
             <!--会议信息-->
-            <el-tab-pane label="会议信息">
+            <el-tab-pane :label="$lang.history.title.meet_msg">
               <el-breadcrumb separator="/">
-                <el-breadcrumb-item>会议信息</el-breadcrumb-item>
+                <el-breadcrumb-item>{{$lang.history.title.meet_msg}}</el-breadcrumb-item>
               </el-breadcrumb>
               <ul>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hymc_n"></i>
                   <div>
-                    <span>会议名称：</span>
+                    <span v-text="$lang.history.title.m_name+'：'"></span>
                     <p v-html="name"></p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_time_n"></i>
                   <div>
-                    <span>会议时间：</span>
-                    <p class="f-fc-orange" v-text="meetingMsg.start_time + '开始'"></p>
+                    <span v-text="$lang.history.title.m_time+'：'"></span>
+                    <p class="f-fc-orange" v-text="meetingMsg.start_time + $lang.history.title.begin_txt"></p>
                   </div>
                 </li>
                 <!--<li class="m-history-list">
@@ -40,28 +40,28 @@
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hycs_n"></i>
                   <div>
-                    <span>会议场所：</span>
+                    <span v-text="$lang.history.title.m_place+'：'"></span>
                     <p v-text="meetingMsg.room_name"></p><p v-if="meetingMsg.room_name==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_zcr_n"></i>
                   <div>
-                    <span>主持人：</span>
+                    <span v-text="$lang.history.title.m_host+'：'"></span>
                     <p v-text="meetingMsg.moderator"></p><p v-if="meetingMsg.moderator==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hyjj_n"></i>
                   <div>
-                    <span>会议简介：</span>
+                    <span v-text="$lang.history.title.m_mark+'：'"></span>
                     <p v-text="meetingMsg.description"></p><p v-if="meetingMsg.description==''" style="visibility: hidden">a</p>
                   </div>
                 </li>
                 <li class="m-history-list">
                   <i class="iconfont pl-hyxx_hymd_n"></i>
                   <div>
-                    <span>参会名单：</span>
+                    <span v-text="$lang.history.title.m_users+'：'"></span>
                     <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
