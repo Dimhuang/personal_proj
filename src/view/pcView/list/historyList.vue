@@ -85,7 +85,7 @@
               <router-view/>
             </el-tab-pane>
             <!--临时资料-->
-            <el-tab-pane :label="$lang.history.title.meet_stmpfiles">
+            <el-tab-pane :label="$lang.history.title.meet_means">
               <router-view/>
             </el-tab-pane>
             <!--批注白板-->
@@ -140,7 +140,7 @@
                   <el-tab-pane name="3">
                     <div slot="label">
                       <span v-text="elecNum"></span>
-                      <p v-text="$lang.history.title.m_elec"></p>
+                      <p v-text="$lang.history.title.m_electron"></p>
                     </div>
                     <div class="m-ele-white-view">
                       <el-row :gutter="12">
@@ -386,7 +386,7 @@
       handleClick(tab, event){
         if(tab.label == this.$lang.history.title.meet_topic){
           this.$router.push({path:'/list/historyList/topics'})
-        }else if(tab.label == this.$lang.history.title.meet_stmpfiles){
+        }else if(tab.label == this.$lang.history.title.meet_means){
           this.$router.push({path:'/list/historyList/stmpfile'})
         }
       },

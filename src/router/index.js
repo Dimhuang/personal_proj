@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {routers ,routerList} from './router'
 import { isMobile ,getRequest} from '../utils/utils'
-
+import { language } from '@/assets/language/language.js'
 Vue.use(Router)
 
 const RouterConfig = {
@@ -10,7 +10,7 @@ const RouterConfig = {
 }
 export const router = new Router(RouterConfig)
 router.beforeEach((to, from, next)=>{
-    sessionStorage.setItem('lang' ,'chinese')
+    sessionStorage.setItem('lang' ,'english')
    /* if(to.meta.is_first != undefined){
       isMobile(function(is_mobile){
         if(is_mobile){
@@ -94,9 +94,6 @@ router.beforeEach((to, from, next)=>{
 
     }else {
       var token= JSON.parse(jsObj.getUser())
-      console.log(token)
-      console.log(token.userJson.userName)
-      console.log(token.userJson.passWord)
       sessionStorage.removeItem('lang')
       sessionStorage.setItem('objName' , token.userJson.userName)
       sessionStorage.setItem('objPwd' ,token.userJson.passWord)
@@ -104,5 +101,5 @@ router.beforeEach((to, from, next)=>{
       sessionStorage.setItem('showLogin' ,false)
       next()
     }
-
+    Vue.prototype.$lang=language[sessionStorage.getItem('lang')];
 })

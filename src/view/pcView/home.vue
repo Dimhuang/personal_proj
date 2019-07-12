@@ -186,7 +186,6 @@
                     this.hisBusy=false
                   }
                 }else{
-
                   this.hisList = res.data
                   console.log(res.data)
                   console.log(this.hisList)

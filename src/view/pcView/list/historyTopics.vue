@@ -49,26 +49,30 @@
         },
         methods:{
           getList(flag){
-            this.$fetch('/wap/meeting/datum',{
-              m_id:this.mid,
+            let _self = this;
+            _self.$fetch('/wap/meeting/datum',{
+              m_id:_self.mid,
               pagesize:10,
-              page:this.page
+              page:_self.page
             }).then(result=>{
               let res = result.data;
             if(result.msg=='success'){
               if(flag){
-                this.topicList = this.topicList.concat(res.data)
-                if(res.total<this.page*10){
-                  this.busy=true
+                console.log(res.data)
+                if(res.data.length!=0){
+                  _self.topicList = _self.topicList.concat(res.data)
+                }
+                if(res.total<_self.page*10){
+                  _self.busy=true
                 }else{
-                  this.busy=false
+                  _self.busy=false
                 }
               }else{
-                this.topicList = res.data
-                this.busy=false
+                _self.topicList = res.data
+                _self.busy=false
               }
             }else{
-              this.topicList = []
+              _self.topicList = []
             }
             })
           },

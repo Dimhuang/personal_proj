@@ -3,7 +3,7 @@
 
     <div class="f-left-box">
       <i></i>
-      <span>无纸化个人中心</span>
+      <span v-text="$lang.tips.nav_title"></span>
     </div>
     <div class="f-right-box">
       <!--<span><i class="iconfont pl-user"></i></span>-->

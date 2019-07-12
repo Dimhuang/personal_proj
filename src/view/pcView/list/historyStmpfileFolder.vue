@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_stmpfiles}}</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
@@ -13,8 +13,8 @@
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round  @click.native="goDetails(items)">
-             <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.stmpfiles.form.download"></span>
-             <span v-else v-text="$lang.stmpfiles.form.open"></span>
+             <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.means.form.download"></span>
+             <span v-else v-text="$lang.means.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">

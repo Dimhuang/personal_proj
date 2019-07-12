@@ -3,7 +3,8 @@ export const language = {
     tips:{
       no_data:"暂无更多数据",
       back:'返回',
-      see:'查看'
+      see:'查看',
+      nav_title:"无纸化个人中心"
     },
     index:{
       title:{
@@ -44,11 +45,11 @@ export const language = {
         m_users:'参会名单',
         m_case:'会议方案',
         meet_topic:'会议议题',
-        meet_stmpfiles:'会议资料',
+        meet_means:'会议资料',
         meet_white:'批注白板',
         m_file:'文档批注',
         m_hand:'手写批注',
-        m_elec:'电子白板'
+        m_electron:'电子白板'
       }
     },
     topic:{
@@ -63,7 +64,7 @@ export const language = {
         slide_up:'收起'
       }
     },
-    stmpfiles:{
+    means:{
       form:{
         open:'打开',
         download:'下载',
@@ -73,71 +74,72 @@ export const language = {
   "english": {
     tips:{
       no_data:"No more data yet",
-      back:'Back',
-      see:'Preview'
+      back:"Back",
+      see:"Preview",
+      nav_title:"Paperless Conference"
     },
     index:{
       title:{
-        his:'History Conference',
-        meet:'Meeting List',
+        his:"History Conference",
+        meet:"Meeting List",
         weight_tips:"Confidential meeting, need to apply for permission from administrator",
-        time:'Time',
-        host:'Host',
-        room:'Meeting Room'
+        time:"Time",
+        host:"Host",
+        room:"Meeting Room"
       },
       status:{
-        not_start:'Not started',
-        start:'Ongoing'
+        not_start:"Not started",
+        start:"Ongoing"
       },
       tips:{
-        refresh:'Refresh List'
+        refresh:"Refresh List"
       }
     },
     login:{
       tips:{
-        name_txt:'Please input a name',
-        pwd_txt:'Please input a password',
-        login_btn:'Sign in',
-        name_tips:'User name cannot be empty',
-        pwd_tips:'Password cannot be empty',
-        right_input:'Please enter the correct username or password!'
+        name_txt:"Please input a name",
+        pwd_txt:"Please input a password",
+        login_btn:"Sign in",
+        name_tips:"User name cannot be empty",
+        pwd_tips:"Password cannot be empty",
+        right_input:"Please enter the correct username or password!"
       }
     },
     history:{
       title:{
-        meet_msg:'Conference information',
-        m_name:'Name of meeting',
-        m_time:'Meeting time',
-        begin_txt:'begin',
-        m_place:'Conference venue',
-        m_host:'Host',
-        m_mark:'Introduction of meeting',
-        m_users:'List of participants',
-        m_case:'Programme of meetings',
-        meet_topic:'Topics of the meeting',
-        meet_stmpfiles:'Conference information',
-        meet_white:'Note White Board',
-        m_file:'Document Annotation',
-        m_hand:'Hand annotation',
-        m_elec:'Electronic whiteboard'
+        meet_msg:"Conference information",
+        m_name:"Name of meeting",
+        m_time:"Meeting time",
+        begin_txt:"begin",
+        m_place:"Conference venue",
+        m_host:"Host",
+        m_mark:"Introduction of meeting",
+        m_users:"List of participants",
+        m_case:"Programme of meetings",
+        meet_topic:"Topics",
+        meet_means:"Meeting Files",
+        meet_white:"White Board",
+        m_file:"Document Annotation",
+        m_hand:"Hand annotation",
+        m_electron:"Electronic whiteboard"
       }
     },
     topic:{
       form:{
-        reporter:'Reporter',
-        watch_file:'View information',
-        open:'Open',
-        download:'Download',
-        report:'Report',
-        join:'Participants',
-        all:'Whole',
-        slide_up:'Retract'
+        reporter:"Reporter",
+        watch_file:"View information",
+        open:"Open",
+        download:"Download",
+        report:"Report",
+        join:"Participants",
+        all:"Whole",
+        slide_up:"Retract"
       }
     },
-    stmpfiles:{
+    means:{
       form:{
-        open:'Open',
-        download:'Download',
+        open:"Open",
+        download:"Download",
       }
     }
   }

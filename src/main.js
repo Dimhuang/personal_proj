@@ -28,7 +28,7 @@ Vue.use(infiniteScroll)
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
-Vue.prototype.$lang=language[sessionStorage.getItem('lang')];
+//Vue.prototype.$lang=language[sessionStorage.getItem('lang')];
 //定义全局变量
 Vue.prototype.$post=post;
 Vue.prototype.$fetch=fetch;
