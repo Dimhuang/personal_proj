@@ -34,6 +34,7 @@
           <span>忘记密码?</span>
         </p>-->
         <yd-button size="large" bgcolor="#8bc34a" shape="circle" @click.native="login()">登　录</yd-button>
+        <!--<yd-button size="large" bgcolor="#8bc34a" shape="circle" @click.native="demo()">demo</yd-button>-->
       </div>
 
     </div>
@@ -89,7 +90,13 @@
           },
           goIndex(){
             this.$router.push({path:'/wap/meetingList'})
+          },
+          demo(){
+            var _self = this;
+            _self.$router.push({path:'/wap/demo'});
           }
+
+
         },
         components: {
 

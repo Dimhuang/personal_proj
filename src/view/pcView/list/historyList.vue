@@ -485,7 +485,7 @@
     height: 0;
   }
   .m-list-nav .el-tabs__nav-wrap{
-    padding-left: 320px;
+    padding-left: 179px;
     margin-top:-1px;
   }
   .m-list-nav .el-tabs__item{
@@ -542,6 +542,7 @@
     line-height: 20px;
     color: #666;
     margin-top: 5px;
+    word-break: break-all;
   }
   .m-history-list-flie{
     height: 60px;

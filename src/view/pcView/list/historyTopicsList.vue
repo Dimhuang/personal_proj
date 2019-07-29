@@ -190,7 +190,7 @@
     font-size: 18px;
     line-height: 44px;
     color: #333;
-    width: 850px;
+    width: 790px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

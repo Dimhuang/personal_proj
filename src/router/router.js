@@ -187,6 +187,13 @@ export const routerList = [
       requiresAuth: true
     },
     component: resolve => require(["@/view/wapView/list/board"], resolve)
+  },{
+    path: '/wap/demo',
+    name: 'wapDemo',
+    meta: {
+      requiresAuth: false
+    },
+    component: resolve => require(["@/view/wapView/list/demo"], resolve)
   }
 ]
 

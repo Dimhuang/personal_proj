@@ -80,16 +80,16 @@ export const language = {
     },
     index:{
       title:{
-        his:"History Conference",
+        his:"Historical meeting",
         meet:"Meeting List",
         weight_tips:"Confidential meeting, need to apply for permission from administrator",
         time:"Time",
-        host:"Host",
+        host:"Chairman",
         room:"Meeting Room"
       },
       status:{
         not_start:"Not started",
-        start:"Ongoing"
+        start:"In process"
       },
       tips:{
         refresh:"Refresh List"
@@ -107,32 +107,32 @@ export const language = {
     },
     history:{
       title:{
-        meet_msg:"Conference information",
-        m_name:"Name of meeting",
+        meet_msg:"Meeting information",
+        m_name:"Meeting name",
         m_time:"Meeting time",
         begin_txt:"begin",
-        m_place:"Conference venue",
-        m_host:"Host",
-        m_mark:"Introduction of meeting",
-        m_users:"List of participants",
-        m_case:"Programme of meetings",
-        meet_topic:"Topics",
-        meet_means:"Meeting Files",
-        meet_white:"White Board",
-        m_file:"Document Annotation",
-        m_hand:"Hand annotation",
-        m_electron:"Electronic whiteboard"
+        m_place:"Meeting venue",
+        m_host:"Chairman",
+        m_mark:"Meeting introduction",
+        m_users:"Participants",
+        m_case:"Meeting programme",
+        meet_topic:"Meeting topic",
+        meet_means:"Meeting document",
+        meet_white:"Comment whiteboard",
+        m_file:"Document annotation",
+        m_hand:"Note",
+        m_electron:"Whiteboard"
       }
     },
     topic:{
       form:{
         reporter:"Reporter",
-        watch_file:"View information",
+        watch_file:"Files",
         open:"Open",
         download:"Download",
         report:"Report",
-        join:"Participants",
-        all:"Whole",
+        join:"Participation",
+        all:"All",
         slide_up:"Retract"
       }
     },
