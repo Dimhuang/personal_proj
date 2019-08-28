@@ -171,9 +171,10 @@ export const fileType = (filename,type) => {
       return 'f-wap-na-icon';
     }
 
-
-
-
-
 };
+
+
+export const global_ = {
+  obj : 1  //1：3.0客户端，2：麒麟客户端
+}
 

@@ -33,7 +33,8 @@
 <script>
   import '@/assets/css/pcScrollBar.css'
   import {mapState} from 'vuex'
-  import { fileType } from '@/utils/utils'
+  import { fileType , global_ } from '@/utils/utils'
+  import { QWebChannel } from  '@/assets/js/qwebchannel.js'
   export default{
     data(){
       return {
@@ -136,13 +137,31 @@
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
            dangerouslyUseHTMLString: true
            });*/
-          if(typeof jsObj === "undefined") {
-            _self.srcPath = data.path
-            window.location.href = _self.srcPath
+          if(global_.obj==1){
+            if(typeof jsObj === "undefined") {
+              _self.srcPath = data.path
+              window.location.href = _self.srcPath
+            }else{
+              var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
+              jsObj.downloadFile(JSON.stringify(parems))
+            }
           }else{
-            var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
-            jsObj.downloadFile(JSON.stringify(parems))
+            if(typeof qt === "undefined") {
+              _self.srcPath = data.path
+              window.location.href = _self.srcPath
+            }else{
+              var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.path,"iSize":0}
+
+              new QWebChannel(qt.webChannelTransport,function(channel) {
+                var jsObj = channel.objects.jsObj;
+                jsObj.downloadFile(JSON.stringify(parems))
+              });
+            }
           }
+
+
+
+
         }
       }
     }

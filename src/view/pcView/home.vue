@@ -55,9 +55,9 @@
                   <div class="m-main-nav-list-bd">
                     <p>
                       <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
-                      <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span v-text="items.moderator"></span></span>
+                      <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
                     </p>
-                    <p><span v-text="$lang.index.title.room+':'"></span><span v-text="items.room_name"></span></p>
+                    <p><span class="fl"><span v-text="$lang.index.title.room+':'"></span><span class="f-width-2" v-text="items.room_name"></span></span></p>
                   </div>
               </el-card>
             </el-col>
@@ -84,9 +84,9 @@
                 <div class="m-main-nav-list-bd">
                   <p>
                     <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
-                    <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span v-text="items.moderator"></span></span>
+                    <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
                   </p>
-                  <p><span v-text="$lang.index.title.room+':'"></span><span v-text="items.room_name"></span></p>
+                  <p><span v-text="$lang.index.title.room+':'"></span><span class="f-width-2" v-text="items.room_name"></span></p>
                 </div>
               </el-card>
             </el-col>
@@ -186,10 +186,13 @@
                     this.hisBusy=false
                   }
                 }else{
-                  this.hisList = res.data
-                  console.log(res.data)
-                  console.log(this.hisList)
-                  this.hisBusy=false
+                  if(res.data.length==0){
+                    this.hisList = res.data
+                    this.hisBusy=true
+                  }else{
+                    this.hisList = res.data
+                    this.hisBusy=false
+                  }
                 }
               }else{
                 this.hisList = []
@@ -220,8 +223,13 @@
                   this.metBusy=false
                 }
               }else{
-                this.metList = res.data
-                this.metBusy=false
+                if(res.data.length==0){
+                  this.metList = res.data
+                  this.metBusy=true
+                }else{
+                  this.metList = res.data
+                  this.metBusy=false
+                }
               }
             }else{
               this.metList = []
@@ -416,7 +424,26 @@
     width: 100%;
     position: relative;
   }
-
+  .m-main-nav-list-bd span.f-width-1{
+    width: 80px;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    text-overflow: ellipsis;
+  }
+  .m-main-nav-list-bd span.f-width-2{
+    width: 195px;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    text-overflow: ellipsis;
+  }
   .f-visibility{
     visibility: hidden;
   }

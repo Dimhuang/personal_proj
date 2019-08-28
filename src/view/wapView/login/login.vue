@@ -46,7 +46,8 @@
             return {
               msg: 'hello vue',
               userTxt:'',
-              pwdTxt:''
+              pwdTxt:'',
+              is_free:"0"
             }
         },
         created(){
@@ -55,11 +56,14 @@
           }
 
           console.log(sessionStorage.getItem('adName'))*/
-
-
           if(sessionStorage.getItem('adName')!=null&&sessionStorage.getItem('adPwd')!=null){
             this.userTxt = sessionStorage.getItem('adName')
             this.pwdTxt = sessionStorage.getItem('adPwd')
+            if(sessionStorage.getItem('adPwd')==''){
+              this.is_free=1
+            }else{
+              this.is_free=0
+            }
             this.login()
           }
         },
@@ -67,12 +71,13 @@
           login(){
             if(this.userTxt==''){
               this.$dialog.toast({mes: '用户名不能为空', timeout: 1500, icon: 'error' });
-            }else if(this.pwdTxt==''){
+            }else if(this.pwdTxt==''&&this.is_free==0){
               this.$dialog.toast({mes: '密码不能为空', timeout: 1500, icon: 'error' });
             }else{
               this.$post('/wap/User/login',{
                 account:this.userTxt,
-                password:this.pwdTxt
+                password:this.pwdTxt,
+                density_free:this.is_free
               }).then(result=>{
                 if(result.msg == 'success'){
                 sessionStorage.setItem('wapAccessToken' , true)
