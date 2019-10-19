@@ -38,7 +38,8 @@
             return {
               topicList:[],
               page:1,
-              busy:true
+              busy:true,
+              is_meet_type:sessionStorage.getItem('meetType')==null?'1':sessionStorage.getItem('meetType'),
             }
         },
         computed: {
@@ -84,8 +85,14 @@
             }, 500);
           },
           goList(id){
-            this.$router.push({path:'/list/historyList/topicsList',query:{did:id}})
-          }
+            if(this.is_meet_type==1){
+              this.$router.push({path:'/list/historyList/topicsList',query:{did:id}})
+            }else{
+              this.$router.push({path:'/list/meetingList/topicsList',query:{did:id}})
+            }
+
+
+          },
         }
     }
 </script>
@@ -139,4 +146,6 @@
     color: #1792ff;
     cursor: pointer;
   }
+
+
 </style>

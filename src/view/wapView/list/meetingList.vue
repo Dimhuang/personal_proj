@@ -115,20 +115,20 @@
         getHistorytList(flag){
           this.$fetch('/wap/meeting/data',{
             status:2,
-            pagisize:6,
+            pagesize:6,
             page:this.hisPage
           }).then(result=>{
             let res = result.data;
           if(result.msg=='success'){
             if(flag){
-              this.hisList = this.hisList.concat(res.data)
+              this.hisList = this.hisList.concat(res)
               if(res.total<this.hisPage*6){
                 this.hisBusy=true
               }else{
                 this.hisBusy=false
               }
             }else{
-              this.hisList = res.data
+              this.hisList = res
               this.hisBusy=false
             }
           }else{
@@ -146,20 +146,20 @@
         getMeetingList(flag){
           this.$fetch('/wap/meeting/data',{
             status:"0,1",
-            pagisize:6,
+            pagesize:6,
             page:this.metPage
           }).then(result=>{
             let res = result.data;
           if(result.msg=='success'){
             if(flag){
-              this.metList = this.metList.concat(res.data)
+              this.metList = this.metList.concat(res)
               if(res.total<this.metPage*6){
                 this.metBusy=true
               }else{
                 this.metBusy=false
               }
             }else{
-              this.metList = res.data
+              this.metList = res
               this.metBusy=false
             }
           }else{

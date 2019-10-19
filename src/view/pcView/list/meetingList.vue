@@ -9,7 +9,7 @@
             <i class="el-icon-arrow-left"></i>
             <em v-text="'返回'"></em>
           </span>
-          <el-tabs @tab-click="">
+          <el-tabs @tab-click="handleClick">
             <!--会议信息-->
             <el-tab-pane :label="$lang.history.title.meet_msg">
               <el-breadcrumb separator="/">
@@ -67,6 +67,14 @@
                 </li>
               </ul>
             </el-tab-pane>
+            <!--会议议题-->
+          <!--  <el-tab-pane :label="$lang.history.title.meet_topic">
+              <router-view/>
+            </el-tab-pane>-->
+            <!--临时资料-->
+           <!-- <el-tab-pane :label="$lang.history.title.meet_means">
+              <router-view/>
+            </el-tab-pane>-->
           </el-tabs>
         </div>
       </div>
@@ -82,7 +90,6 @@
     data(){
       return{
         meetingMsg:[],
-        whiteBoardActive:'1',
         name:''
       }
     },
@@ -108,6 +115,13 @@
             this.meetingMsg = []
           }
         })
+      },
+      handleClick(tab, event){
+        if(tab.label == this.$lang.history.title.meet_topic){
+          this.$router.push({path:'/list/meetingList/topics'})
+        }else if(tab.label == this.$lang.history.title.meet_means){
+          this.$router.push({path:'/list/meetingList/stmpfile'})
+        }
       },
       back(){
         this.$router.push({path:'/index'})
@@ -140,6 +154,10 @@
   }
   .m-meeting-nav .el-tabs__nav{
     float: inherit;
+  }
+  .m-meeting-nav .el-tabs__nav-wrap{
+    padding-left: 179px;
+    margin-top:-1px;
   }
   .m-meeting-nav .el-tabs__nav-wrap::after{
     height: 0;

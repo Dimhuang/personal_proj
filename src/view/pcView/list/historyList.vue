@@ -396,7 +396,7 @@
       },
       openView(path,data) {
         var _self = this;
-        if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+        if (_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
           _self.dialogTableVisible=true
         /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
@@ -406,12 +406,12 @@
           }).catch(action => {
               _self.srcPath = ''
           });*/
-        }else if(_self.getType(path) == 'f-pdf-icon'){
+       /* }else if(_self.getType(path) == 'f-pdf-icon'){
           _self.srcPath = path
-          /*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+          /!*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
             dangerouslyUseHTMLString: true
-          })*/
-          _self.dialogTableVisible=true
+          })*!/
+          _self.dialogTableVisible=true*/
         }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
 
           }else {
@@ -419,10 +419,15 @@
            dangerouslyUseHTMLString: true
            });*/
 
-          if(global_.obj==1){
+          if(sessionStorage.getItem('globalObj')==1){
             if(typeof jsObj === "undefined") {
-              _self.srcPath = data.filepath
-              window.location.href = _self.srcPath
+              if(_self.getType(path) == 'f-pdf-icon'){
+                _self.srcPath = path
+                _self.dialogTableVisible=true
+              }else{
+                _self.srcPath = data.filepath
+                window.location.href = _self.srcPath
+              }
             }else{
               var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.filepath,"iSize":0}
               jsObj.downloadFile(JSON.stringify(parems))
@@ -444,7 +449,7 @@
       },
       openViewA(path,data) {
         var _self = this;
-        if (_self.getType(path) == 'f-txt-icon'||_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+        if (_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
           _self.srcPath = path
           _self.dialogTableVisible=true
           /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
@@ -454,30 +459,40 @@
            }).catch(action => {
            _self.srcPath = ''
            });*/
-        }else if(_self.getType(path) == 'f-pdf-icon'){
+     /*   }else if(_self.getType(path) == 'f-pdf-icon'){
           _self.srcPath = path
-          /*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+          /!*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
            dangerouslyUseHTMLString: true
-           })*/
-          _self.dialogTableVisible=true
+           })*!/
+          _self.dialogTableVisible=true*/
         }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
 
         }else {
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
            dangerouslyUseHTMLString: true
            });*/
-          if(global_.obj==1){
+          if(sessionStorage.getItem('globalObj')==1){
             if(typeof jsObj === "undefined") {
-              _self.srcPath = path
-              window.location.href = _self.srcPath
+              if(_self.getType(path) == 'f-pdf-icon'){
+                _self.srcPath = path
+                _self.dialogTableVisible=true
+              }else{
+                _self.srcPath = path
+                window.location.href = _self.srcPath
+              }
             }else{
               var parems = {"fileName":data.agenda_name,"fileId":data.id,"downloadPath":data.agenda_path,"iSize":0}
               jsObj.downloadFile(JSON.stringify(parems))
             }
           }else{
             if(typeof qt === "undefined") {
-              _self.srcPath = path
-              window.location.href = _self.srcPath
+              if(_self.getType(path) == 'f-pdf-icon'){
+                _self.srcPath = path
+                _self.dialogTableVisible=true
+              }else{
+                _self.srcPath = path
+                window.location.href = _self.srcPath
+              }
             }else{
               var parems = {"fileName":data.agenda_name,"fileId":data.id,"downloadPath":data.agenda_path,"iSize":0}
               new QWebChannel(qt.webChannelTransport,function(channel) {

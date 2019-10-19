@@ -45,7 +45,7 @@ export const language = {
         m_users:'参会名单',
         m_case:'会议方案',
         meet_topic:'会议议题',
-        meet_means:'会议资料',
+        meet_means:'临时资料',
         meet_white:'批注白板',
         m_file:'文档批注',
         m_hand:'手写批注',
@@ -61,13 +61,30 @@ export const language = {
         report:'汇报',
         join:'参会',
         all:'全部',
-        slide_up:'收起'
+        slide_up:'收起',
+        upload:'上传文件'
       }
     },
     means:{
       form:{
         open:'打开',
         download:'下载',
+        confirm:'确定',
+        cancel:'取消'
+      }
+    },
+    upload:{
+      form:{
+        title:'上传文件',
+        sel_file:'选择文件',
+        file_tips:'(上传文件单次不能大于100个且会议议题总数不能超过200个)',
+        is_upload:'已上传：',
+        down_name:'下载设置：',
+        can_down:'可下载到U盘',
+        no_down:'不可下载',
+        is_secret:'私有模式：',
+        only_watch:'仅上传者能查看',
+        all_watch:'所有人可查看',
       }
     }
   },
@@ -133,13 +150,30 @@ export const language = {
         report:"Report",
         join:"Participation",
         all:"All",
-        slide_up:"Retract"
+        slide_up:"Retract",
+        upload:'Upload files'
       }
     },
     means:{
       form:{
         open:"Open",
         download:"Download",
+        confirm:'Confirm',
+        cancel:'Cancel'
+      }
+    },
+    upload:{
+      form:{
+        title:'Upload files',
+        sel_file:'Select file',
+        file_tips:'(The number of uploaded documents should not exceed 100 at a time and the total number of conference topics should not exceed 200)',
+        is_upload:'Uploaded:',
+        down_name:'Download settings:',
+        can_down:'Downloadable to U disk',
+        no_down:'Not downloadable',
+        is_secret:'Private mode:',
+        only_watch:'Only uploaders can view',
+        all_watch:'Everyone can view it',
       }
     }
   }

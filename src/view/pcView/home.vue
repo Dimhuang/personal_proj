@@ -127,8 +127,11 @@
          /* getRequest((item)=>{
             console.log(item.id)
           })*/
-
+          sessionStorage.removeItem('meetType')
           this.is_ch = sessionStorage.getItem('lang') == 'chinese'?true:false;
+
+
+          console.log('pic='+this.is_ch)
           if((sessionStorage.getItem('objName')!=null)&&(sessionStorage.getItem('objPwd')!=null)){
             var noPw = '';
             console.log(sessionStorage.getItem('objName'))
@@ -155,13 +158,16 @@
             this.getHistorytList()
             this.getMeetingList()
           }
-
-          if(typeof jsObj === "undefined"){
-            this.is_kehu = false
-          }else{
+          console.log('jsObj：'+typeof jsObj)
+          console.log('qt：'+typeof qt)
+          if(typeof jsObj !== "undefined"){
             this.is_kehu = true
+          }else if(typeof qt !== "undefined"){
+            this.is_kehu = true
+          }else{
+            this.is_kehu = false
           }
-
+          console.log('showl：'+this.is_kehu)
         },
         methods:{
           refreshList(){
@@ -173,24 +179,24 @@
           getHistorytList(flag){
             this.$fetch('/wap/meeting/data',{
               status:2,
-              pagisize:9,
+              pagesize:9,
               page:this.hisPage
             }).then(result=>{
               let res = result.data;
               if(result.msg=='success'){
                 if(flag){
-                  this.hisList = this.hisList.concat(res.data)
+                  this.hisList = this.hisList.concat(res)
                   if(res.total<this.hisPage*9){
                     this.hisBusy=true
                   }else{
                     this.hisBusy=false
                   }
                 }else{
-                  if(res.data.length==0){
-                    this.hisList = res.data
+                  if(res.length==0){
+                    this.hisList = res
                     this.hisBusy=true
                   }else{
-                    this.hisList = res.data
+                    this.hisList = res
                     this.hisBusy=false
                   }
                 }
@@ -210,24 +216,24 @@
           getMeetingList(flag){
             this.$fetch('/wap/meeting/data',{
               status:"0,1",
-              pagisize:9,
+              pagesize:9,
               page:this.metPage
             }).then(result=>{
             let res = result.data;
             if(result.msg=='success'){
               if(flag){
-                this.metList = this.metList.concat(res.data)
+                this.metList = this.metList.concat(res)
                 if(res.total<this.metPage*9){
                   this.metBusy=true
                 }else{
                   this.metBusy=false
                 }
               }else{
-                if(res.data.length==0){
-                  this.metList = res.data
+                if(res.length==0){
+                  this.metList = res
                   this.metBusy=true
                 }else{
-                  this.metList = res.data
+                  this.metList = res
                   this.metBusy=false
                 }
               }
@@ -247,10 +253,12 @@
             if(secrect==1){
               this.$message(this.$lang.index.title.weight_tips);
             }else{
+              sessionStorage.setItem('meetType',1)
               this.$router.push({path:'/list/historyList',query:{mid:id}})
             }
           },
           goMeeting(id){
+            sessionStorage.setItem('meetType',2)
             this.$router.push({path:'/list/meetingList',query:{mid:id}})
           }
         },

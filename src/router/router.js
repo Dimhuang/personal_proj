@@ -80,7 +80,60 @@ export const routerList = [
     meta: {
       requiresAuth: true
     },
-    component: resolve => require(["@/view/pcView/list/meetingList"], resolve)
+    component: resolve => require(["@/view/pcView/list/meetingList"], resolve),
+    children: [
+      {
+        path: '/list/meetingList/topics',
+        name:'topics',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyTopics"], resolve)
+      },{
+        path: '/list/meetingList/topicsList',
+        name:'topicsList',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyTopicsList"], resolve)
+      },{
+        path: '/list/meetingList/topicsDetails',
+        name:'topicsDetails',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyTopicsDetails"], resolve)
+      },{
+        path: '/list/meetingList/stmpfile',
+        name:'stmpfile',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyStmpFiles"], resolve)
+      },{
+        path: '/list/meetingList/stmpfileFolder',
+        name:'stmpfileFolder',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyStmpfileFolder"], resolve)
+      },{
+        path: '/list/meetingList/stmpfileDetails',
+        name:'stmpfileDetails',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyStmpfileDetails"], resolve)
+      }
+    ]
+  },
+  {
+    path: '/list/demo',
+    name: 'demo',
+    meta: {
+      requiresAuth: true
+    },
+    component: resolve => require(["@/view/pcView/list/demo"], resolve)
   },
   //mobile路由
   {

@@ -173,8 +173,8 @@ export const fileType = (filename,type) => {
 
 };
 
-
+//obj : 1
 export const global_ = {
-  obj : 1  //1：3.0客户端，2：麒麟客户端
+  obj : sessionStorage.getItem('globalObj')  //1：3.0客户端，2：麒麟客户端
 }
 
