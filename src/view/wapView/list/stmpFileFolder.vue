@@ -42,6 +42,9 @@
         <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
       </yd-cell-item>
     </yd-cell-group>
+    <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998">
+      <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
+    </yd-tabbar>
     <yd-backtop></yd-backtop>
     <yd-popup v-model="showRight" position="right" class="f-popup-view" width="100%">
       <yd-navbar slot="top" title="查看">
@@ -52,6 +55,34 @@
       </yd-navbar>
       <iframe :src='srcPath' width='100%' height='100%' frameborder='1'></iframe>
     </yd-popup>
+
+    <yd-popup v-model="showMiddle" position="center" class="f-popup-view" width="90%" :close-on-masker="false">
+      <div class="m-wap-upload-view" style="background-color:#fff;">
+        <h2>上传文件</h2>
+        <div class="m-wap-upload-radio">
+          <p><yd-icon name="xiazai" size=".4rem" color="#999" custom></yd-icon><span>下载设置</span></p>
+          <yd-radio-group v-model="downType" color="#1791ff">
+            <yd-radio val="1">可下载到U盘</yd-radio>
+            <yd-radio val="0">不可下载</yd-radio>
+          </yd-radio-group>
+        </div>
+        <div class="m-wap-upload-radio">
+          <p><yd-icon name="suoding" size=".4rem" color="#999" custom></yd-icon><span>私有模式</span></p>
+          <yd-radio-group v-model="watchType" color="#1791ff">
+            <yd-radio val="1">仅上传者能查看</yd-radio>
+            <yd-radio val="0">所有人可查看</yd-radio>
+          </yd-radio-group>
+        </div>
+        <div class="m-wap-upload-footer">
+          <div class="fl" @click.stop="showMiddle=false">取消</div>
+          <div class="fr">
+            <input type="file" name="file" @change="getFileVal($event)">
+            <span>下一步</span>
+          </div>
+        </div>
+      </div>
+    </yd-popup>
+
     <div class="f-wap-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else>暂无更多数据</span>
@@ -60,7 +91,8 @@
 </template>
 <script>
   import {mapState} from 'vuex'
-  import { fileType } from '@/utils/utils'
+  import { fileType  , upload_url} from '@/utils/utils'
+  import $ from 'jquery'
   export default{
     data(){
       return {
@@ -74,7 +106,11 @@
         fileType:'',
         srcPath:'',
         showRight:false,
-        is_ad:sessionStorage.getItem('adType')==null?false:true
+        is_ad:sessionStorage.getItem('adType')==null?false:true,
+        showMiddle:false,
+        downType:'1',
+        watchType:'1',
+        file:''
       }
     },
     computed: {
@@ -174,6 +210,72 @@
         _self.srcPath = path
         window.location.href = _self.srcPath
       }
+    },
+    getFileVal(event) {
+      this.file = event.target.files[0];
+      console.log(console.log(this.file));
+      this.getFileSubmit()
+    },
+    getFileSubmit(){
+      var _self = this;
+      event.preventDefault();
+      var formData = new FormData();
+      formData.append('mid', _self.mid);
+      formData.append('file', _self.file);
+      $.ajax({
+        url:upload_url,
+        dataType:'json',
+        type:'POST',
+        async: false,
+        data: formData,
+        processData : false, // 使数据不做处理
+        contentType : false, // 不要设置Content-Type请求头
+        success: function(data){
+          console.log(data);
+          var arr = [];
+
+          if (data.msg == 'success') {
+            _self.$dialog.loading.open('正在上传...');
+            arr.push(data.fid)
+            var parems = {
+              mid:_self.mid,
+              parent_id:_self.fid,
+              files:arr,
+              is_secret:_self.watchType,
+              allow_download:_self.downType
+            }
+            _self.$post('/wap/meeting/upload_files',parems).then(result=>{
+              let res = result;
+              console.log(res)
+              _self.showMiddle=false
+              if(result.msg=='success'){
+                _self.$dialog.loading.close();
+                setTimeout(function(){
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'success'
+                  });
+                },100)
+
+                _self.getfile()
+              }else{
+                _self.$dialog.loading.close();
+                setTimeout(function() {
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'error'
+                  });
+                },100)
+              }
+            })
+          }
+        },
+        error:function(response){
+          console.log(response);
+        }
+      });
     }
   }
   }
@@ -239,5 +341,58 @@
   .m-wap-folder-list-bd .yd-cell-left{
     line-height: 0.48rem;
     font-size: 0.28rem;
+  }
+  .m-wap-upload-view{
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .m-wap-upload-view h2{
+    font-size: 0.36rem;
+    text-align: center;
+    padding:0.4rem 0;
+  }
+  .m-wap-upload-radio{
+    padding:0 0.28rem 0.4rem;
+  }
+  .m-wap-upload-radio p{
+    font-size:0.32rem ;
+    line-height: 0.48rem;
+    overflow: hidden;
+    margin-bottom: 0.2rem;
+  }
+  .m-wap-upload-radio p i,
+  .m-wap-upload-radio p span{
+    float: left;
+    color: #999;
+    margin-right: 0.12rem;
+  }
+  .m-wap-upload-radio .yd-radio-text{
+    font-size: 0.32rem
+  }
+  .m-wap-upload-footer{
+    overflow: hidden;
+    border-top: 1px solid #ddd;
+  }
+  .m-wap-upload-footer div{
+    height: 1rem !important;
+    line-height: 1rem !important;
+    text-align: center;
+    width: 50%;
+    font-size: 0.32rem;
+    color: #666;
+    box-sizing: border-box;
+  }
+  .m-wap-upload-footer div.fr{
+    color: #1792FF;
+    border-left: 1px solid #ddd;
+    position: relative;
+  }
+  .m-wap-upload-footer div.fr input{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
   }
 </style>

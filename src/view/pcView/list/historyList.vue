@@ -104,7 +104,7 @@
                     <div>
                       <el-row :gutter="12">
                         <el-col :span="8" v-for="(o, index) in docList" :key="index">
-                          <el-card :body-style="{ padding: '0px' }" shadow="hover" :title="o.filename" @click.native="openView(o.filepath)">
+                          <el-card :body-style="{ padding: '0px' }" shadow="hover" :title="o.filename" @click.native="openView(o.filepath,o)">
                             <div class="m-white-item-hd">
                               <span :class="getType(o.filename,1)"></span>
                             </div>
@@ -161,7 +161,7 @@
             </el-tab-pane>
           </el-tabs>
 
-          <el-dialog :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
+          <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
             <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
           </el-dialog>
 
@@ -698,17 +698,17 @@
     background-color: #fff;
   }
 
-  .el-message-box{
+  .f-watch-dialog .el-message-box{
     width: 70% !important;
   }
-  .el-message-box__content,
-  .el-message-box__message ,
-  .el-message-box__message p,
-  .el-dialog__body{
+  .f-watch-dialog .el-message-box__content,
+  .f-watch-dialog .el-message-box__message ,
+  .f-watch-dialog  .el-message-box__message p,
+  .f-watch-dialog  .el-dialog__body{
     height: 600px;
   }
 
-  .el-message-box__btns{
+  .f-watch-dialog  .el-message-box__btns{
     padding-top: 22px;
   }
   .f-msg-hide-img{

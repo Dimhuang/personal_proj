@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2" @click="showUpload=true">{{$lang.topic.form.upload}}</el-button>
+        <el-button type="primary" size="small" v-if="is_meet_type==2" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
       <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
@@ -12,7 +12,13 @@
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
           <div class="fl" v-else :class="getType(items.filename)"></div>
-          <div class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</div>
+          <div class="f-ellipsis">
+            <span :title="items.filename" class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</span>
+            <p v-if="items.is_directory==0">
+              <em class="f-bc-yellow" v-text="$lang.upload.tips.file_only" v-show="items.user_file!=0"></em>
+              <em class="f-bc-blue" v-text="$lang.upload.tips.secret_type" v-show="items.is_secret!=0"></em>
+            </p>
+          </div>
         </div>
         <div class="m-history-list-r">
           <el-button size="mini" round  @click.native="goDetails(items)">
@@ -28,18 +34,19 @@
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else v-text="$lang.tips.no_data"><</span>
     </div>
-    <el-dialog :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
+    <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
       <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
     </el-dialog>
     <el-dialog :title="$lang.upload.form.title" :visible.sync="showUpload" :append-to-body="true" v-if="showUpload" width="40%" class="f-upload-view">
       <div style="overflow: hidden">
         <el-upload
           class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          :action= upload_url
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :before-remove="beforeRemove"
           multiple
+          :data="{mid:mid}"
           :limit="100"
           :on-exceed="handleExceed"
           :on-success="successUpload"
@@ -51,16 +58,16 @@
         <div class="m-upload-radio-box">
           <em>{{$lang.upload.form.down_name}}</em>
           <el-radio v-model="downType" label="1">{{$lang.upload.form.can_down}}</el-radio>
-          <el-radio v-model="downType" label="2">{{$lang.upload.form.no_down}}</el-radio>
+          <el-radio v-model="downType" label="0">{{$lang.upload.form.no_down}}</el-radio>
         </div>
         <div class="m-upload-radio-box">
           <em>{{$lang.upload.form.is_secret}}</em>
-          <el-radio v-model="watchType" label="1">{{$lang.upload.form.only_watch}}</el-radio>
-          <el-radio v-model="watchType" label="2">{{$lang.upload.form.all_watch}}</el-radio>
+          <el-radio v-model="watchType" label="1">{{$lang.upload.form.all_watch}}</el-radio>
+          <el-radio v-model="watchType" label="0">{{$lang.upload.form.only_watch}}</el-radio>
         </div>
         <div class="fr" style="margin-top:20px ">
           <el-button @click="showUpload=false" size="small">{{$lang.means.form.cancel}}</el-button>
-          <el-button type="primary" @click="" size="small">{{$lang.means.form.confirm}}</el-button>
+          <el-button type="primary" @click.native="uploadKeep()" size="small">{{$lang.means.form.confirm}}</el-button>
         </div>
       </div>
     </el-dialog>
@@ -69,7 +76,7 @@
 <script>
   import '@/assets/css/pcScrollBar.css'
   import {mapState} from 'vuex'
-  import { fileType , global_} from '@/utils/utils'
+  import { fileType , global_ , upload_url} from '@/utils/utils'
   import { QWebChannel } from  '@/assets/js/qwebchannel.js'
   export default{
     data(){
@@ -86,6 +93,7 @@
         fileList: [],
         downType:"1",
         watchType:"1",
+        upload_url:upload_url
       }
     },
     computed: {
@@ -219,29 +227,70 @@
         }
       }
     },
+    showPopup(){
+      this.watchType = '1'
+      this.downType  = '1'
+      this.fileList = []
+      this.showUpload = true
+    },
+    uploadKeep(){
+      var _self = this;
+      var arr = [];
+      if(_self.fileList.length==0){
+        _self.$message(_self.$lang.upload.tips.file_limit_tips);
+      }else{
+        for(var i=0;i<_self.fileList.length;i++){
+          arr.push(_self.fileList[i].fid)
+        }
+
+        var parems = {
+          mid:_self.mid,
+          parent_id:_self.fid,
+          files:arr,
+          is_secret:_self.watchType,
+          allow_download:_self.downType
+        }
+
+
+        _self.$post('/wap/meeting/upload_files',parems).then(result=>{
+          let res = result;
+        console.log(res)
+        if(result.msg=='success'){
+          _self.$notify({
+            title: result.message,
+            //message: '这是一条成功的提示消息',
+            type: 'success'
+          });
+          _self.getfile()
+        }else{
+          _self.$message(result.message);
+        }
+      })
+
+      }
+    },
     handleRemove(file, fileList) {
-      console.log(1)
-      console.log(file, fileList);
+      var _self = this;
+      for(var i=0;i<_self.fileList.length;i++){
+        if(_self.fileList[i].fid==file.fid){
+          _self.fileList.splice(i,1)
+        }
+      }
     },
     handlePreview(file) {
-      console.log(2)
-      console.log(file);
+      var _self = this;
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${ file.name }？`);
     },
-    aa(){
-      console.log(JSON.stringify(this.fileList))
-    },
 
     successUpload(response, file, fileList){
-      console.log(response)
-      console.log(file)
-      console.log(fileList)
-      this.fileList.push(fileList)
+      var _self = this;
+      _self.fileList.push(response)
+      console.log( _self.fileList)
     },
   }
   }
@@ -271,6 +320,27 @@
     margin-top: 10px;
     word-break: break-all;
     line-height: 24px;
+  }
+  .m-history-topics-list .f-flex-item .f-ellipsis span{
+    display: inline-block;
+    width: 100%;
+    line-height: 34px;
+  }
+  .m-history-topics-list .f-flex-item .f-ellipsis p{
+    line-height: 20px;
+  }
+  .m-history-topics-list .f-flex-item .f-ellipsis p em{
+    font-size: 12px;
+    padding:4px 6px;
+    border-radius: 5px;
+    margin-right: 10px;
+    color: #666;
+  }
+  .f-bc-blue{
+    background-color: #9fd6fd;
+  }
+  .f-bc-yellow{
+    background-color: #ffff00;
   }
   .m-history-list-r{
     text-align: right;
@@ -306,7 +376,7 @@
     margin-top: 26px;
   }
   .m-history-topics-list-file{
-    line-height: 54px;
+    /*line-height: 54px;*/
   }
   .m-history-topics-list-file div.f-ellipsis{
     width:700px;
@@ -322,16 +392,16 @@
     padding-left: 0;
     font-size: 100%;
   }
-  .el-message-box{
+  .f-watch-dialog  .el-message-box{
     width: 70% !important;
   }
-  .el-message-box__content,
-  .el-message-box__message ,
-  .el-message-box__message p,
-  .el-dialog__body{
+  .f-watch-dialog .el-message-box__content,
+  .f-watch-dialog  .el-message-box__message ,
+  .f-watch-dialog .el-message-box__message p,
+  .f-watch-dialog .el-dialog__body{
     height: 600px;
   }
-  .el-message-box__btns{
+  .f-watch-dialog .el-message-box__btns{
     padding-top: 22px;
   }
 
@@ -339,7 +409,7 @@
   .f-upload-view .el-dialog__body{
     height: auto;
   }
-  .el-upload-list{
+  .f-upload-view .el-upload-list{
     border: 1px solid #ddd;
     margin-top: 30px;
     height: 200px;

@@ -178,3 +178,5 @@ export const global_ = {
   obj : sessionStorage.getItem('globalObj')  //1：3.0客户端，2：麒麟客户端
 }
 
+//上传 打包时需去掉/api
+export const upload_url = "/api/wap/meeting/upload_tmpfile"

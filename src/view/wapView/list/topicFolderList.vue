@@ -75,7 +75,10 @@
             </div>
             <div class="m-wap-upload-footer">
               <div class="fl" @click.stop="showMiddle=false">取消</div>
-              <div class="fr">下一步</div>
+              <div class="fr">
+                  <input type="file" name="file" @change="getFileVal($event)">
+                  <span>下一步</span>
+              </div>
             </div>
           </div>
       </yd-popup>
@@ -88,7 +91,8 @@
 </template>
 <script>
     import {mapState} from 'vuex'
-    import { fileType } from '@/utils/utils'
+    import { fileType , upload_url} from '@/utils/utils'
+    import $ from 'jquery'
     export default{
       data(){
         return {
@@ -106,7 +110,8 @@
           name:'',
           showMiddle:false,
           downType:'1',
-          watchType:'1'
+          watchType:'1',
+          file:''
         }
       },
       computed: {
@@ -235,6 +240,109 @@
             _self.srcPath = path
             window.location.href = _self.srcPath
           }
+        },
+        getFileVal(event) {
+          this.file = event.target.files[0];
+          console.log(console.log(this.file));
+          this.getFileSubmit()
+        },
+        getFileSubmit(){
+          var _self = this;
+          event.preventDefault();
+          var formData = new FormData();
+          formData.append('mid', _self.mid);
+          formData.append('file', _self.file);
+          $.ajax({
+            url:upload_url,
+            dataType:'json',
+            type:'POST',
+            async: false,
+            data: formData,
+            processData : false, // 使数据不做处理
+            contentType : false, // 不要设置Content-Type请求头
+            success: function(data){
+              console.log(data);
+              var arr = [];
+
+              if (data.msg == 'success') {
+                _self.$dialog.loading.open('正在上传...');
+                arr.push(data.fid)
+                if(_self.showType==1){
+                  var parems = {
+                    datum_id:_self.did,
+                    mid:_self.mid,
+                    parent_id:0,
+                    files:arr,
+                    is_secret:_self.watchType,
+                    allow_download:_self.downType
+                  }
+                  _self.$post('/wap/meeting/upload_datum_file',parems).then(result=>{
+                    let res = result;
+                    console.log(res)
+                    _self.showMiddle=false
+                    if(result.msg=='success'){
+                      _self.$dialog.loading.close();
+                      setTimeout(function(){
+                        _self.$dialog.toast({
+                          mes: result.message,
+                          timeout: 1500,
+                          icon: 'success'
+                        });
+                      },100)
+
+                      _self.getfile()
+                    }else{
+                      _self.$dialog.loading.close();
+                      setTimeout(function() {
+                        _self.$dialog.toast({
+                          mes: result.message,
+                          timeout: 1500,
+                          icon: 'error'
+                        });
+                      },100)
+                    }
+                  })
+                }else{
+                  var parems = {
+                    mid:_self.mid,
+                    parent_id:0,
+                    files:arr,
+                    is_secret:_self.watchType,
+                    allow_download:_self.downType
+                  }
+                  _self.$post('/wap/meeting/upload_files',parems).then(result=>{
+                    let res = result;
+                  console.log(res)
+                  _self.showMiddle=false
+                  if(result.msg=='success'){
+                    _self.$dialog.loading.close();
+                    setTimeout(function(){
+                      _self.$dialog.toast({
+                        mes: result.message,
+                        timeout: 1500,
+                        icon: 'success'
+                      });
+                    },100)
+
+                    _self.getfile()
+                  }else{
+                    _self.$dialog.loading.close();
+                    setTimeout(function() {
+                      _self.$dialog.toast({
+                        mes: result.message,
+                        timeout: 1500,
+                        icon: 'error'
+                      });
+                    },100)
+                  }
+                })
+                }
+              }
+            },
+            error:function(response){
+              console.log(response);
+            }
+          });
         }
       }
     }
@@ -344,5 +452,15 @@
   .m-wap-upload-footer div.fr{
     color: #1792FF;
     border-left: 1px solid #ddd;
+    position: relative;
   }
+  .m-wap-upload-footer div.fr input{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+
 </style>

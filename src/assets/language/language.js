@@ -85,6 +85,11 @@ export const language = {
         is_secret:'私有模式：',
         only_watch:'仅上传者能查看',
         all_watch:'所有人可查看',
+      },
+      tips:{
+        file_limit_tips:"请选择文件",
+        file_only:"我上传的",
+        secret_type:"私有模式"
       }
     }
   },
@@ -174,6 +179,11 @@ export const language = {
         is_secret:'Private mode:',
         only_watch:'Only uploaders can view',
         all_watch:'Everyone can view it',
+      },
+      tips:{
+        file_limit_tips:"Please select a file",
+        file_only:"I uploaded",
+        secret_type:"Private mode"
       }
     }
   }
