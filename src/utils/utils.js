@@ -179,4 +179,4 @@ export const global_ = {
 }
 
 //上传 打包时需去掉/api
-export const upload_url = "/api/wap/meeting/upload_tmpfile"
+export const upload_url = "/wap/meeting/upload_tmpfile"

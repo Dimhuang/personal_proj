@@ -21,13 +21,14 @@
             </p>
           </div>
         </div>
-        <div class="m-history-list-r">
+        <div class="m-history-list-r" :class="{'f-active':items.user_file!=0}">
           <el-button size="mini" round  @click.native="openView(items.filepath,items)">
             <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&items.is_directory==0" v-text="$lang.topic.form.download"></span>
             <span v-else v-text="$lang.topic.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
+          <i class="el-icon-delete" v-show="items.user_file!=0" @click.stop="delFile(items.id)"></i>
         </div>
       </li>
     </ul>
@@ -63,8 +64,8 @@
         </div>
         <div class="m-upload-radio-box">
           <em>{{$lang.upload.form.is_secret}}</em>
-          <el-radio v-model="watchType" label="1">{{$lang.upload.form.all_watch}}</el-radio>
-          <el-radio v-model="watchType" label="0">{{$lang.upload.form.only_watch}}</el-radio>
+          <el-radio v-model="watchType" label="1">{{$lang.upload.form.only_watch}}</el-radio>
+          <el-radio v-model="watchType" label="0">{{$lang.upload.form.all_watch}}</el-radio>
         </div>
         <div class="fr" style="margin-top:20px ">
           <el-button @click="showUpload=false" size="small">{{$lang.means.form.cancel}}</el-button>
@@ -255,11 +256,13 @@
             let res = result;
           console.log(res)
           if(result.msg=='success'){
+            _self.showUpload = false
             _self.$notify({
               title: result.message,
               //message: '这是一条成功的提示消息',
               type: 'success'
             });
+            _self.page=_self.page-1
             _self.getfile()
           }else{
             _self.$message(result.message);
@@ -290,6 +293,28 @@
         var _self = this;
         _self.fileList.push(response)
         console.log( _self.fileList)
+      },
+      delFile(id){
+        var _self = this;
+        var  parems = {
+          type:2,
+          id:id,
+          datum_id:_self.did
+        }
+        _self.$post('/wap/meeting/del_datum_file',parems).then(result=>{
+          let res = result;
+        if(result.msg=='success'){
+          _self.$notify({
+            title: result.message,
+            //message: '这是一条成功的提示消息',
+            type: 'success'
+          });
+          _self.page=_self.page-1
+          _self.getfile()
+        }else{
+          _self.$message(result.message);
+        }
+      })
       }
     }
   }
@@ -432,5 +457,16 @@
   .m-upload-radio-box label{
     padding-left: 10px;
     flex: 1;
+  }
+  .m-history-list-r i{
+    font-size: 30px;
+    float: right;
+    margin-top: 15px;
+    color:#d81e06 ;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+  .m-history-list-r.f-active .f-hide-img{
+    right: 65px;
   }
 </style>

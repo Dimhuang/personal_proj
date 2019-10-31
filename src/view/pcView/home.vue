@@ -12,7 +12,8 @@
                   <i class="iconfont pl-icon_lshy_n"></i>
                   <p v-text="$lang.index.title.his"></p>
                 </span>
-                <span class="f-flex-item" @click="indexActive=2" :class="{'f-active':indexActive==2}" v-if="!is_kehu">
+                <!--<span class="f-flex-item" @click="indexActive=2" :class="{'f-active':indexActive==2}" v-if="!is_kehu">-->
+                <span class="f-flex-item" @click="indexActive=2" :class="{'f-active':indexActive==2}">
                   <i class="iconfont pl-icon_hylb_n"></i>
                   <p v-text="$lang.index.title.meet"></p>
                 </span>

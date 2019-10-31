@@ -28,7 +28,14 @@
           </yd-lightbox>-->
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"></i>
-          <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+          <span slot="left">
+             <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+            <p v-if="n.is_directory==0">
+              <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
+              <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
+            </p>
+          </span>
+          <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></yd-icon>
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd" v-else>
@@ -38,7 +45,14 @@
           </yd-lightbox>
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"></i>
-          <span slot="left">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+          <span slot="left">
+            <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+            <p v-if="n.is_directory==0">
+              <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
+              <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
+            </p>
+          </span>
+          <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></yd-icon>
         </yd-cell-item>
       </yd-cell-group>
       <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998">
@@ -343,6 +357,72 @@
               console.log(response);
             }
           });
+        },
+        delFile(id){
+          var _self = this;
+          if(_self.showType==1){
+            var  parems = {
+              type:2,
+              id:id,
+              datum_id:_self.did
+            }
+            _self.$post('/wap/meeting/del_datum_file',parems).then(result=>{
+              let res = result;
+              if(result.msg=='success'){
+                _self.$dialog.loading.close();
+                setTimeout(function(){
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'success'
+                  });
+                },100)
+                _self.page=_self.page-1
+                _self.getfile()
+              }else{
+                _self.$dialog.loading.close();
+                setTimeout(function() {
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'error'
+                  });
+                },100)
+              }
+            })
+          }else{
+            var arr = [];
+            arr.push(id)
+            var  parems = {
+              meeting_id:_self.mid,
+              file_id:arr
+            }
+            _self.$post('/wap/meeting/del_files',parems).then(result=>{
+              let res = result;
+              if(result.msg=='success'){
+                _self.$dialog.loading.close();
+                setTimeout(function(){
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'success'
+                  });
+                },100)
+                _self.page=_self.page-1
+                _self.getfile()
+              }else{
+                _self.$dialog.loading.close();
+                setTimeout(function(){
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'success'
+                  });
+                },100)
+              }
+            })
+          }
+
         }
       }
     }
@@ -409,6 +489,28 @@
    line-height: 0.48rem;
     font-size: 0.28rem;
   }
+
+  .m-wap-folder-list-bd .yd-cell-left span.f-ex{
+    width: 4.8rem;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .m-wap-folder-list-bd .yd-cell-left em{
+   font-size: 0.24rem;
+    padding: 0.06rem 0.1rem;
+    border-radius: 5px;
+    color: #666;
+    margin-right: 0.2rem;
+  }
+  .f-bc-blue{
+    background-color: #9fd6fd;
+  }
+  .f-bc-yellow{
+    background-color: #ffff00;
+  }
+
   .m-wap-upload-view{
     overflow: hidden;
     border-radius: 5px;
