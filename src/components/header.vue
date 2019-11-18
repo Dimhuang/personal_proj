@@ -7,29 +7,67 @@
     </div>
     <div class="f-right-box" v-show="showLogin_n==1">
       <!--<div class="f-right-box" v-show="false">-->
-      <span class="fl f-head-right" @click="dialogFormVisible = true" v-if="false"><div class="fl"><em>Welcome</em><p>asaaaaaaaaaaaaadas</p></div><i class="iconfont pl-user"></i></span>
+      <span class="fl f-head-right" @click="dialogFormVisible = true"><div class="fl"><em>Welcome</em><p v-text="formLabelAlign.username"></p></div><i class="iconfont pl-user"></i></span>
+      <!--<span class="fl f-head-right" ><div class="fl"><em>Welcome</em><p v-text="formLabelAlign.username"></p></div><i class="iconfont pl-user"></i></span>-->
       <span @click.stop="login" ><i class="iconfont pl-icon_sign_out_n"></i></span>
     </div>
 
     <!-- Form -->
 
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-      <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-        <el-form-item label="名称">
-          <el-input v-model="formLabelAlign.name"></el-input>
+    <el-dialog class="m-header-info-dialog" :title="$lang.head.form.info" :visible.sync="dialogFormVisible">
+      <el-form :label-position="labelPosition" label-width="100px" :model="formLabelAlign">
+        <el-form-item :label="$lang.head.form.account">
+          <el-input v-model="formLabelAlign.account" disabled></el-input>
         </el-form-item>
-        <el-form-item label="活动区域">
-          <el-input v-model="formLabelAlign.region"></el-input>
+        <el-form-item :label="$lang.head.form.pwd">
+          <el-input class="f-ex" type="password" v-model="formLabelAlign.password" disabled></el-input>
+          <el-button type="primary" @click.prevent="dialogPassword=true">{{$lang.head.form.reset_pwd}}</el-button>
         </el-form-item>
-        <el-form-item label="活动形式">
-          <el-input v-model="formLabelAlign.type"></el-input>
+        <el-form-item :label="$lang.head.form.name">
+          <el-input v-model="formLabelAlign.username" maxlength="20"></el-input>
+        </el-form-item>
+        <el-form-item :label="$lang.head.form.unit">
+          <el-input v-model="formLabelAlign.unit" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="$lang.head.form.dept">
+          <el-input v-model="formLabelAlign.dept" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="$lang.head.form.positions">
+          <el-input v-model="formLabelAlign.position" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="$lang.head.form.salutatory">
+          <el-input
+            type="textarea"
+            :placeholder="$lang.head.form.salutatory_tips"
+            v-model="formLabelAlign.salutatory"
+            maxlength="200"
+            show-word-limit
+          >
+          </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button @click="dialogFormVisible = false">{{$lang.head.form.cancel_btn}}</el-button>
+        <el-button type="primary" @click="infoConfirm()">{{$lang.head.form.confirm_btn}}</el-button>
       </div>
     </el-dialog>
+
+
+    <el-dialog class="m-header-info-dialog" :title="$lang.head.form.reset_pwd" :visible.sync="dialogPassword">
+      <el-form :label-position="labelPosition" label-width="100px" :model="pwdAlign">
+        <el-form-item :label="$lang.head.form.new_pwd">
+          <el-input type="password" v-model="pwdAlign.password" minlength="6" maxlength="20"></el-input>
+        </el-form-item>
+        <el-form-item :label="$lang.head.form.ag_pwd">
+          <el-input  type="password" v-model="pwdAlign.passwordAg" minlength="6" maxlength="20"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogPassword = false">{{$lang.head.form.cancel_btn}}</el-button>
+        <el-button type="primary" @click="pwdConfirm">{{$lang.head.form.confirm_btn}}</el-button>
+      </div>
+    </el-dialog>
+
 
   </div>
 
@@ -46,11 +84,12 @@
               showLogin_n:'',
               dialogFormVisible: false,
               labelPosition: 'right',
-              formLabelAlign: {
-                name: '',
-                region: '',
-                type: ''
-              }
+              formLabelAlign: {},
+              pwdAlign: {
+                password:'',
+                passwordAg:''
+              },
+              dialogPassword:false
             }
         },
         components: {
@@ -59,17 +98,13 @@
         created(){
           var _self = this
           _self.showLogin_n = sessionStorage.getItem('showLogin')
+          _self.getInfo()
         },
         methods:{
           login(){
-
-
-
-
-
-            this.$confirm('确定退出登录吗, 是否继续?', '退出', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
+            this.$confirm(this.$lang.head.tips.login_out, this.$lang.head.tips.quit, {
+              confirmButtonText: this.$lang.head.tips.yes,
+              cancelButtonText: this.$lang.head.tips.cancel,
               customClass:'f-login-out-tips'
             }).then(() => {
               this.$fetch('/wap/User/logout').then(result=>{
@@ -79,7 +114,70 @@
             }).catch(() => { });
           },
           getInfo(){
+            var _self = this
+            _self.$post('/wap/User/login',{
+              account:sessionStorage.getItem('objName'),
+              password:sessionStorage.getItem('objPwd')
+            }).then(result=>{
 
+              _self.formLabelAlign = {
+                account:sessionStorage.getItem('objName'),
+                password:sessionStorage.getItem('objPwd'),
+                username:result.user.username,
+                position:result.user.position,
+                unit:result.user.unit,
+                dept:result.user.dept,
+                salutatory:result.user.salutatory
+              }
+            })
+          },
+          pwdConfirm(){
+            var _self = this
+            if(_self.pwdAlign.password==''||_self.pwdAlign.passwordAg==''){
+              _self.$message(_self.$lang.login.tips.pwd_tips);
+            }else if(_self.pwdAlign.password.length<6||_self.pwdAlign.passwordAg.length<6){
+              _self.$message(_self.$lang.head.tips.pwd_length);
+            }else if(_self.pwdAlign.password!=_self.pwdAlign.passwordAg){
+              _self.$message(_self.$lang.head.tips.pwd_same);
+            }else{
+              _self.$post('/wap/user/reset_password',{
+                password:_self.pwdAlign.password,
+                password_repeat:_self.pwdAlign.passwordAg
+              }).then(result=>{
+                if(result.msg=='success'){
+                  _self.$message(_self.$lang.head.tips.change_success);
+                  _self.dialogPassword = false
+                  sessionStorage.removeItem('objPwd')
+                  setTimeout(function(){
+                    sessionStorage.setItem('objPwd',_self.pwdAlign.password)
+                    _self.getInfo()
+                  },100)
+                }else{
+                  _self.$message(_self.$lang.head.tips.change_fail);
+                }
+              })
+            }
+          },
+          infoConfirm(){
+            var _self = this
+            if(_self.formLabelAlign.username==''){
+              _self.$message(_self.$lang.head.tips.name_length);
+            }else{
+              _self.$post('/wap/user/user_update',{
+                username:_self.formLabelAlign.username,
+                salutatory:_self.formLabelAlign.salutatory
+              }).then(result=>{
+                  if(result.msg=='success'){
+                  _self.$message(_self.$lang.head.tips.change_success);
+                  _self.dialogFormVisible = false
+                  setTimeout(function(){
+                    _self.getInfo()
+                  },100)
+                }else{
+                  _self.$message(_self.$lang.head.tips.change_fail);
+                }
+              })
+            }
           }
         }
     }
@@ -173,7 +271,17 @@
     height: auto;
   }
   .el-message-box.f-login-out-tips{
+
+
     width: 400px !important;
+  }
+
+  .m-header-info-dialog .f-ex.el-input{
+    width: calc(100% - 146px);
+    margin-right: 6px;
+  }
+  .m-header-info-dialog .f-ex.el-input+.el-button{
+    width: 135px;
   }
 
 </style>

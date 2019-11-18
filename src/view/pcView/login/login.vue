@@ -47,20 +47,23 @@
         },
         methods:{
           login(){
-            if(this.formLabelAlign.name==''){
-              this.$message(this.$lang.login.tips.name_tips);
-            }else if(this.formLabelAlign.pwd==''){
-              this.$message(this.$lang.login.tips.pwd_tips);
+            var _self = this;
+            if(_self.formLabelAlign.name==''){
+              _self.$message(_self.$lang.login.tips.name_tips);
+            }else if(_self.formLabelAlign.pwd==''){
+              _self.$message(_self.$lang.login.tips.pwd_tips);
             }else{
-              this.$post('/wap/User/login',{
-                account:this.formLabelAlign.name,
-                password:this.formLabelAlign.pwd
+              _self.$post('/wap/User/login',{
+                account:_self.formLabelAlign.name,
+                password:_self.formLabelAlign.pwd
               }).then(result=>{
                 if(result.msg == 'success'){
                   sessionStorage.setItem('accessToken' , true)
-                  this.goIndex()
+                  sessionStorage.setItem('objName' , _self.formLabelAlign.name)
+                  sessionStorage.setItem('objPwd' ,_self.formLabelAlign.pwd)
+                  _self.goIndex()
                 }else{
-                  this.$message(this.$lang.login.tips.pwd_tips);
+                  _self.$message(_self.$lang.login.tips.right_input);
                 }
               })
             }

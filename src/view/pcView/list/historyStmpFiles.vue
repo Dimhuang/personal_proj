@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
       <el-breadcrumb-item>{{$lang.history.title.meet_means}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -53,7 +53,7 @@
           :on-success="successUpload"
           :file-list="fileList">
           <el-button size="small" type="primary">{{$lang.upload.form.sel_file}}</el-button>
-          <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_tips}}</div>
+          <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_s_tips}}</div>
         </el-upload>
         <span class="m-upload-limit-tips">{{$lang.upload.form.is_upload}}{{fileList.length}}</span>
         <div class="m-upload-radio-box">
@@ -92,9 +92,10 @@
         is_meet_type:sessionStorage.getItem('meetType')==null?'1':sessionStorage.getItem('meetType'),
         showUpload:false,
         fileList: [],
-        downType:"1",
-        watchType:"1",
-        upload_url:upload_url
+        downType:"0",
+        watchType:"0",
+        upload_url:upload_url,
+        showUpdataBtn:true
       }
     },
     computed: {
@@ -102,6 +103,7 @@
   },
     mounted(){
       this.getfile()
+    this.getShowUpdata()
       console.log('kehuduan:'+typeof jsObj)
     },
     components: {
@@ -111,6 +113,11 @@
       getType(name){
         var file = fileType(name,1)
         return file;
+      },
+      getShowUpdata(){
+        this.$fetch('/api/system/system_config',{}).then(result=>{
+          result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
+        })
       },
       getfile(flag){
         this.$fetch('/wap/meeting/files',{
@@ -228,8 +235,8 @@
         }
       },
       showPopup(){
-        this.watchType = '1'
-        this.downType  = '1'
+        this.watchType = '0'
+        this.downType  = '0'
         this.fileList = []
         this.showUpload = true
       },
@@ -240,7 +247,7 @@
           _self.$message(_self.$lang.upload.tips.file_limit_tips);
         }else{
           for(var i=0;i<_self.fileList.length;i++){
-            arr.push(_self.fileList[i].fid)
+            arr.push(_self.fileList[i].response.fid)
           }
 
           var parems = {
@@ -274,7 +281,7 @@
       handleRemove(file, fileList) {
         var _self = this;
         for(var i=0;i<_self.fileList.length;i++){
-          if(_self.fileList[i].fid==file.fid){
+          if(_self.fileList[i].response.fid==file.fid){
             _self.fileList.splice(i,1)
           }
         }
@@ -291,8 +298,7 @@
 
       successUpload(response, file, fileList){
         var _self = this;
-        _self.fileList.push(response)
-        console.log( _self.fileList)
+        _self.fileList = fileList
       },
       delFile(id){
         var _self = this;
@@ -302,20 +308,32 @@
           meeting_id:_self.mid,
           file_id:arr
         }
-        _self.$post('/wap/meeting/del_files',parems).then(result=>{
-          let res = result;
-        if(result.msg=='success'){
-          _self.$notify({
-            title: result.message,
-            //message: '这是一条成功的提示消息',
-            type: 'success'
-          });
-          _self.page=_self.page-1
-          _self.getfile()
-        }else{
-          _self.$message(result.message);
-        }
-      })
+
+        _self.$confirm(_self.$lang.upload.tips.del_tips, _self.$lang.upload.tips.del_title, {
+          confirmButtonText: _self.$lang.head.tips.yes,
+          cancelButtonText:  _self.$lang.head.tips.cancel
+        }).then(() => {
+          _self.$post('/wap/meeting/del_files',parems).then(result=>{
+             let res = result;
+            if(result.msg=='success'){
+              _self.$notify({
+                title: result.message,
+                //message: '这是一条成功的提示消息',
+                type: 'success'
+              });
+              _self.page=_self.page-1
+              _self.getfile()
+            }else{
+              _self.$message(result.message);
+            }
+          })
+      }).catch(() => {
+          /*  _self.$message({
+           type: 'info',
+           message: '已取消删除'
+           });*/
+        });
+
       }
     }
   }

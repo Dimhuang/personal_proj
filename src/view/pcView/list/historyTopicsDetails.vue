@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
       <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_topic}}</el-breadcrumb-item>
       <el-breadcrumb-item @click.native="goList">{{topicNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
@@ -95,9 +95,10 @@
         is_meet_type:sessionStorage.getItem('meetType')==null?'1':sessionStorage.getItem('meetType'),
         showUpload:false,
         fileList: [],
-        downType:"1",
-        watchType:"1",
-        upload_url:upload_url
+        downType:"0",
+        watchType:"0",
+        upload_url:upload_url,
+        showUpdataBtn:true
       }
     },
     computed: {
@@ -109,11 +110,17 @@
       this.did = this.$route.query.did
       this.fid = this.$route.query.id
       this.getfile()
+    this.getShowUpdata()
     },
     methods:{
       getType(name){
         var file = fileType(name,1)
         return file
+      },
+      getShowUpdata(){
+        this.$fetch('/api/system/system_config',{}).then(result=>{
+          result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
+        })
       },
       getfile(flag){
         this.$fetch('/wap/meeting/files',{
@@ -227,8 +234,8 @@
         }
       },
       showPopup(){
-        this.watchType = '1'
-        this.downType  = '1'
+        this.watchType = '0'
+        this.downType  = '0'
         this.fileList = []
         this.showUpload = true
       },
@@ -239,7 +246,7 @@
           _self.$message(_self.$lang.upload.tips.file_limit_tips);
         }else{
           for(var i=0;i<_self.fileList.length;i++){
-            arr.push(_self.fileList[i].fid)
+            arr.push(_self.fileList[i].response.fid)
           }
 
           var parems = {
@@ -274,7 +281,7 @@
       handleRemove(file, fileList) {
         var _self = this;
         for(var i=0;i<_self.fileList.length;i++){
-          if(_self.fileList[i].fid==file.fid){
+          if(_self.fileList[i].response.fid==file.fid){
             _self.fileList.splice(i,1)
           }
         }
@@ -291,8 +298,7 @@
 
       successUpload(response, file, fileList){
         var _self = this;
-        _self.fileList.push(response)
-        console.log( _self.fileList)
+        _self.fileList = fileList
       },
       delFile(id){
         var _self = this;
@@ -301,7 +307,11 @@
           id:id,
           datum_id:_self.did
         }
-        _self.$post('/wap/meeting/del_datum_file',parems).then(result=>{
+        _self.$confirm(_self.$lang.upload.tips.del_tips, _self.$lang.upload.tips.del_title, {
+          confirmButtonText: _self.$lang.head.tips.yes,
+          cancelButtonText:  _self.$lang.head.tips.cancel
+        }).then(() => {
+          _self.$post('/wap/meeting/del_datum_file',parems).then(result=>{
           let res = result;
         if(result.msg=='success'){
           _self.$notify({
@@ -315,6 +325,12 @@
           _self.$message(result.message);
         }
       })
+      }).catch(() => {
+          /*  _self.$message({
+           type: 'info',
+           message: '已取消删除'
+           });*/
+        });
       }
     }
   }

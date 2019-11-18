@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
       <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
@@ -53,7 +53,7 @@
           :on-success="successUpload"
           :file-list="fileList">
           <el-button size="small" type="primary">{{$lang.upload.form.sel_file}}</el-button>
-          <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_tips}}</div>
+          <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_s_tips}}</div>
         </el-upload>
         <span class="m-upload-limit-tips">{{$lang.upload.form.is_upload}}{{fileList.length}}</span>
         <div class="m-upload-radio-box">
@@ -92,9 +92,10 @@
         is_meet_type:sessionStorage.getItem('meetType')==null?'1':sessionStorage.getItem('meetType'),
         showUpload:false,
         fileList: [],
-        downType:"1",
-        watchType:"1",
-        upload_url:upload_url
+        downType:"0",
+        watchType:"0",
+        upload_url:upload_url,
+        showUpdataBtn:true
       }
     },
     computed: {
@@ -104,11 +105,17 @@
     this.folderNameTxt = this.$route.query.f_name
     this.fid = this.$route.query.id
     this.getfile()
+    this.getShowUpdata()
   },
   methods:{
     getType(name){
       var file = fileType(name,1)
       return file;
+    },
+    getShowUpdata(){
+      this.$fetch('/api/system/system_config',{}).then(result=>{
+        result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
+      })
     },
     getfile(flag){
       this.$fetch('/wap/meeting/files',{
@@ -229,8 +236,8 @@
       }
     },
     showPopup(){
-      this.watchType = '1'
-      this.downType  = '1'
+      this.watchType = '0'
+      this.downType  = '0'
       this.fileList = []
       this.showUpload = true
     },
@@ -241,7 +248,7 @@
         _self.$message(_self.$lang.upload.tips.file_limit_tips);
       }else{
         for(var i=0;i<_self.fileList.length;i++){
-          arr.push(_self.fileList[i].fid)
+          arr.push(_self.fileList[i].response.fid)
         }
 
         var parems = {
@@ -303,7 +310,11 @@
         meeting_id:_self.mid,
         file_id:arr
       }
-      _self.$post('/wap/meeting/del_files',parems).then(result=>{
+      _self.$confirm(_self.$lang.upload.tips.del_tips, _self.$lang.upload.tips.del_title, {
+        confirmButtonText: _self.$lang.head.tips.yes,
+        cancelButtonText:  _self.$lang.head.tips.cancel
+      }).then(() => {
+        _self.$post('/wap/meeting/del_files',parems).then(result=>{
         let res = result;
       if(result.msg=='success'){
         _self.$notify({
@@ -317,6 +328,12 @@
         _self.$message(result.message);
       }
     })
+    }).catch(() => {
+        /*  _self.$message({
+         type: 'info',
+         message: '已取消删除'
+         });*/
+      });
     }
   }
   }

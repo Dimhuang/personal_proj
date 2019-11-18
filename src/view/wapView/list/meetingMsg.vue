@@ -40,7 +40,7 @@
                 <yd-icon name="hyxx_hycs_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
             <span slot="left">
-              <span>会议场所:</span>
+              <span>会议地点:</span>
               <p v-text="meetingMsgList.room_name"></p>
             </span>
           </yd-cell-item>
@@ -49,7 +49,7 @@
                 <yd-icon name="hyxx_zcr_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
             <span slot="left">
-              <span>主持人:</span>
+              <span>会议主持:</span>
               <p v-text="meetingMsgList.moderator"></p>
             </span>
           </yd-cell-item>
@@ -67,7 +67,7 @@
                 <yd-icon name="hyxx_hyfa_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
             <span slot="left">
-              <span>会议方案:</span>
+              <span>会议议程:</span>
                <div class="m-history-list-flie f-flex-content">
                  <div :class="getType(meetingMsgList.agenda_name)"></div>
                  <div class="f-flex-item" v-text="meetingMsgList.agenda_name"></div>

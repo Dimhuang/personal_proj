@@ -55,7 +55,7 @@
           <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></yd-icon>
         </yd-cell-item>
       </yd-cell-group>
-      <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998">
+      <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn">
         <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
       </yd-tabbar>
       <yd-backtop></yd-backtop>
@@ -123,9 +123,10 @@
           is_ad:sessionStorage.getItem('adType')==null?false:true,
           name:'',
           showMiddle:false,
-          downType:'1',
-          watchType:'1',
-          file:''
+          downType:'0',
+          watchType:'0',
+          file:'',
+          showUpdataBtn:true
         }
       },
       computed: {
@@ -144,12 +145,19 @@
           _self.fileType = 'stmpfile'
           _self.did = 0
         }
+          _self.getShowUpdata()
+
           _self.getfile()
       },
       methods: {
         getType(name){
           var file = fileType(name,2)
           return file;
+        },
+        getShowUpdata(){
+          this.$fetch('/api/system/system_config',{}).then(result=>{
+            result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
+          })
         },
         getTitle(){
           this.$fetch('/wap/meeting/datum',{
@@ -350,7 +358,7 @@
                     },100)
                   }
                 })
-                }
+                }iconfont.cn
               }
             },
             error:function(response){
@@ -360,7 +368,12 @@
         },
         delFile(id){
           var _self = this;
-          if(_self.showType==1){
+
+          _self.$dialog.confirm({
+              title: '删除',
+              mes: '确定删除选中项?',
+              opts: () => {
+              if(_self.showType==1){
             var  parems = {
               type:2,
               id:id,
@@ -368,28 +381,28 @@
             }
             _self.$post('/wap/meeting/del_datum_file',parems).then(result=>{
               let res = result;
-              if(result.msg=='success'){
-                _self.$dialog.loading.close();
-                setTimeout(function(){
-                  _self.$dialog.toast({
-                    mes: result.message,
-                    timeout: 1500,
-                    icon: 'success'
-                  });
-                },100)
-                _self.page=_self.page-1
-                _self.getfile()
-              }else{
-                _self.$dialog.loading.close();
-                setTimeout(function() {
-                  _self.$dialog.toast({
-                    mes: result.message,
-                    timeout: 1500,
-                    icon: 'error'
-                  });
-                },100)
-              }
-            })
+            if(result.msg=='success'){
+              _self.$dialog.loading.close();
+              setTimeout(function(){
+                _self.$dialog.toast({
+                  mes: result.message,
+                  timeout: 1500,
+                  icon: 'success'
+                });
+              },100)
+              _self.page=_self.page-1
+              _self.getfile()
+            }else{
+              _self.$dialog.loading.close();
+              setTimeout(function() {
+                _self.$dialog.toast({
+                  mes: result.message,
+                  timeout: 1500,
+                  icon: 'error'
+                });
+              },100)
+            }
+          })
           }else{
             var arr = [];
             arr.push(id)
@@ -399,30 +412,31 @@
             }
             _self.$post('/wap/meeting/del_files',parems).then(result=>{
               let res = result;
-              if(result.msg=='success'){
-                _self.$dialog.loading.close();
-                setTimeout(function(){
-                  _self.$dialog.toast({
-                    mes: result.message,
-                    timeout: 1500,
-                    icon: 'success'
-                  });
-                },100)
-                _self.page=_self.page-1
-                _self.getfile()
-              }else{
-                _self.$dialog.loading.close();
-                setTimeout(function(){
-                  _self.$dialog.toast({
-                    mes: result.message,
-                    timeout: 1500,
-                    icon: 'success'
-                  });
-                },100)
-              }
-            })
+            if(result.msg=='success'){
+              _self.$dialog.loading.close();
+              setTimeout(function(){
+                _self.$dialog.toast({
+                  mes: result.message,
+                  timeout: 1500,
+                  icon: 'success'
+                });
+              },100)
+              _self.page=_self.page-1
+              _self.getfile()
+            }else{
+              _self.$dialog.loading.close();
+              setTimeout(function(){
+                _self.$dialog.toast({
+                  mes: result.message,
+                  timeout: 1500,
+                  icon: 'success'
+                });
+              },100)
+            }
+          })
           }
-
+              }
+          });
         }
       }
     }

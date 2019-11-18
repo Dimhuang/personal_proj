@@ -654,6 +654,10 @@
     background-color: transparent;
     text-align: center;
   }
+  .m-white-view .el-card{
+    overflow: inherit;
+  }
+
   .m-white-item-hd{
     height: 140px;
     width: 100%;

@@ -39,7 +39,7 @@
         <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></yd-icon>
       </yd-cell-item>
     </yd-cell-group>
-    <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998">
+    <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn">
       <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
     </yd-tabbar>
     <yd-backtop></yd-backtop>
@@ -109,9 +109,10 @@
         o_f_name:'',
         is_ad:sessionStorage.getItem('adType')==null?false:true,
         showMiddle:false,
-        downType:'1',
-        watchType:'1',
-        file:''
+        downType:'0',
+        watchType:'0',
+        file:'',
+        showUpdataBtn:true
       }
     },
     computed: {
@@ -132,11 +133,17 @@
         _self.did = 0
       }
     _self.getfile()
+    _self.getShowUpdata()
     },
     methods: {
       getType(name){
         var file = fileType(name,2)
         return file;
+      },
+      getShowUpdata(){
+        this.$fetch('/api/system/system_config',{}).then(result=>{
+          result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
+        })
       },
       getfile(flag){
         this.$fetch('/wap/meeting/files',{
@@ -318,7 +325,12 @@
       },
       delFile(id){
         var _self = this;
-        if(_self.showType==1){
+
+        _self.$dialog.confirm({
+            title: '删除',
+            mes: '确定删除选中项?',
+            opts: () => {
+            if(_self.showType==1){
           var  parems = {
             type:2,
             id:id,
@@ -378,6 +390,12 @@
           }
         })
         }
+            }
+        })
+
+
+
+
 
       }
 
