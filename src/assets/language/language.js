@@ -45,7 +45,7 @@ export const language = {
         m_users:'参会名单',
         m_case:'会议议程',
         meet_topic:'会议议题',
-        meet_means:'临时资料',
+        meet_means:'会议资料',
         meet_white:'批注白板',
         m_file:'文档批注',
         m_hand:'手写批注',

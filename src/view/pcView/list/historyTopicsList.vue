@@ -43,11 +43,11 @@
         </div>
         <div class="m-history-list-r" :class="{'f-active':items.user_file!=0}">
           <el-button size="mini" round @click.native="goDetails(items)">
-            <span v-if="(getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&items.is_directory==0" v-text="$lang.topic.form.download"></span>
+            <span v-if="(((getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&is_kehu)||getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&items.is_directory==0" v-text="$lang.topic.form.download"></span>
             <span v-else v-text="$lang.topic.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
-          <img preview="4" :src="items.filepath" class="f-hide-img" v-if="getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'">
+          <img preview="4" :src="items.filepath" class="f-hide-img" v-if="(getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&!is_kehu">
           <i class="el-icon-delete" v-show="items.user_file!=0" @click.stop="delFile(items.id)"></i>
         </div>
       </li>
@@ -119,7 +119,8 @@
         downType:"0",
         watchType:"0",
         upload_url:upload_url,
-        showUpdataBtn:true
+        showUpdataBtn:true,
+        is_kehu:false
       }
     },
     computed: {
@@ -127,6 +128,13 @@
     },
     mounted(){
       this.did = this.$route.query.did
+    if(typeof jsObj !== "undefined"){
+      this.is_kehu = true
+    }else if(typeof qt !== "undefined"){
+      this.is_kehu = true
+    }else{
+      this.is_kehu = false
+    }
       this.getTitle()
       this.getfile()
       this.getShowUpdata()
@@ -228,7 +236,7 @@
             dangerouslyUseHTMLString: true,
             closeOnClickModal:true
           })*/
-        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+        }else if((_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon')&&!_self.is_kehu){
 
         }else {
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {

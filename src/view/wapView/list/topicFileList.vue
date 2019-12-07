@@ -12,34 +12,35 @@
         <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
            <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
          </yd-lightbox>-->
-        <i :class="getType(n.filename)" slot="icon"></i>
-        <span slot="left">
+        <i :class="getType(n.filename)" slot="icon" @click.stop="openView(n.filepath,n)"></i>
+        <span slot="left" @click.stop="openView(n.filepath,n)">
           <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
         </span>
-        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></yd-icon>
+        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
       </yd-cell-item>
     </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd" v-else>
-      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="openView(n.filepath,n)">
+      <yd-cell-item v-for="(n,index) in topicList" :key="index">
         <yd-lightbox slot="left" :num="topicList.length" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
         </yd-lightbox>
-        <i :class="getType(n.filename)" slot="icon"></i>
-        <span slot="left">
+        <i :class="getType(n.filename)" slot="icon"  @click.stop="openView(n.filepath,n)"></i>
+        <span slot="left" @click.stop="openView(n.filepath,n)">
           <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
         </span>
-        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></yd-icon>
+        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
       </yd-cell-item>
     </yd-cell-group>
     <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn">
+      <!--<yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="false">-->
       <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
     </yd-tabbar>
     <yd-backtop></yd-backtop>
@@ -222,8 +223,9 @@
       },
       getFileVal(event) {
         this.file = event.target.files[0];
-        console.log(console.log(this.file));
-        this.getFileSubmit()
+        if(typeof this.file!='undefined'){
+          this.getFileSubmit()
+        }
       },
       getFileSubmit(){
         var _self = this;
@@ -268,7 +270,7 @@
                       icon: 'success'
                     });
                   },100)
-
+                  _self.page=_self.page-1
                   _self.getfile()
                 }else{
                   _self.$dialog.loading.close();
@@ -302,7 +304,7 @@
                       icon: 'success'
                     });
                   },100)
-
+                  _self.page=_self.page-1
                   _self.getfile()
                 }else{
                   _self.$dialog.loading.close();
@@ -347,6 +349,7 @@
                 icon: 'success'
               });
             },100)
+            _self.page=_self.page-1
             _self.getfile()
           }else{
             _self.$dialog.loading.close();
@@ -377,6 +380,7 @@
                 icon: 'success'
               });
             },100)
+            _self.page=_self.page-1
             _self.getfile()
           }else{
             _self.$dialog.loading.close();
@@ -533,5 +537,8 @@
     left: 0;
     top: 0;
     opacity: 0;
+  }
+  .m-wap-folder-list-bd .yd-cell-right{
+    z-index: 99;
   }
 </style>

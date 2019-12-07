@@ -72,11 +72,11 @@
         <!--会议列表-->
         <div class="f-view-width m-main-nav-list" v-show="indexActive==2">
           <el-row :gutter="12">
-            <el-col :span="8" v-for="(items, index) in metList" :key="index" @click.native="goMeeting(items.id)">
+            <el-col :span="8" v-for="(items, index) in metList" :key="index" @click.native="goMeeting(items.id,items.is_secrect)">
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
                 <div class="m-main-nav-list-hd">
                   <div class="m-main-nav-list-hd-content">
-                    <em></em>
+                    <em :class="{'f-visibility':items.is_secrect==0}" v-text="$lang.index.title.weight_tips"></em>
                     <i class="f-restart-ico" v-if="items.status==0" v-text="$lang.index.status.not_start"></i>
                     <i class="f-load-ico" v-else v-text="$lang.index.status.start"></i>
                     <h2 v-html="items.name.replace(/\s/g,'&nbsp;')"></h2>
@@ -258,9 +258,13 @@
               this.$router.push({path:'/list/historyList',query:{mid:id}})
             }
           },
-          goMeeting(id){
-            sessionStorage.setItem('meetType',2)
-            this.$router.push({path:'/list/meetingList',query:{mid:id}})
+          goMeeting(id,secrect){
+            if(secrect==1){
+              this.$message(this.$lang.index.title.weight_tips);
+            }else{
+              sessionStorage.setItem('meetType',2)
+              this.$router.push({path:'/list/meetingList',query:{mid:id}})
+            }
           }
         },
         components: {
@@ -370,7 +374,7 @@
   .m-main-nav-list-hd-content i{
     position: absolute;
     top: 0;
-    left:20px;
+    left:5px;
     width: 46px;
     height: 34px;
     line-height: 32px;

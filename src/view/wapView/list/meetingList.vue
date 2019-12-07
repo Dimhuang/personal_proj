@@ -345,6 +345,13 @@
     width: 100%;
     position: relative;
   }
+  .m-wap-main-nav-list-bd p span.fr span:nth-of-type(2){
+    width: 1.4rem;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   .f-visibility{
     visibility: hidden;
   }

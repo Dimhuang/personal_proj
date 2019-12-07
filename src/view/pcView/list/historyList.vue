@@ -66,7 +66,7 @@
                   </div>
                 </li>
                 <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openViewA(meetingMsg.agenda_path,meetingMsg)">
-                  <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon'">
+                  <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="(getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon')&& !is_kehu">
                   <i class="iconfont pl-hyxx_hyfa_n"></i>
                   <div>
                     <span v-text="$lang.history.title.m_case+'：'"></span>
@@ -205,7 +205,8 @@
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s5.jpg'},
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s6.jpg'}
         ],
-        srcPath:''
+        srcPath:'',
+        is_kehu:false
       }
     },
     computed: {
@@ -215,6 +216,15 @@
       if(sessionStorage.getItem('keepMid')==null){
         this.$store.commit('getMid',this.$route.query.mid)
       }
+
+    if(typeof jsObj !== "undefined"){
+      this.is_kehu = true
+    }else if(typeof qt !== "undefined"){
+      this.is_kehu = true
+    }else{
+      this.is_kehu = false
+    }
+
       this.getMsg(this.mid)
       this.getFileNum(5,()=>{
         this.getDocFile()
@@ -412,7 +422,7 @@
             dangerouslyUseHTMLString: true
           })*!/
           _self.dialogTableVisible=true*/
-        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+        }else if((_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon')&&!_self.is_kehu){
 
           }else {
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
@@ -465,7 +475,7 @@
            dangerouslyUseHTMLString: true
            })*!/
           _self.dialogTableVisible=true*/
-        }else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){
+        /*}else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){*/
 
         }else {
           /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
