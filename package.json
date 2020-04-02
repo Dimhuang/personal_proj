@@ -5,7 +5,7 @@
   "author": "junjian <704823864@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 172.16.19.231",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 172.16.19.237",
     "start": "npm run dev",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",

@@ -10,7 +10,8 @@
           </span>-->
       </yd-navbar>
       <yd-tab active-color="#1791ff">
-        <yd-tab-panel label="会议列表" v-if="!is_ad">
+        <!--<yd-tab-panel label="会议列表" v-if="!is_ad">-->
+         <yd-tab-panel label="会议列表">
           <div class="m-wap-index-tabs-content" ref="tabView1">
             <div class="m-wap-main-nav-list" v-for="n in metList" @click.stop="goFunctionList(1,n.id)">
               <div class="m-wap-main-nav-list-hd">
@@ -38,7 +39,7 @@
         </yd-tab-panel>
         <yd-tab-panel label="历史会议">
           <div class="m-wap-index-tabs-content" ref="tabView2">
-            <div class="m-wap-main-nav-list" v-for="n in hisList" @click.stop="goFunctionList(2,n.id)">
+            <div class="m-wap-main-nav-list" v-for="n in hisList" @click.stop="goFunctionList(2,n.id,n.is_secrect)">
               <div class="m-wap-main-nav-list-hd f-history">
                 <div class="m-wap-main-nav-list-hd-content">
                   <em :class="{'f-visibility':n.is_secrect==0}">保密会议，需向管理员申请权限</em>
@@ -105,11 +106,11 @@
         setTimeout(function(){
           let bodyH = document.getElementById('scrollView').clientHeight;
           let navH = document.querySelector('.yd-tab-nav').clientHeight;
-          if(sessionStorage.getItem('adType')==null){
+         // if(sessionStorage.getItem('adType')==null){
             _self.$refs.tabView1.style.maxHeight = bodyH - navH + 'px'
-          }
+         // }
           _self.$refs.tabView2.style.maxHeight = bodyH - navH + 'px'
-        },100)
+        },200)
       },
       methods:{
         getHistorytList(flag){
@@ -175,11 +176,18 @@
           }, 500);*/
         },
 
-        goFunctionList(type,id){
+        goFunctionList(type,id,secrect){
           //type=1 =》会议列表，type=2 =》历史会议
-          this.$store.commit("changeType",type)
-          this.$store.commit('getMid',id)
-          this.$router.push({path:'/wap/functions'})
+          if(secrect==1){
+            this.$dialog.toast({
+              mes: '保密会议，需向管理员申请权限！',
+              timeout: 1500
+            });
+          }else{
+            this.$store.commit("changeType",type)
+            this.$store.commit('getMid',id)
+            this.$router.push({path:'/wap/functions'})
+          }
         }
       },
       components: {
@@ -345,12 +353,17 @@
     width: 100%;
     position: relative;
   }
+  .m-wap-main-nav-list-bd p{
+    line-height: 0.42rem;
+  }
   .m-wap-main-nav-list-bd p span.fr span:nth-of-type(2){
     width: 1.4rem;
     overflow: hidden;
     display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
+    float: right;
+    /*height: 0.32rem;*/
   }
   .f-visibility{
     visibility: hidden;

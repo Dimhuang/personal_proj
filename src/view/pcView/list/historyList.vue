@@ -159,6 +159,10 @@
                 </el-tabs>
               </div>
             </el-tab-pane>
+
+           <!-- <el-tab-pane :label="'会议决定事项通知'">
+              <router-view/>
+            </el-tab-pane>-->
           </el-tabs>
 
           <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
@@ -400,6 +404,9 @@
         }else if(tab.label == this.$lang.history.title.meet_means){
           this.$router.push({path:'/list/historyList/stmpfile'})
         }
+        /*else if(tab.label == '会议决定事项通知'){
+          this.$router.push({path:'/list/historyList/decision'})
+        }*/
       },
       back(){
         this.$router.push({path:'/index'})

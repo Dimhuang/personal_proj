@@ -1,63 +1,49 @@
 <template>
   <yd-layout>
     <yd-navbar slot="navbar">
-      <span class="yd-navbar-center-title" slot="center">{{title.replace(/\s/g,'&nbsp;')}}</span>
+      <span class="yd-navbar-center-title" slot="center">决定事项通知</span>
       <div slot="left" @click.stop="back">
         <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
         <span>返回</span>
       </div>
+      <div slot="right" @click.stop="refresh">
+        <span>刷新</span>
+      </div>
     </yd-navbar>
-    <yd-cell-group class="m-wap-folder-list-hd" v-if="showType==1">
-      <yd-cell-item>
-          <span slot="left">
-            <h2 v-text="topicTitle.name"></h2>
-            <p class="f-flex-content f-ex">
-              <span>汇报人：</span>
-              <span class="f-flex-item" v-text="topicTitle.reporter"></span>
-            </p>
-             <p class="f-flex-content">
-               <span>列席人员：</span>
-               <span class="f-flex-item" style="word-break: break-all" v-text="topicTitle.users"></span>
-             </p>
-          </span>
-      </yd-cell-item>
-    </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd" v-if="is_ad">
-      <yd-cell-item v-for="(n,index) in topicList" :key="index">
-       <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
-          <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
-        </yd-lightbox>-->
-        <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n)"></i>
-        <i  v-else :class="getType(n.filename)" slot="icon" @click.stop="goDetails(n)"></i>
-        <span slot="left" @click.stop="goDetails(n)">
+      <yd-cell-item v-for="(n,index) in topicList" :key="index" @click.native="openView(n.filepath,n)">
+        <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
+         </yd-lightbox>-->
+        <i :class="getType(n.filename)" slot="icon" @click.stop="openView(n.filepath,n)"></i>
+        <span slot="left" @click.stop="openView(n.filepath,n)">
           <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
-           <!-- <p v-if="n.is_directory==0">
-              <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
-              <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
-            </p>-->
+          <!-- <p v-if="n.is_directory==0">
+             <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
+             <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
+           </p>-->
         </span>
         <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
     </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd" v-else>
       <yd-cell-item v-for="(n,index) in topicList" :key="index">
-         <yd-lightbox :num="topicList.length" slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
-           <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
-         </yd-lightbox>
-        <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon" @click.stop="goDetails(n)"></i>
-        <i  v-else :class="getType(n.filename)" slot="icon" @click.stop="goDetails(n)"></i>
-        <span slot="left" @click.stop="goDetails(n)">
-           <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
-           <!-- <p v-if="n.is_directory==0">
-              <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
-              <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
-            </p>-->
+        <yd-lightbox slot="left" :num="topicList.length" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
+          <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
+        </yd-lightbox>
+        <i :class="getType(n.filename)" slot="icon"  @click.stop="openView(n.filepath,n)"></i>
+        <span slot="left" @click.stop="openView(n.filepath,n)">
+          <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+          <!-- <p v-if="n.is_directory==0">
+             <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
+             <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
+           </p>-->
         </span>
         <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
     </yd-cell-group>
     <!--<yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn&&!is_ad">-->
-      <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="false">
+    <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="false">
       <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
     </yd-tabbar>
     <yd-backtop></yd-backtop>
@@ -105,22 +91,26 @@
   </yd-layout>
 </template>
 <script>
+  import { fileType , upload_url } from '@/utils/utils'
   import {mapState} from 'vuex'
-  import { fileType  , upload_url} from '@/utils/utils'
   import $ from 'jquery'
   export default{
     data(){
       return {
         showType:'1',
-        title:'',
-        topicTitle:[],
+        folderNameTxt:'',
+        topicNameTxt:'',
         did:'',
+        fid:'',
+        fileType:'',
         page:1,
         topicList:[],
         busy:true,
         fileType:'',
         srcPath:'',
         showRight:false,
+        o_fid:'',
+        o_f_name:'',
         is_ad:sessionStorage.getItem('adType')==null?false:true,
         showMiddle:false,
         downType:'0',
@@ -134,12 +124,10 @@
   },
   mounted(){
     var _self = this;
-    _self.showType = _self.$route.query.type
-      _self.title = _self.$route.query.f_name
-      _self.fileType = 'stmpfile'
-      _self.fid =_self.$route.query.fid
+
+    _self.fileType = 'decision'
     _self.getfile()
-   // _self.getShowUpdata()
+    // _self.getShowUpdata()
   },
   methods: {
     getType(name){
@@ -149,16 +137,15 @@
     getShowUpdata(){
       this.$fetch('/api/system/system_config',{}).then(result=>{
         result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
-     })
+    })
     },
     getfile(flag){
       this.$fetch('/wap/meeting/files',{
         m_id:this.mid,
-        type: 'stmpfile',
-        d_id:0,
-        file_id:this.fid,
+        type: this.fileType,
         pagesize:10,
-        page:this.page
+        page:this.page,
+        file_use:10
       }).then(result=>{
         let res = result.data;
       if(result.msg=='success'){
@@ -185,52 +172,46 @@
       this.getfile(true)
     }, 500);
     },
-    goDetails(data){
-      var _self = this;
-      if(data.is_directory==1){
-        _self.$router.push({path:'/wap/topicFileList',query:{id:data.id,f_name:data.filename,o_f_name:_self.title,o_fid:_self.fid,did:_self.fid,type:_self.showType}})
-      }else{
-        // alert('这是文档');
-        //_self.openView(data.filepath)
-        //window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath + data.filepathex
-        if(_self.getType(data.filename) == 'f-wap-na-icon'){
-          _self.$dialog.toast({
-            mes: '格式不支持！',
-            timeout: 1500
-          });
-        }else{
-          if(sessionStorage.getItem('adType')!=null){
-            if(data.filepathex==''){
-              window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
-            }else{
-              window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
-            }
-            return
-          }else{
-            _self.openView(data.filepath)
-          }
-        }
-      }
+    refresh(){
+      this.page = 1
+      this.getfile()
     },
     back(){
       var _self = this;
-      _self.$router.push({path:'/wap/topicFolderList',query: { type:2}})
+      _self.$router.push({path:'/wap/functions'})
+
     },
     cencel:function(){
       var _self = this;
       _self.srcPath = ''
       _self.showRight = false
     },
-    openView(path) {
+    openView(path,data) {
       var _self = this;
-      if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
-        _self.srcPath = path
-        _self.showRight = true
-      }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
+      if(_self.getType(data.filename) == 'f-wap-na-icon'){
+        _self.$dialog.toast({
+          mes: '格式不支持！',
+          timeout: 1500
+        });
+      }else{
+        if(sessionStorage.getItem('adType')!=null){
+          if(data.filepathex==''){
+            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+          }else{
+            window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+          }
+          return
+        }else{
+          if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
+            _self.srcPath = path
+            _self.showRight = true
+          }else if(_self.getType(path) == 'f-wap-png-icon'||_self.getType(path) == 'f-wap-jpg-icon'){
 
-      }else {
-        _self.srcPath = path
-        window.location.href = _self.srcPath
+          }else {
+            _self.srcPath = path
+            window.location.href = _self.srcPath
+          }
+        }
       }
     },
     getFileVal(event) {
@@ -245,8 +226,6 @@
       var formData = new FormData();
       formData.append('mid', _self.mid);
       formData.append('file', _self.file);
-      console.log( _self.file)
-
       $.ajax({
         url:upload_url,
         dataType:'json',
@@ -262,15 +241,17 @@
           if (data.msg == 'success') {
             _self.$dialog.loading.open('正在上传...');
             arr.push(data.fid)
-            var parems = {
-              mid:_self.mid,
-              parent_id:_self.fid,
-              files:arr,
-              is_secret:_self.watchType,
-              allow_download:_self.downType
-            }
-            _self.$post('/wap/meeting/upload_files',parems).then(result=>{
-              let res = result;
+            if(_self.showType==1){
+              var parems = {
+                datum_id:_self.did,
+                mid:_self.mid,
+                parent_id:_self.fid,
+                files:arr,
+                is_secret:_self.watchType,
+                allow_download:_self.downType
+              }
+              _self.$post('/wap/meeting/upload_datum_file',parems).then(result=>{
+                let res = result;
               console.log(res)
               _self.showMiddle=false
               if(result.msg=='success'){
@@ -295,6 +276,41 @@
                 },100)
               }
             })
+            }else{
+              var parems = {
+                mid:_self.mid,
+                parent_id:_self.fid,
+                files:arr,
+                is_secret:_self.watchType,
+                allow_download:_self.downType
+              }
+              _self.$post('/wap/meeting/upload_files',parems).then(result=>{
+                let res = result;
+              console.log(res)
+              _self.showMiddle=false
+              if(result.msg=='success'){
+                _self.$dialog.loading.close();
+                setTimeout(function(){
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'success'
+                  });
+                },100)
+                _self.page=_self.page-1
+                _self.getfile()
+              }else{
+                _self.$dialog.loading.close();
+                setTimeout(function() {
+                  _self.$dialog.toast({
+                    mes: result.message,
+                    timeout: 1500,
+                    icon: 'error'
+                  });
+                },100)
+              }
+            })
+            }
           }
         },
         error:function(response){
@@ -371,13 +387,15 @@
         }
       })
       }
-          }
-      })
+    }
+    })
+
 
 
 
 
     }
+
   }
   }
 </script>
@@ -386,9 +404,6 @@
     padding:0.2rem 0.5rem;
     background-color: #fff;
     margin-bottom: 0;
-  }
-  .m-wap-folder-list-hd .yd-cell:after{
-    height: 0;
   }
   .m-wap-folder-list-hd .yd-cell-item,
   .m-wap-folder-list-hd .yd-cell-right,

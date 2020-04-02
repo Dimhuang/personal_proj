@@ -64,8 +64,9 @@
             </el-col>
           </el-row>
           <div class="f-load-box" v-infinite-scroll="loadMoreHis" infinite-scroll-disabled="hisBusy" infinite-scroll-distance="30">
-            <i class="el-icon-loading" v-if="!hisBusy"></i>
-            <span v-else v-text="$lang.tips.no_data"></span>
+            <!--<i class="el-icon-loading" v-if="!hisBusy"></i>
+            <span v-else v-text="$lang.tips.no_data"></span>-->
+            <span v-text="$lang.tips.no_data"></span>
           </div>
 
         </div>
@@ -87,14 +88,15 @@
                     <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
                     <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
                   </p>
-                  <p><span v-text="$lang.index.title.room+':'"></span><span class="f-width-2" v-text="items.room_name"></span></p>
+                  <p><span class="fl"><span v-text="$lang.index.title.room+':'"></span><span class="f-width-2" v-text="items.room_name"></span></span></p>
                 </div>
               </el-card>
             </el-col>
           </el-row>
           <div class="f-load-box" v-infinite-scroll="loadMoreMet" infinite-scroll-disabled="metBusy" infinite-scroll-distance="30">
-            <i class="el-icon-loading" v-if="!metBusy"></i>
-            <span v-else v-text="$lang.tips.no_data"></span>
+           <!-- <i class="el-icon-loading" v-if="!metBusy"></i>
+            <span v-else v-text="$lang.tips.no_data"></span>-->
+            <span v-text="$lang.tips.no_data"></span>
           </div>
         </div>
       </m-body>

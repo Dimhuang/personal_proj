@@ -26,15 +26,21 @@
         </yd-grids-item>
         <yd-grids-item @click.native="goFolder">
           <img slot="icon" src="../../../assets/img/but_lswj.png">
-          <span slot="text">会议资料</span>
+          <span slot="text">临时资料</span>
         </yd-grids-item>
-        <yd-grids-item @click.native="goVote" v-if="wapFunType==1">
+        <!--<yd-grids-item @click.native="goVote" v-if="wapFunType==1">-->
+        <yd-grids-item @click.native="goVote" v-if="false">
           <img slot="icon" src="../../../assets/img/but_hytp.png">
           <span slot="text">会议投票</span>
         </yd-grids-item>
         <yd-grids-item @click.native="goBoard" v-if="wapFunType==2">
           <img slot="icon" src="../../../assets/img/but_pzbb.png">
           <span slot="text">批注白板</span>
+        </yd-grids-item>
+        <!--<yd-grids-item @click.native="goNote" v-if="wapFunType==2">-->
+          <yd-grids-item @click.native="goNote" v-if="false">
+          <img slot="icon" src="../../../assets/img/but_hysxtz.png">
+          <span slot="text">决定事项通知</span>
         </yd-grids-item>
         <yd-grids-item @click.native="goBack">
           <img slot="icon" src="../../../assets/img/but_fhlb.png">
@@ -43,9 +49,9 @@
       </yd-grids-group>
     </div>
 
-    <yd-tabbar slot="tabbar" style="padding: 0;">
+    <!--<yd-tabbar slot="tabbar" style="padding: 0;">
       <yd-button size="large" :type="signBtnType" shape="angle" style="margin: 0" v-text="signTxt" v-if="is_start" @click.native="signIn()"></yd-button>
-    </yd-tabbar>
+    </yd-tabbar>-->
   </yd-layout>
 </template>
 <script>
@@ -132,6 +138,10 @@
       goVote(){
         var _self = this;
         _self.$router.push({path:'/wap/vote'});
+      },
+      goNote(){
+        var _self = this;
+        _self.$router.push({path:'/wap/decision'});
       },
       goBoard(){
         var _self = this;

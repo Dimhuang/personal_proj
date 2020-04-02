@@ -58,7 +58,7 @@
                 <yd-icon name="hyxx_hyjj_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
             <span slot="left">
-              <span>会议简介:</span>
+              <span>会议描述:</span>
               <p v-text="meetingMsgList.description"></p>
             </span>
           </yd-cell-item>

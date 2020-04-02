@@ -1,29 +1,28 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-     <!-- <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
-      </div>-->
-      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
-      <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
+       <div class="fr">
+         <el-button type="primary" size="small"  @click="refresh">刷新</el-button>
+       </div>
+      <el-breadcrumb-item>会议决定事项通知</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
-      <li class="m-history-topics-list f-flex-content"  v-for="items in topicList">
+
+      <li class="m-history-topics-list f-flex-content" v-for="items in dtopicList">
         <div class="f-flex-item m-history-topics-list-file">
           <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
           <div class="fl" v-else :class="getType(items.filename)"></div>
           <div class="f-ellipsis">
             <span :title="items.filename" class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</span>
-           <!-- <p v-if="items.is_directory==0">
-              <em class="f-bc-yellow" v-text="$lang.upload.tips.file_only" v-show="items.user_file!=0"></em>
-              <em class="f-bc-blue" v-text="$lang.upload.tips.secret_type" v-show="items.is_secret!=0"></em>
-            </p>-->
+            <!-- <p v-if="items.is_directory==0">
+               <em class="f-bc-yellow" v-text="$lang.upload.tips.file_only" v-show="items.user_file!=0"></em>
+               <em class="f-bc-blue" v-text="$lang.upload.tips.secret_type" v-show="items.is_secret!=0"></em>
+             </p>-->
           </div>
         </div>
         <div class="m-history-list-r" :class="{'f-active':items.user_file!=0}">
-          <el-button size="mini" round  @click.native="goDetails(items)">
-             <span v-if="(((getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&is_kehu)||getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&items.is_directory==0" v-text="$lang.means.form.download"></span>
-             <span v-else v-text="$lang.means.form.open"></span>
+          <el-button size="mini" round @click.native="goDetails(items)">
+            <span  v-text="$lang.means.form.download"></span>
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="(getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&!is_kehu">
@@ -33,7 +32,7 @@
     </ul>
     <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
       <i class="el-icon-loading" v-if="!busy"></i>
-      <span v-else v-text="$lang.tips.no_data"><</span>
+      <span v-else v-text="$lang.tips.no_data"></span>
     </div>
     <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
       <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
@@ -47,8 +46,8 @@
           :on-remove="handleRemove"
           :before-remove="beforeRemove"
           multiple
-          :data="{mid:mid}"
           :limit="100"
+          :data="{mid:mid}"
           :on-exceed="handleExceed"
           :on-success="successUpload"
           :file-list="fileList">
@@ -77,16 +76,16 @@
 <script>
   import '@/assets/css/pcScrollBar.css'
   import {mapState} from 'vuex'
-  import { fileType , global_ , upload_url} from '@/utils/utils'
+  import { fileType, global_ , upload_url} from '@/utils/utils'
   import { QWebChannel } from  '@/assets/js/qwebchannel.js'
   export default{
+
     data(){
       return {
-        folderNameTxt:'',
-        topicList:[],
+        toggleTap:true,
+        dtopicList:[],
         page:1,
         busy:true,
-        fid:'',
         srcPath:' ',
         dialogTableVisible:false,
         is_meet_type:sessionStorage.getItem('meetType')==null?'1':sessionStorage.getItem('meetType'),
@@ -103,8 +102,8 @@
       ...mapState(["mid"])
   },
   mounted(){
-    this.folderNameTxt = this.$route.query.f_name
-    this.fid = this.$route.query.id
+    this.getfile()
+    //this.getShowUpdata()
     if(typeof jsObj !== "undefined"){
       this.is_kehu = true
     }else if(typeof qt !== "undefined"){
@@ -112,8 +111,10 @@
     }else{
       this.is_kehu = false
     }
-    this.getfile()
-    //this.getShowUpdata()
+    console.log('kehuduan:'+typeof jsObj)
+  },
+  components: {
+
   },
   methods:{
     getType(name){
@@ -123,31 +124,31 @@
     getShowUpdata(){
       this.$fetch('/api/system/system_config',{}).then(result=>{
         result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
-      })
+    })
     },
     getfile(flag){
       this.$fetch('/wap/meeting/files',{
         m_id:this.mid,
-        type:'stmpfile',
-        file_id:this.fid,
+        type:'decision',
         pagesize:10,
-        page:this.page
+        page:this.page,
+        file_use:10
       }).then(result=>{
         let res = result.data;
       if(result.msg=='success'){
         if(flag){
-          this.topicList = this.topicList.concat(res.data)
+          this.dtopicList = this.dtopicList.concat(res.data)
           if(res.total<this.page*10){
             this.busy=true
           }else{
             this.busy=false
           }
         }else{
-          this.topicList = res.data
+          this.dtopicList = res.data
           this.busy=false
         }
       }else{
-        this.topicList = []
+        this.dtopicList = []
       }
     })
     },
@@ -155,36 +156,24 @@
       this.busy = true;
       setTimeout(() => {
         this.page++;
-        this.getfile(true)
-      }, 500);
-    },
-    goMain(){
-      if(this.is_meet_type == 1) {
-        this.$router.push({path:'/list/historyList/stmpfile'})
-      }else{
-        this.$router.push({path:'/list/meetingList/stmpfile'})
-      }
-
+      this.getfile(true)
+    }, 500);
     },
     goDetails(data){
       let _self = this;
-      if(data.is_directory==1){
-        if(_self.is_meet_type == 1) {
-          _self.$router.push({path:'/list/historyList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
-        }else{
-          _self.$router.push({path:'/list/meetingList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
-        }
+      _self.openView(data.filepath,data);
 
-      }else{
-        _self.openView(data.filepath,data);
-      }
+    },
+    refresh(){
+      this.page = 1
+      this.getfile()
     },
     openView(path,data) {
       var _self = this;
+
       if (_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
         _self.srcPath = path
         _self.dialogTableVisible=true
-
         /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
          dangerouslyUseHTMLString: true
          }).then(action => {
@@ -192,10 +181,10 @@
          }).catch(action => {
          _self.srcPath = ''
          });*/
-   /*   }else if(_self.getType(path) == 'f-pdf-icon'){
-        _self.srcPath = path
-        _self.dialogTableVisible=true*/
-        /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+        /*    }else if(_self.getType(path) == 'f-pdf-icon'){
+         _self.srcPath = path
+         _self.dialogTableVisible=true*/
+        /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
          dangerouslyUseHTMLString: true
          }).then(action => {
          var elem = document.querySelector('.pswp');
@@ -261,7 +250,7 @@
 
         var parems = {
           mid:_self.mid,
-          parent_id:_self.fid,
+          parent_id:0,
           files:arr,
           is_secret:_self.watchType,
           allow_download:_self.downType
@@ -290,7 +279,7 @@
     handleRemove(file, fileList) {
       var _self = this;
       for(var i=0;i<_self.fileList.length;i++){
-        if(_self.fileList[i].fid==file.fid){
+        if(_self.fileList[i].response.fid==file.fid){
           _self.fileList.splice(i,1)
         }
       }
@@ -307,8 +296,7 @@
 
     successUpload(response, file, fileList){
       var _self = this;
-      _self.fileList.push(response)
-      console.log( _self.fileList)
+      _self.fileList = fileList
     },
     delFile(id){
       var _self = this;
@@ -318,6 +306,7 @@
         meeting_id:_self.mid,
         file_id:arr
       }
+
       _self.$confirm(_self.$lang.upload.tips.del_tips, _self.$lang.upload.tips.del_title, {
         confirmButtonText: _self.$lang.head.tips.yes,
         cancelButtonText:  _self.$lang.head.tips.cancel
@@ -342,6 +331,7 @@
          message: '已取消删除'
          });*/
       });
+
     }
   }
   }
@@ -393,6 +383,10 @@
   .f-bc-yellow{
     background-color: #ffff00;
   }
+  .m-history-topics-list div.f-ellipsis{
+    width:700px;
+    font-size: 16px;
+  }
   .m-history-list-r{
     text-align: right;
   }
@@ -429,11 +423,6 @@
   .m-history-topics-list-file{
     /*line-height: 54px;*/
   }
-  .m-history-topics-list-file div.f-ellipsis{
-    width:700px;
-    font-size: 16px;
-  }
-
   .m-history-list-r button{
     margin-top:14px;
   }
@@ -442,13 +431,22 @@
     line-height: normal;
     padding-left: 0;
     font-size: 100%;
+  }.f-topic-list-user span{
+     float: left;
+   }
+  .f-topic-list-user p{
+    float: left;
+    display: inline-block;
+    width: 802px;
   }
+
+
   .f-watch-dialog  .el-message-box{
-    width: 70% !important;
+    width: 90% !important;
   }
-  .f-watch-dialog .el-message-box__content,
-  .f-watch-dialog  .el-message-box__message ,
-  .f-watch-dialog .el-message-box__message p,
+  .f-watch-dialog  .el-message-box__content,
+  .f-watch-dialog .el-message-box__message ,
+  .f-watch-dialog  .el-message-box__message p,
   .f-watch-dialog .el-dialog__body{
     height: 600px;
   }

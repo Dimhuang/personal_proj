@@ -68,6 +68,13 @@ export const routerList = [
           requiresAuth: true
         },
         component: resolve => require(["@/view/pcView/list/historyStmpfileDetails"], resolve)
+      },{
+        path: '/list/historyList/decision',
+        name:'decision',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historyDecision"], resolve)
       }
     ]
    /* redirect:{
@@ -219,6 +226,10 @@ export const routerList = [
     path: '/wap/vote',
     name: 'wapVote',
     component: resolve => require(["@/view/wapView/list/vote"], resolve)
+  },{
+    path: '/wap/decision',
+    name: 'wapDecision',
+    component: resolve => require(["@/view/wapView/list/decision"], resolve)
   },{
     path: '/wap/voteSelect',
     name: 'wapVoteSelect',

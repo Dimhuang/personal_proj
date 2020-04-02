@@ -65,17 +65,33 @@
                     <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
+                <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openViewA(meetingMsg.agenda_path,meetingMsg)">
+                  <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="(getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon')&& !is_kehu">
+                  <i class="iconfont pl-hyxx_hyfa_n"></i>
+                  <div>
+                    <span v-text="$lang.history.title.m_case+'：'"></span>
+                    <div class="m-history-list-flie f-flex-content">
+                      <div :class="getType(meetingMsg.agenda_name)"></div>
+                      <div class="f-flex-item">
+                        <span class="f-ellipsis" :title="meetingMsg.agenda_name" v-text="meetingMsg.agenda_name"></span>
+                      </div>
+                    </div>
+                  </div>
+                </li>
               </ul>
             </el-tab-pane>
             <!--会议议题-->
-            <el-tab-pane :label="$lang.history.title.meet_topic">
+           <!-- <el-tab-pane :label="$lang.history.title.meet_topic">
               <router-view/>
-            </el-tab-pane>
+            </el-tab-pane>-->
             <!--临时资料-->
-            <el-tab-pane :label="$lang.history.title.meet_means">
+           <!-- <el-tab-pane :label="$lang.history.title.meet_means">
               <router-view/>
-            </el-tab-pane>
+            </el-tab-pane>-->
           </el-tabs>
+          <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
+            <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
+          </el-dialog>
         </div>
       </div>
     </m-body>
@@ -85,24 +101,37 @@
   import mHeader from '@/components/header.vue'
   import mBody from '@/components/body.vue'
   import '@/assets/css/pcScrollBar.css'
+  import { fileType , global_} from '@/utils/utils'
   import {mapState} from 'vuex'
   export default{
     data(){
       return{
         meetingMsg:[],
-        name:''
+        name:'',
+        dialogTableVisible:false,
       }
     },
     computed: {
       ...mapState(["mid"])
      },
     mounted(){
+    if(typeof jsObj !== "undefined"){
+      this.is_kehu = true
+    }else if(typeof qt !== "undefined"){
+      this.is_kehu = true
+    }else{
+      this.is_kehu = false
+    }
       if(sessionStorage.getItem('keepMid')==null){
         this.$store.commit('getMid',this.$route.query.mid)
       }
       this.getMsg(this.mid)
     },
     methods:{
+      getType(name){
+        var file = fileType(name,1)
+        return file;
+      },
       getMsg(id){
         this.$fetch('/wap/meeting/data',{
           m_id:id
@@ -121,6 +150,62 @@
           this.$router.push({path:'/list/meetingList/topics'})
         }else if(tab.label == this.$lang.history.title.meet_means){
           this.$router.push({path:'/list/meetingList/stmpfile'})
+        }
+      },
+      openViewA(path,data) {
+        var _self = this;
+        if (_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
+          _self.srcPath = path
+          _self.dialogTableVisible=true
+          /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           }).then(action => {
+           _self.srcPath = ''
+           }).catch(action => {
+           _self.srcPath = ''
+           });*/
+          /*   }else if(_self.getType(path) == 'f-pdf-icon'){
+           _self.srcPath = path
+           /!*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           })*!/
+           _self.dialogTableVisible=true*/
+          /*}else if(_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon'){*/
+
+        }else {
+          /* _self.$alert(" <iframe src='https://view.officeapps.live.com/op/view.aspx?src=" + path + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+           dangerouslyUseHTMLString: true
+           });*/
+          if(sessionStorage.getItem('globalObj')==1){
+            if(typeof jsObj === "undefined") {
+              if(_self.getType(path) == 'f-pdf-icon'){
+                _self.srcPath = path
+                _self.dialogTableVisible=true
+              }else{
+                _self.srcPath = path
+                window.location.href = _self.srcPath
+              }
+            }else{
+              var parems = {"fileName":data.agenda_name,"fileId":data.id,"downloadPath":data.agenda_path,"iSize":0}
+              jsObj.downloadFile(JSON.stringify(parems))
+            }
+          }else{
+            if(typeof qt === "undefined") {
+              if(_self.getType(path) == 'f-pdf-icon'){
+                _self.srcPath = path
+                _self.dialogTableVisible=true
+              }else{
+                _self.srcPath = path
+                window.location.href = _self.srcPath
+              }
+            }else{
+              var parems = {"fileName":data.agenda_name,"fileId":data.id,"downloadPath":data.agenda_path,"iSize":0}
+              new QWebChannel(qt.webChannelTransport,function(channel) {
+                var jsObj = channel.objects.jsObj;
+                jsObj.downloadFile(JSON.stringify(parems))
+              });
+            }
+          }
         }
       },
       back(){
@@ -150,7 +235,7 @@
   }
 
   .m-meeting-nav .el-tabs__nav-scroll{
-    /*text-align: center;*/
+    text-align: center;
   }
   .m-meeting-nav .el-tabs__nav{
     float: inherit;
@@ -172,8 +257,8 @@
     color:#409EFF !important;
   }
   .m-meeting-nav .el-tabs__active-bar{
-    /*left: 50%;
-    margin-left: -35.5px;*/
+    left: 50%;
+    margin-left: -35.5px;
   }
   .m-meeting-nav .f-view-width{
     position: relative;
