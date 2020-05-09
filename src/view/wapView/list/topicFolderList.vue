@@ -22,7 +22,7 @@
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd" v-if="is_ad">
-        <yd-cell-item v-for="(n,index) in topicList" :key="index">
+        <yd-cell-item v-for="(n,index) in topicList" :key="index" :class="{'f-is-del':n.user_file==0}">
         <!--  <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
             <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
           </yd-lightbox>-->
@@ -30,16 +30,16 @@
           <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n)"></i>
           <span slot="left"  @click.stop="goDetails(n)">
              <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
-            <!--<p v-if="n.is_directory==0">
+            <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
-            </p>-->
+            </p>
           </span>
-          <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
+          <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd" v-else>
-        <yd-cell-item v-for="(n,index) in topicList" :key="index">
+        <yd-cell-item v-for="(n,index) in topicList" :key="index" :class="{'f-is-del':n.user_file==0}">
           <yd-lightbox slot="left" class="f-wap-img-hide-view" :num="topicList.length" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
             <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
           </yd-lightbox>
@@ -47,16 +47,16 @@
           <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n)"></i>
           <span slot="left" @click.stop="goDetails(n)">
             <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
-           <!-- <p v-if="n.is_directory==0">
+            <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
-            </p>-->
+            </p>
           </span>
-          <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
+          <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
         </yd-cell-item>
       </yd-cell-group>
-      <!--<yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn&&!is_ad">-->
-        <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="false">
+      <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn">
+        <!--<yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="false">-->
         <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
       </yd-tabbar>
       <yd-backtop></yd-backtop>
@@ -146,7 +146,7 @@
           _self.fileType = 'stmpfile'
           _self.did = 0
         }
-          //_self.getShowUpdata()
+        _self.getShowUpdata()
 
           _self.getfile()
       },
@@ -582,5 +582,12 @@
   }
   .m-wap-folder-list-bd .yd-cell-right{
     z-index: 99;
+  }
+
+  .m-wap-folder-list-bd .f-is-del .yd-cell-right{
+    display: none;
+  }
+  .m-wap-folder-list-bd .f-is-del .yd-cell-left{
+    width: 100%;
   }
 </style>

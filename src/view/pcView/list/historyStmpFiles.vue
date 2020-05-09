@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-breadcrumb separator="/">
-     <!-- <div class="fr">
+      <div class="fr">
         <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
-      </div>-->
+      </div>
       <el-breadcrumb-item>{{$lang.history.title.meet_means}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
@@ -14,10 +14,10 @@
           <div class="fl" v-else :class="getType(items.filename)"></div>
           <div class="f-ellipsis">
             <span :title="items.filename" class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</span>
-           <!-- <p v-if="items.is_directory==0">
+            <p v-if="items.is_directory==0">
               <em class="f-bc-yellow" v-text="$lang.upload.tips.file_only" v-show="items.user_file!=0"></em>
               <em class="f-bc-blue" v-text="$lang.upload.tips.secret_type" v-show="items.is_secret!=0"></em>
-            </p>-->
+            </p>
           </div>
         </div>
         <div class="m-history-list-r" :class="{'f-active':items.user_file!=0}">
@@ -27,7 +27,7 @@
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="(getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&!is_kehu">
-          <!--<i class="el-icon-delete" v-show="items.user_file!=0" @click.stop="delFile(items.id)"></i>-->
+          <i class="el-icon-delete" v-show="items.user_file!=0" @click.stop="delFile(items.id)"></i>
         </div>
       </li>
     </ul>
@@ -104,7 +104,7 @@
   },
     mounted(){
       this.getfile()
-    //this.getShowUpdata()
+      this.getShowUpdata()
     if(typeof jsObj !== "undefined"){
       this.is_kehu = true
     }else if(typeof qt !== "undefined"){
@@ -375,7 +375,7 @@
   .m-history-topics-list .f-flex-item .f-ellipsis span{
     display: inline-block;
     width: 100%;
-    line-height: 54px;
+    line-height: 34px;
   }
   .m-history-topics-list .f-flex-item .f-ellipsis p{
     line-height: 20px;

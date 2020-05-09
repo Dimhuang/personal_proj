@@ -53,6 +53,7 @@ export const fileType = (filename,type) => {
       result = false;
       return result;
     }
+    suffix = suffix.toLowerCase()
     // 图片格式
     var imglist = ['jpg', 'jpeg', 'bmp', 'gif'];
     // 进行图片匹配

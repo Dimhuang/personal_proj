@@ -13,10 +13,10 @@
         <!--<yd-tab-panel label="会议列表" v-if="!is_ad">-->
          <yd-tab-panel label="会议列表">
           <div class="m-wap-index-tabs-content" ref="tabView1">
-            <div class="m-wap-main-nav-list" v-for="n in metList" @click.stop="goFunctionList(1,n.id)">
+            <div class="m-wap-main-nav-list" v-for="n in metList" @click.stop="goFunctionList(1,n.id,n.is_secrect)">
               <div class="m-wap-main-nav-list-hd">
                 <div class="m-wap-main-nav-list-hd-content">
-                  <em></em>
+                  <em :class="{'f-visibility':n.is_secrect==0}">保密会议，需向管理员申请权限</em>
                   <i class="f-restart-ico" v-if="n.status==0">未开始</i>
                   <i class="f-load-ico" v-else>进行中</i>
                   <h2>{{n.name.replace(/\s/g,'&nbsp;')}}</h2>

@@ -5,8 +5,8 @@
       <i></i>
       <span v-text="$lang.tips.nav_title"></span>
     </div>
-    <!--<div class="f-right-box" v-show="showLogin_n==1">-->
-      <div class="f-right-box" v-show="false">
+    <div class="f-right-box" v-show="showLogin_n==1">
+      <!--<div class="f-right-box" v-show="false">-->
       <span class="fl f-head-right" @click="dialogFormVisible = true"><div class="fl"><em>Welcome</em><p v-text="formLabelAlign.username"></p></div><i class="iconfont pl-user"></i></span>
       <!--<span class="fl f-head-right" ><div class="fl"><em>Welcome</em><p v-text="formLabelAlign.username"></p></div><i class="iconfont pl-user"></i></span>-->
       <span @click.stop="login" ><i class="iconfont pl-icon_sign_out_n"></i></span>

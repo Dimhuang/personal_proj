@@ -365,7 +365,7 @@
   .m-history-topics-list .f-flex-item .f-ellipsis span{
     display: inline-block;
     width: 100%;
-    line-height: 54px;
+    line-height: 34px;
   }
   .m-history-topics-list .f-flex-item .f-ellipsis p{
     line-height: 20px;

@@ -81,13 +81,13 @@
               </ul>
             </el-tab-pane>
             <!--会议议题-->
-           <!-- <el-tab-pane :label="$lang.history.title.meet_topic">
+            <el-tab-pane :label="$lang.history.title.meet_topic">
               <router-view/>
-            </el-tab-pane>-->
+            </el-tab-pane>
             <!--临时资料-->
-           <!-- <el-tab-pane :label="$lang.history.title.meet_means">
+            <el-tab-pane :label="$lang.history.title.meet_means">
               <router-view/>
-            </el-tab-pane>-->
+            </el-tab-pane>
           </el-tabs>
           <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
             <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
@@ -235,7 +235,7 @@
   }
 
   .m-meeting-nav .el-tabs__nav-scroll{
-    text-align: center;
+    /*text-align: center;*/
   }
   .m-meeting-nav .el-tabs__nav{
     float: inherit;
@@ -257,8 +257,8 @@
     color:#409EFF !important;
   }
   .m-meeting-nav .el-tabs__active-bar{
-    left: 50%;
-    margin-left: -35.5px;
+   /* left: 50%;
+    margin-left: -35.5px;*/
   }
   .m-meeting-nav .f-view-width{
     position: relative;
