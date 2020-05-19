@@ -126,7 +126,10 @@
         downType:'0',
         watchType:'0',
         file:'',
-        showUpdataBtn:true
+        showUpdataBtn:true,
+        fileLimit:'',
+        fileMax:'',
+        fileCount:''
       }
     },
     computed: {
@@ -152,38 +155,41 @@
      })
     },
     getfile(flag){
+      var _self = this;
       this.$fetch('/wap/meeting/files',{
-        m_id:this.mid,
+        m_id:_self.mid,
         type: 'stmpfile',
         d_id:0,
-        file_id:this.fid,
+        file_id:_self.fid,
         pagesize:10,
-        page:this.page
+        page:_self.page
       }).then(result=>{
         let res = result.data;
+      _self.fileCount = result.file_count
+      _self.fileMax = result.file_max
       if(result.msg=='success'){
         if(flag){
-          this.topicList = this.topicList.concat(res.data)
-          if(res.total<this.page*10){
-            this.busy=true
+          _self.topicList = _self.topicList.concat(res.data)
+          if(res.total<_self.page*10){
+            _self.busy=true
           }else{
-            this.busy=false
+            _self.busy=false
           }
         }else{
-          this.topicList = res.data
-          this.busy=false
+          _self.topicList = res.data
+          _self.busy=false
         }
       }else{
-        this.topicList = []
+        _self.topicList = []
       }
     })
     },
     loadMore(){
-      this.busy = true;
+      let _self = this;
       setTimeout(() => {
-        this.page++;
-      this.getfile(true)
-    }, 500);
+        _self.page++;
+        _self.getfile(true)
+      }, 500);
     },
     goDetails(data){
       var _self = this;
@@ -234,9 +240,18 @@
       }
     },
     getFileVal(event) {
-      this.file = event.target.files[0];
-      if(typeof this.file!='undefined'){
-        this.getFileSubmit()
+      var _self = this;
+      if((_self.fileMax - _self.fileCount)==parseInt(0)){
+        _self.$dialog.toast({
+          mes: '临时资料总数最多不得超过'+_self.fileMax+' 个文件',
+          timeout: 1500,
+          icon: 'error'
+        });
+      }else{
+        _self.file = event.target.files[0];
+        if(typeof _self.file!='undefined'){
+          _self.getFileSubmit()
+        }
       }
     },
     getFileSubmit(){

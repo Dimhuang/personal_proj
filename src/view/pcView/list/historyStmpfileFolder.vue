@@ -4,6 +4,7 @@
       <div class="fr">
         <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
+      <el-button @click.native="goMain" size="small" type="primary " v-text="$lang.tips.back" class="fl" style="margin-right: 10px"></el-button>
       <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -31,7 +32,7 @@
         </div>
       </li>
     </ul>
-    <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+    <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="60">
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else v-text="$lang.tips.no_data"><</span>
     </div>
@@ -48,7 +49,7 @@
           :before-remove="beforeRemove"
           multiple
           :data="{mid:mid}"
-          :limit="100"
+          :limit="fileLimit"
           :on-exceed="handleExceed"
           :on-success="successUpload"
           :file-list="fileList">
@@ -96,7 +97,10 @@
         watchType:"0",
         upload_url:upload_url,
         showUpdataBtn:true,
-        is_kehu:false
+        is_kehu:false,
+        fileLimit:'',
+        fileMax:'',
+        fileCount:''
       }
     },
     computed: {
@@ -126,36 +130,40 @@
       })
     },
     getfile(flag){
-      this.$fetch('/wap/meeting/files',{
-        m_id:this.mid,
+      var _self = this;
+      _self.$fetch('/wap/meeting/files',{
+        m_id:_self.mid,
         type:'stmpfile',
-        file_id:this.fid,
+        file_id:_self.fid,
         pagesize:10,
-        page:this.page
+        page:_self.page
       }).then(result=>{
         let res = result.data;
+      _self.fileCount = result.file_count
+      _self.fileMax = result.file_max
       if(result.msg=='success'){
         if(flag){
-          this.topicList = this.topicList.concat(res.data)
-          if(res.total<this.page*10){
-            this.busy=true
+          _self.topicList = _self.topicList.concat(res.data)
+          if(res.total<_self.page*10){
+            _self.busy=true
           }else{
-            this.busy=false
+            _self.busy=false
           }
         }else{
-          this.topicList = res.data
-          this.busy=false
+          _self.topicList = res.data
+          _self.busy=false
         }
       }else{
-        this.topicList = []
+        _self.topicList = []
       }
     })
     },
     loadMore(){
-      this.busy = true;
+      let _self = this;
       setTimeout(() => {
-        this.page++;
-        this.getfile(true)
+        _self.page++;
+        _self.getfile(true)
+        return
       }, 500);
     },
     goMain(){
@@ -244,10 +252,13 @@
       }
     },
     showPopup(){
-      this.watchType = '0'
-      this.downType  = '0'
-      this.fileList = []
-      this.showUpload = true
+      var _self = this;
+      _self.watchType = '0'
+      _self.downType  = '0'
+      _self.fileList = []
+      _self.showUpload = true
+      _self.fileLimit = _self.fileMax - _self.fileCount
+      console.log(_self.fileLimit)
     },
     uploadKeep(){
       var _self = this;
@@ -299,7 +310,8 @@
       var _self = this;
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      //this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`单次最多支持上传100个文件；临时资料总数最多不得超过${this.fileMax} 个文件`);
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${ file.name }？`);

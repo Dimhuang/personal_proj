@@ -31,7 +31,7 @@
         </div>
       </li>
     </ul>
-    <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+    <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="60">
       <i class="el-icon-loading" v-if="!busy"></i>
       <span v-else v-text="$lang.tips.no_data"></span>
     </div>
@@ -47,7 +47,7 @@
           :on-remove="handleRemove"
           :before-remove="beforeRemove"
           multiple
-          :limit="100"
+          :limit="fileLimit"
           :data="{mid:mid}"
           :on-exceed="handleExceed"
           :on-success="successUpload"
@@ -96,7 +96,10 @@
         watchType:"0",
         upload_url:upload_url,
         showUpdataBtn:true,
-        is_kehu:false
+        is_kehu:false,
+        fileLimit:'',
+        fileMax:'',
+        fileCount:''
       }
     },
     computed: {
@@ -128,36 +131,40 @@
         })
       },
       getfile(flag){
-        this.$fetch('/wap/meeting/files',{
-          m_id:this.mid,
+        var _self = this;
+        _self.$fetch('/wap/meeting/files',{
+          m_id:_self.mid,
           type:'stmpfile',
           pagesize:10,
-          page:this.page
+          page:_self.page
         }).then(result=>{
           let res = result.data;
+          _self.fileCount = result.file_count
+          _self.fileMax = result.file_max
           if(result.msg=='success'){
             if(flag){
-              this.dtopicList = this.dtopicList.concat(res.data)
-              if(res.total<this.page*10){
-                this.busy=true
+              _self.dtopicList = _self.dtopicList.concat(res.data)
+              if(res.total<_self.page*10){
+                _self.busy=true
               }else{
-                this.busy=false
+                _self.busy=false
               }
             }else{
-              this.dtopicList = res.data
-              this.busy=false
+              _self.dtopicList = res.data
+              _self.busy=false
             }
           }else{
-            this.dtopicList = []
+            _self.dtopicList = []
           }
         })
       },
       loadMore(){
-        this.busy = true;
+        let _self = this;
         setTimeout(() => {
-          this.page++;
-        this.getfile(true)
-      }, 500);
+          _self.page++;
+          _self.getfile(true)
+          return
+        }, 500);
       },
       goDetails(data){
         let _self = this;
@@ -243,10 +250,13 @@
         }
       },
       showPopup(){
-        this.watchType = '0'
-        this.downType  = '0'
-        this.fileList = []
-        this.showUpload = true
+        var _self = this;
+        _self.watchType = '0'
+        _self.downType  = '0'
+        _self.fileList = []
+        _self.showUpload = true
+        _self.fileLimit = _self.fileMax - _self.fileCount
+          console.log(_self.fileLimit)
       },
       uploadKeep(){
         var _self = this;
@@ -298,7 +308,8 @@
         var _self = this;
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        //this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`单次最多支持上传100个文件；临时资料总数最多不得超过${this.fileMax} 个文件`);
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);

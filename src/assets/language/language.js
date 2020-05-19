@@ -3,6 +3,7 @@ export const language = {
     tips:{
       no_data:"暂无更多数据",
       back:'返回',
+      back_index:'返回首页',
       see:'查看',
       nav_title:"无纸化个人中心"
     },
@@ -129,6 +130,7 @@ export const language = {
     tips:{
       no_data:"No more data yet",
       back:"Back",
+      back_index:'Back to home',
       see:"Preview",
       nav_title:"Paperless Conference"
     },

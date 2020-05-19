@@ -7,7 +7,7 @@
         <div class="f-view-width">
           <span class="m-back-btn" @click.stop="back">
             <i class="el-icon-arrow-left"></i>
-            <em v-text="$lang.tips.back"></em>
+            <em v-text="$lang.tips.back_index"></em>
           </span>
           <el-tabs @tab-click="handleClick">
             <!--会议信息-->
@@ -239,6 +239,12 @@
       this.getFileNum("11,12",()=>{
         this.getHandFile()
       })
+
+
+      setTimeout(function(){
+        console.log( document.querySelector('.m-main').clientHeight)
+        document.querySelector('.el-tabs__content').style.height = document.querySelector('.m-main').clientHeight - 70 + 'px'
+      },500)
     },
     methods:{
       getType(name){
@@ -741,5 +747,15 @@
     -moz-opacity:0; /* 老版Mozilla */
     -khtml-opacity:0; /* 老版Safari */
     opacity: 0; /* 支持opacity的浏览器*/
+  }
+  .el-tabs__content{
+    overflow-y: auto !important;
+  }
+  .el-breadcrumb .el-breadcrumb__item{
+    margin-top: 6px;
+  }
+  .el-breadcrumb{
+    height: 28px;
+    margin-bottom: 10px;
   }
 </style>

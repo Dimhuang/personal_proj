@@ -7,7 +7,7 @@
         <div class="f-view-width">
           <span class="m-back-btn" @click="back">
             <i class="el-icon-arrow-left"></i>
-            <em v-text="'返回'"></em>
+            <em v-text="$lang.tips.back_index"></em>
           </span>
           <el-tabs @tab-click="handleClick">
             <!--会议信息-->
@@ -126,6 +126,16 @@
         this.$store.commit('getMid',this.$route.query.mid)
       }
       this.getMsg(this.mid)
+
+
+
+    setTimeout(function(){
+      console.log( document.querySelector('.m-main').clientHeight)
+      document.querySelector('.el-tabs__content').style.height = document.querySelector('.m-main').clientHeight - 70 + 'px'
+    },500)
+
+
+
     },
     methods:{
       getType(name){
@@ -315,5 +325,14 @@
     align-items: center;
     background-color: #f5f5f5;
   }
-
+.el-tabs__content{
+  overflow-y: auto !important;
+}
+  .el-breadcrumb .el-breadcrumb__item{
+    margin-top: 6px;
+  }
+  .el-breadcrumb{
+    height: 28px;
+    margin-bottom: 10px;
+  }
 </style>
