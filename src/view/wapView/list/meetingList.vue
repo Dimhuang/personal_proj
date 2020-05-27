@@ -10,8 +10,8 @@
           </span>-->
       </yd-navbar>
       <yd-tab active-color="#1791ff">
-        <!--<yd-tab-panel label="会议列表" v-if="!is_ad">-->
-         <yd-tab-panel label="会议列表">
+        <yd-tab-panel label="会议列表" v-if="is_device!=1">
+         <!--<yd-tab-panel label="会议列表">-->
           <div class="m-wap-index-tabs-content" ref="tabView1">
             <div class="m-wap-main-nav-list" v-for="n in metList" @click.stop="goFunctionList(1,n.id,n.is_secrect)">
               <div class="m-wap-main-nav-list-hd">
@@ -94,11 +94,15 @@
               metPage:1,
               metList:[],
               metBusy:true,
-              is_ad:sessionStorage.getItem('adType')==null?false:true
+              is_ad:sessionStorage.getItem('adType')==null?false:true,
+              is_device:'0'
             }
         },
       created(){
         var _self = this;
+        if(sessionStorage.getItem('adType')!=null){
+          _self.is_device = sessionStorage.getItem('adType')
+        }
         _self.getMeetingList()
         _self.getHistorytList()
         sessionStorage.removeItem('keepWapType')
@@ -106,7 +110,7 @@
         setTimeout(function(){
           let bodyH = document.getElementById('scrollView').clientHeight;
           let navH = document.querySelector('.yd-tab-nav').clientHeight;
-         // if(sessionStorage.getItem('adType')==null){
+          //if(sessionStorage.getItem('adType')==null){
             _self.$refs.tabView1.style.maxHeight = bodyH - navH + 'px'
          // }
           _self.$refs.tabView2.style.maxHeight = bodyH - navH + 'px'

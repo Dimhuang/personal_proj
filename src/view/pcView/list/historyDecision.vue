@@ -50,6 +50,7 @@
           :data="{mid:mid}"
           :on-exceed="handleExceed"
           :on-success="successUpload"
+          :before-upload="beforeAvatarUpload"
           :file-list="fileList">
           <el-button size="small" type="primary">{{$lang.upload.form.sel_file}}</el-button>
           <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_s_tips}}</div>
@@ -291,9 +292,15 @@
       this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
+     // return this.$confirm(`确定移除 ${ file.name }？`);
     },
-
+    beforeAvatarUpload(file){
+      var isLt100M = file.size / 1024 / 1024 < 100;
+      if (!isLt100M) {
+        this.$message.error('文件超出限制大小(限制：100M)');
+      }
+      return isLt100M;
+    },
     successUpload(response, file, fileList){
       var _self = this;
       _self.fileList = fileList

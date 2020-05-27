@@ -23,7 +23,7 @@
         </div>
         <div class="m-history-list-r" :class="{'f-active':items.user_file!=0}">
           <el-button size="mini" round  @click.native="openView(items.filepath,items)">
-            <span v-if="(((getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&is_kehu)||getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&items.is_directory==0" v-text="$lang.means.form.download"></span>
+            <span v-if="(((getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&is_kehu)||getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.means.form.download"></span>
             <span v-else v-text="$lang.means.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
@@ -53,6 +53,7 @@
           :data="{mid:mid}"
           :on-exceed="handleExceed"
           :on-success="successUpload"
+          :before-upload="beforeAvatarUpload"
           :file-list="fileList">
           <el-button size="small" type="primary">{{$lang.upload.form.sel_file}}</el-button>
           <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_s_tips}}</div>
@@ -315,9 +316,15 @@
         this.$message.warning(`单次最多支持上传100个文件；临时资料总数最多不得超过${this.fileMax} 个文件`);
       },
       beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+       // return this.$confirm(`确定移除 ${ file.name }？`);
       },
-
+      beforeAvatarUpload(file){
+        var isLt100M = file.size / 1024 / 1024 < 100;
+        if (!isLt100M) {
+          this.$message.error('文件超出限制大小(限制：100M)');
+        }
+        return isLt100M;
+      },
       successUpload(response, file, fileList){
         var _self = this;
         _self.fileList = fileList

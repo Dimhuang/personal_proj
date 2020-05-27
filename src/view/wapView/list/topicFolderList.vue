@@ -22,19 +22,21 @@
         </yd-cell-item>
       </yd-cell-group>
       <yd-cell-group class="m-wap-folder-list-bd" v-if="is_ad">
-        <yd-cell-item v-for="(n,index) in topicList" :key="index" :class="{'f-is-del':n.user_file==0}">
+        <yd-cell-item v-for="(n,index) in topicList" :key="index" :class="{'f-is-del':n.is_directory==1}">
+          <!--<yd-cell-item v-for="(n,index) in topicList" :key="index" :class="{'f-is-del':n.user_file==0}">-->
         <!--  <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
             <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
           </yd-lightbox>-->
-          <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n)"></i>
-          <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n)"></i>
-          <span slot="left"  @click.stop="goDetails(n)">
+          <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n,0)"></i>
+          <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n,0)"></i>
+          <span slot="left"  @click.stop="goDetails(n,0)">
              <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
           </span>
+          <yd-icon slot="right" name="download" color="#1792FF" @click.native="goDetails(n,1)" ></yd-icon>
           <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
         </yd-cell-item>
       </yd-cell-group>
@@ -43,9 +45,9 @@
           <yd-lightbox slot="left" class="f-wap-img-hide-view" :num="topicList.length" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
             <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
           </yd-lightbox>
-          <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n)"></i>
-          <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n)"></i>
-          <span slot="left" @click.stop="goDetails(n)">
+          <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n,0)"></i>
+          <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n,0)"></i>
+          <span slot="left" @click.stop="goDetails(n,0)">
             <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
@@ -213,7 +215,7 @@
             _self.getfile(true)
           }, 500);
         },
-        goDetails(data){
+        goDetails(data,is_down){
           var _self = this;
           if(data.is_directory==1){
             if( _self.fileType == 'datum'){
@@ -234,9 +236,9 @@
             }else{
               if(sessionStorage.getItem('adType')!=null){
                 if(data.filepathex==''){
-                  window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+                  window.location.href = 'wzh://itc?id='+data.id+'&down='+is_down+'&path='+data.filepath+'&name='+data.filename
                 }else{
-                  window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+                  window.location.href = 'wzh://itc?id='+data.id+'&down='+is_down+'&path='+data.filepathex+'&name='+data.filename
                 }
                 return
               }else{
@@ -291,7 +293,13 @@
             }
           }else{
             _self.file = event.target.files[0];
-            if(typeof _self.file!='undefined'){
+            if(_self.file.size>(100*1024*1024)){
+              _self.$dialog.toast({
+                mes: '文件超出限制大小(限制：100M)',
+                timeout: 1500,
+                icon: 'error'
+              });
+            }else if(typeof _self.file!='undefined'){
               _self.getFileSubmit()
             }
           }
@@ -533,7 +541,7 @@
   }
 
   .m-wap-folder-list-bd .yd-cell-left span.f-ex{
-    width: 4.8rem;
+    width: 4rem;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
@@ -612,6 +620,9 @@
 
   .m-wap-folder-list-bd .f-is-del .yd-cell-right{
     display: none;
+  }
+  .m-wap-folder-list-bd .yd-cell-right i.yd-icon-delete{
+    margin-left: 0.2rem;
   }
   .m-wap-folder-list-bd .f-is-del .yd-cell-left{
     width: 100%;

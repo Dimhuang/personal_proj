@@ -1,11 +1,18 @@
 <template>
   <yd-layout>
-    <yd-navbar class="m-wap-index-title-logo" slot="navbar">
-      <div class="f-ex" slot="left">
+    <yd-navbar class="m-wap-index-title-logo" :class="{'f-ex':is_device==2}" slot="navbar">
+      <div class="f-ex" slot="left" v-if="is_device!=2">
         <i></i>
         <span>无纸化微终端</span>
       </div>
-        <span slot="right" style="font-size: 0.24rem !important;">
+      <div slot="left" @click.stop="goBack" v-if="is_device==2">
+        <yd-navbar-back-icon size="0.44rem" style="margin-left: 0"></yd-navbar-back-icon>
+        <span>返回</span>
+      </div>
+      <div slot="center" v-if="is_device==2">
+        <span style="font-size: 0.34rem">无纸化微终端</span>
+      </div>
+        <span slot="right" style="font-size: 0.24rem !important;" v-if="is_device!=2">
            欢迎您,<span style="font-size: 0.24rem !important;" v-text="userName"></span>
           </span>
     </yd-navbar>
@@ -42,7 +49,7 @@
           <img slot="icon" src="../../../assets/img/but_hysxtz.png">
           <span slot="text">决定事项通知</span>
         </yd-grids-item>
-        <yd-grids-item @click.native="goBack">
+        <yd-grids-item @click.native="goBack" v-if="is_device!=2">
           <img slot="icon" src="../../../assets/img/but_fhlb.png">
           <span slot="text">返回会议列表</span>
         </yd-grids-item>
@@ -64,15 +71,20 @@
         signBtnType:'blue',
         signTxt:'签到',
         is_sign:true,
-        is_start:false
+        is_start:false,
+        is_device:'0'
       }
     },
     computed: {
       ...mapState(["wapFunType","mid"])
     },
     mounted(){
-      this.getMetName()
-    this.getSignStatus()
+    var _self = this;
+      _self.getMetName()
+      _self.getSignStatus()
+      if(sessionStorage.getItem('adType')!=null){
+        _self.is_device = sessionStorage.getItem('adType')
+      }
     },
     methods:{
       getMetName(){
@@ -161,6 +173,10 @@
     overflow: inherit;
     padding:0 0.3rem;
   }
+  .m-wap-index-title-logo.f-ex .yd-navbar-item{
+    overflow: inherit;
+    padding:0 0.2rem;
+  }
   .m-wap-index-title-logo .f-ex i{
     display: inline-block;
     width:0.8rem;
@@ -170,6 +186,9 @@
   }
   .m-wap-index-title-logo span{
     margin-left: 0.2rem;
+  }
+  .m-wap-index-title-logo.f-ex span{
+    margin-left: 0.07rem;
   }
   .m-wap-index-title-logo .yd-navbar-item div{
     display: -webkit-box;
