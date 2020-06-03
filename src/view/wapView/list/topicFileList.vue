@@ -8,7 +8,7 @@
       </div>
     </yd-navbar>
     <yd-cell-group class="m-wap-folder-list-bd" v-if="is_ad">
-      <yd-cell-item v-for="(n,index) in topicList" :key="index"  :class="{'f-is-del':n.is_directory==1}">
+      <yd-cell-item v-for="(n,index) in topicList" :key="index"  :class="{'f-is-del':(is_device!=2&&n.user_file==0)||n.is_directory==1}">
         <!-- <yd-lightbox slot="left" class="f-wap-img-hide-view" v-if="getType(n.filepath)=='f-wap-png-icon'||getType(n.filepath)=='f-wap-jpg-icon'">
            <yd-lightbox-img :src="n.filepath"></yd-lightbox-img>
          </yd-lightbox>-->
@@ -20,8 +20,10 @@
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
         </span>
-        <yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>
-        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
+        <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.native="openView(n.filepath,n,1)"></i>
+        <i class="m-wap-folder-delete" slot="right" v-show="n.user_file!=0" @click.native="delFile(n.id)"></i>
+        <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>
+        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
     </yd-cell-group>
     <yd-cell-group class="m-wap-folder-list-bd" v-else>
@@ -37,7 +39,8 @@
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
         </span>
-        <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>
+        <i class="m-wap-folder-delete" slot="right" v-show="n.user_file!=0" @click.native="delFile(n.id)"></i>
+        <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
     </yd-cell-group>
     <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn">
@@ -117,7 +120,8 @@
         showUpdataBtn:true,
         fileLimit:'',
         fileMax:'',
-        fileCount:''
+        fileCount:'',
+        is_device:'0'
       }
     },
     computed: {
@@ -128,6 +132,9 @@
       _self.folderNameTxt = _self.$route.query.f_name
       _self.fid = _self.$route.query.id
       _self.showType = _self.$route.query.type
+    if(sessionStorage.getItem('adType')!=null){
+      _self.is_device = sessionStorage.getItem('adType')
+    }
       if(_self.showType==1){
         _self.did = _self.$route.query.did
         _self.fileType = 'datum'
@@ -575,7 +582,7 @@
   .m-wap-folder-list-bd .f-is-del .yd-cell-right{
     display: none;
   }
-  .m-wap-folder-list-bd .yd-cell-right i.yd-icon-delete{
+  .m-wap-folder-list-bd .yd-cell-right i.m-wap-folder-delete{
     margin-left: 0.2rem;
   }
   .m-wap-folder-list-bd .f-is-del .yd-cell-left{

@@ -11,9 +11,11 @@
         <yd-tab-panel label="文档批注" :badge="fileNum">
           <div class="m-board-view-bd">
             <yd-cell-group>
-              <yd-cell-item v-for="(n,index) in docList" :key="index" @click.native="openView(n.filepath,n)">
-                <i :class="getType(n.filename)" slot="icon"></i>
-                <span slot="left" v-text="n.filename"></span>
+              <yd-cell-item v-for="(n,index) in docList" :key="index" :class="{'f-is-del':is_device!=2}">
+                <i :class="getType(n.filename)" slot="icon" @click.native="openView(n.filepath,n,0)"></i>
+                <span class="f-ex" slot="left" v-text="n.filename"  @click.native="openView(n.filepath,n,0)"></span>
+                <i class="m-wap-folder-download" slot="right"  @click.native="openView(n.filepath,n,1)" v-show="is_device==2"></i>
+                <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
               </yd-cell-item>
             </yd-cell-group>
             <yd-backtop></yd-backtop>
@@ -25,13 +27,14 @@
         </yd-tab-panel>
         <yd-tab-panel label="手写批注" :badge="handNum">
           <div class="m-board-view-bd">
-            <yd-lightbox>
-              <yd-grids-group :rows="2">
-                <yd-grids-item v-for="item, key in handList" @click.native="openView(item.filepath,item)">
-                  <yd-lightbox-img slot="icon" :src="item.filepath"></yd-lightbox-img>
-                </yd-grids-item>
-              </yd-grids-group>
-            </yd-lightbox>
+            <yd-cell-group>
+              <yd-cell-item v-for="(n,index) in handList" :key="index" :class="{'f-is-del':is_device!=2}">
+                <i :class="getType(n.filename)" slot="icon" @click.native="openView(n.filepath,n,0)"></i>
+                <span class="f-ex" slot="left" v-text="n.filename"  @click.native="openView(n.filepath,n,0)"></span>
+                <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.native="openView(n.filepath,n,1)"></i>
+                <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
+              </yd-cell-item>
+            </yd-cell-group>
             <yd-backtop></yd-backtop>
             <div class="f-wap-load-box" v-infinite-scroll="loadMoreHand" infinite-scroll-disabled="handBusy" infinite-scroll-distance="30">
               <i class="el-icon-loading" v-if="!handBusy"></i>
@@ -41,13 +44,14 @@
         </yd-tab-panel>
         <yd-tab-panel label="电子白板" :badge="elecNum">
           <div class="m-board-view-bd">
-            <yd-lightbox>
-              <yd-grids-group :rows="2">
-                <yd-grids-item v-for="item, key in elecList"  @click.native="openView(item.filepath,item)">>
-                  <yd-lightbox-img slot="icon" :src="item.filepath"></yd-lightbox-img>
-                </yd-grids-item>
-              </yd-grids-group>
-            </yd-lightbox>
+            <yd-cell-group>
+              <yd-cell-item v-for="(n,index) in elecList" :key="index" :class="{'f-is-del':is_device!=2}">
+                <i :class="getType(n.filename)" slot="icon" @click.native="openView(n.filepath,n,0)"></i>
+                <span class="f-ex" slot="left" v-text="n.filename"  @click.native="openView(n.filepath,n,0)"></span>
+                <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.native="openView(n.filepath,n,1)"></i>
+                <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
+              </yd-cell-item>
+            </yd-cell-group>
             <yd-backtop></yd-backtop>
             <div class="f-wap-load-box" v-infinite-scroll="loadMoreElec" infinite-scroll-disabled="elecBusy" infinite-scroll-distance="30">
               <i class="el-icon-loading" v-if="!elecBusy"></i>
@@ -71,7 +75,7 @@
         <yd-tab-panel label="文档批注" :badge="fileNum">
           <div class="m-board-view-bd">
             <yd-cell-group>
-              <yd-cell-item v-for="(n,index) in docList" :key="index" @click.native="openView(n.filepath,n)">
+              <yd-cell-item v-for="(n,index) in docList" :class="{'f-is-del':is_device!=2}" :key="index" @click.native="openView(n.filepath,n)">
                 <i :class="getType(n.filename)" slot="icon"></i>
                 <span slot="left" v-text="n.filename"></span>
               </yd-cell-item>
@@ -156,7 +160,8 @@
           {src: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'},
           {src: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'}
         ],
-        is_ad:sessionStorage.getItem('adType')==null?false:true
+        is_ad:sessionStorage.getItem('adType')==null?false:true,
+        is_device:'0'
       }
     },
     computed: {
@@ -164,6 +169,9 @@
   },
     mounted(){
       var _self = this;
+    if(sessionStorage.getItem('adType')!=null){
+      _self.is_device = sessionStorage.getItem('adType')
+    }
     _self.getFileNum(5,()=>{
         _self.getDocFile()
       })
@@ -328,7 +336,7 @@
         _self.srcPath = ''
         _self.showRight = false
       },
-      openView(path,data) {
+      openView(path,data,is_down) {
         var _self = this;
         if(_self.getType(data.filename) == 'f-wap-na-icon'){
           _self.$dialog.toast({
@@ -338,9 +346,9 @@
         }else{
           if(sessionStorage.getItem('adType')!=null){
             if(data.filepathex==''){
-              window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepath
+              window.location.href = 'wzh://itc?id='+data.id+'&down='+is_down+'&path='+data.filepath+'&name='+data.filename
             }else{
-              window.location.href = 'wzh://itc?id='+data.id+'&path='+data.filepathex
+              window.location.href = 'wzh://itc?id='+data.id+'&down='+is_down+'&path='+data.filepathex+'&name='+data.filename
             }
             return
           }else{
@@ -434,4 +442,23 @@
   .m-board-view-bd .yd-grids-icon img{
     height: 100%;
   }
+
+
+  .m-board-view-bd .f-is-del .yd-cell-left{
+    width: 100%;
+  }
+
+  .m-board-view-bd .yd-cell-left span.f-ex{
+    width: 4.8rem;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .m-board-view-bd .f-is-del .yd-cell-right{
+    display: none;
+  }
+
+
 </style>
