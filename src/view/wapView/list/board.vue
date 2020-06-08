@@ -12,9 +12,9 @@
           <div class="m-board-view-bd">
             <yd-cell-group>
               <yd-cell-item v-for="(n,index) in docList" :key="index" :class="{'f-is-del':is_device!=2}">
-                <i :class="getType(n.filename)" slot="icon" @click.native="openView(n.filepath,n,0)"></i>
-                <span class="f-ex" slot="left" v-text="n.filename"  @click.native="openView(n.filepath,n,0)"></span>
-                <i class="m-wap-folder-download" slot="right"  @click.native="openView(n.filepath,n,1)" v-show="is_device==2"></i>
+                <i :class="getType(n.filename)" slot="icon" @click.stop="openView(n.filepath,n,0)"></i>
+                <span class="f-ex" slot="left" v-text="n.filename"  @click.stop="openView(n.filepath,n,0)"></span>
+                <i class="m-wap-folder-download" slot="right"  @click.stop="openView(n.filepath,n,1)" v-show="is_device==2"></i>
                 <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
               </yd-cell-item>
             </yd-cell-group>
@@ -29,9 +29,9 @@
           <div class="m-board-view-bd">
             <yd-cell-group>
               <yd-cell-item v-for="(n,index) in handList" :key="index" :class="{'f-is-del':is_device!=2}">
-                <i :class="getType(n.filename)" slot="icon" @click.native="openView(n.filepath,n,0)"></i>
-                <span class="f-ex" slot="left" v-text="n.filename"  @click.native="openView(n.filepath,n,0)"></span>
-                <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.native="openView(n.filepath,n,1)"></i>
+                <i :class="getType(n.filename)" slot="icon" @click.stop="openView(n.filepath,n,0)"></i>
+                <span class="f-ex" slot="left" v-text="n.filename"  @click.stop="openView(n.filepath,n,0)"></span>
+                <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.stop="openView(n.filepath,n,1)"></i>
                 <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
               </yd-cell-item>
             </yd-cell-group>
@@ -46,9 +46,9 @@
           <div class="m-board-view-bd">
             <yd-cell-group>
               <yd-cell-item v-for="(n,index) in elecList" :key="index" :class="{'f-is-del':is_device!=2}">
-                <i :class="getType(n.filename)" slot="icon" @click.native="openView(n.filepath,n,0)"></i>
-                <span class="f-ex" slot="left" v-text="n.filename"  @click.native="openView(n.filepath,n,0)"></span>
-                <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.native="openView(n.filepath,n,1)"></i>
+                <i :class="getType(n.filename)" slot="icon" @click.stop="openView(n.filepath,n,0)"></i>
+                <span class="f-ex" slot="left" v-text="n.filename"  @click.stop="openView(n.filepath,n,0)"></span>
+                <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.stop="openView(n.filepath,n,1)"></i>
                 <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
               </yd-cell-item>
             </yd-cell-group>
@@ -345,6 +345,7 @@
           });
         }else{
           if(sessionStorage.getItem('adType')!=null){
+
             if(data.filepathex==''){
               window.location.href = 'wzh://itc?id='+data.id+'&down='+is_down+'&path='+data.filepath+'&name='+data.filename
             }else{

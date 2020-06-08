@@ -291,7 +291,7 @@
               //message: '这是一条成功的提示消息',
               type: 'success'
             });
-            _self.page=_self.page-1
+            _self.page=1
             _self.getfile()
           }else{
             _self.$message(result.message);
@@ -511,7 +511,10 @@
     margin-left: 15px;
     cursor: pointer;
   }
-  .m-history-list-r.f-active .f-hide-img{
-    right: 65px;
-  }
+  /*.m-history-list-r.f-active .f-hide-img{
+    right: 20px;
+  }*/
+   .m-history-list-r.f-active .f-hide-img{
+     right: 65px;
+   }
 </style>

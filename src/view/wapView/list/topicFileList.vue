@@ -20,8 +20,8 @@
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
         </span>
-        <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.native="openView(n.filepath,n,1)"></i>
-        <i class="m-wap-folder-delete" slot="right" v-show="n.user_file!=0" @click.native="delFile(n.id)"></i>
+        <i class="m-wap-folder-download" slot="right"  v-show="is_device==2" @click.stop="openView(n.filepath,n,1)"></i>
+        <i class="m-wap-folder-delete" slot="right" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></i>
         <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>
         <yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
@@ -39,7 +39,7 @@
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
             </p>
         </span>
-        <i class="m-wap-folder-delete" slot="right" v-show="n.user_file!=0" @click.native="delFile(n.id)"></i>
+        <i class="m-wap-folder-delete" slot="right" v-show="n.user_file!=0" @click.stop="delFile(n.id)"></i>
         <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
     </yd-cell-group>
@@ -387,7 +387,7 @@
                 icon: 'success'
               });
             },100)
-            _self.page=_self.page-1
+            _self.page=1
             _self.getfile()
           }else{
             _self.$dialog.loading.close();
@@ -418,7 +418,7 @@
                 icon: 'success'
               });
             },100)
-            _self.page=_self.page-1
+            _self.page=1
             _self.getfile()
           }else{
             _self.$dialog.loading.close();

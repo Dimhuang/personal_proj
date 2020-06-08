@@ -110,9 +110,9 @@
         setTimeout(function(){
           let bodyH = document.getElementById('scrollView').clientHeight;
           let navH = document.querySelector('.yd-tab-nav').clientHeight;
-          //if(sessionStorage.getItem('adType')==null){
+          if(sessionStorage.getItem('adType')==null||sessionStorage.getItem('adType')!=1){
             _self.$refs.tabView1.style.maxHeight = bodyH - navH + 'px'
-         // }
+          }
           _self.$refs.tabView2.style.maxHeight = bodyH - navH + 'px'
         },200)
       },
