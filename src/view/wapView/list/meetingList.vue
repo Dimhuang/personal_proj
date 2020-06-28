@@ -265,10 +265,10 @@
     background-color: rgba(0,0,0,0.4);
   }
   .m-wap-main-nav-list-hd.f-history{
-    height: 2.9rem;
+    /*height: 2.9rem;*/
   }
   .m-wap-main-nav-list-hd.f-history:after{
-    height: 2.9rem;
+    /*height: 2.9rem;*/
   }
   .m-wap-main-nav-list-hd{
     color: #fff;

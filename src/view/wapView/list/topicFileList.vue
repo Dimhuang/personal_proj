@@ -588,4 +588,13 @@
   .m-wap-folder-list-bd .f-is-del .yd-cell-left{
     width: 100%;
   }
+  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.f-ex{
+    width: 100%;
+  }
+  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.yd-cell-icon+span{
+    width: 100%;
+    display:inline-block;
+    overflow:hidden;
+    text-overflow: ellipsis;
+  }
 </style>

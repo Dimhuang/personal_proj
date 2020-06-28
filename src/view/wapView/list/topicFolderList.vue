@@ -14,9 +14,10 @@
               <span>汇报：</span>
               <span class="f-flex-item" v-text="topicTitle.reporter"></span>
             </p>
-             <p class="f-flex-content">
+             <p class="f-flex-content" v-show="true">
                <span>参会：</span>
-               <span class="f-flex-item" style="word-break: break-all" v-text="topicTitle.users"></span>
+               <span class="f-flex-item " :class="{'f-toggle-user':is_toggle,'f-is-height':is_show_height}" id="txtBox" style="word-break: break-all" v-text="topicTitle.users"></span>
+               <span v-if="show_toggle_btn" v-text="is_toggle?'展开':'收起'" @click.stop="is_toggle = !is_toggle"></span>
              </p>
           </span>
         </yd-cell-item>
@@ -137,7 +138,10 @@
           fileLimit:'',
           fileMax:'',
           fileCount:'',
-          is_device:'0'
+          is_device:'0',
+          is_toggle:false,
+          show_toggle_btn:false,
+          is_show_height:true
         }
       },
       computed: {
@@ -146,14 +150,29 @@
       mounted(){
         var _self = this;
         _self.showType = _self.$route.query.type
-      if(sessionStorage.getItem('adType')!=null){
-        _self.is_device = sessionStorage.getItem('adType')
-      }
+        if(sessionStorage.getItem('adType')!=null){
+          _self.is_device = sessionStorage.getItem('adType')
+        }
         if(_self.showType==1){
           _self.did = _self.$route.query.did
           _self.title = '会议议题'
           _self.fileType = 'datum'
           _self.getTitle()
+
+
+          setTimeout(function () {
+            var ele = document.getElementById('txtBox');
+            if((ele.scrollHeight > ele.clientHeight) || (ele.offsetHeight > ele.clientHeight)) {
+              //设置滚动条到最底部
+              _self.is_show_height = false
+              _self.is_toggle = true
+              _self.show_toggle_btn = true
+            }else{
+              _self.is_show_height = false
+              _self.is_toggle = false
+              _self.show_toggle_btn = false
+            }
+          },400)
         }else{
           _self.title = '临时资料'
           _self.fileType = 'stmpfile'
@@ -525,10 +544,41 @@
    margin: 0.2rem 0;
   }
   .m-wap-folder-list-hd .yd-cell-left p span:nth-of-type(1){
-    width: 1.48rem;
+    width: 1.08rem;
     text-align: right;
   }
-
+  .m-wap-folder-list-hd .yd-cell-left p span:nth-of-type(2)::-webkit-scrollbar{
+    display: none;
+  }
+  .m-wap-folder-list-hd .yd-cell-left p span.f-is-height{
+    height: 0.8rem;
+    overflow-y: auto;
+  }
+  .m-wap-folder-list-hd .yd-cell-left p span.f-toggle-user{
+      height: 0.8rem;
+      position: relative;
+  }
+  .m-wap-folder-list-hd .yd-cell-left p span.f-toggle-user:after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    height: 0.3rem;
+    background: -webkit-linear-gradient(bottom, transparent, rgba(255,255,255,0.9));
+                 /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(bottom,  transparent, rgba(255,255,255,0.9));
+                 /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(bottom, transparent, rgba(255,255,255,0.9));
+                 /* Firefox 3.6 - 15 */
+    background: linear-gradient(to bottom,  transparent, rgba(255,255,255,0.9));
+                 /* 标准的语法 */
+  }
+  .m-wap-folder-list-hd .yd-cell-left p span:nth-of-type(3){
+    padding-left: 0.4rem;
+    display: inline-block;
+    height: 0.6rem;
+  }
   .m-wap-folder-list-bd{
     padding: 0.2rem;
   }
@@ -634,5 +684,14 @@
   }
   .m-wap-folder-list-bd .f-is-del .yd-cell-left{
     width: 100%;
+  }
+  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.f-ex{
+    width: 100%;
+  }
+  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.yd-cell-icon+span{
+    width: 100%;
+    display:inline-block;
+    overflow:hidden;
+    text-overflow: ellipsis;
   }
 </style>
