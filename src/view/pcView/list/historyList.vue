@@ -7,7 +7,7 @@
         <div class="f-view-width">
           <span class="m-back-btn" @click.stop="back">
             <i class="el-icon-arrow-left"></i>
-            <em v-text="$lang.tips.back_index"></em>
+            <em :class="{'f-is-russian':is_russian}" v-text="$lang.tips.back_index"></em>
           </span>
           <el-tabs @tab-click="handleClick">
             <!--会议信息-->
@@ -210,7 +210,8 @@
           {src: 'http://static.ydcss.com/uploads/lightbox/meizu_s6.jpg'}
         ],
         srcPath:'',
-        is_kehu:false
+        is_kehu:false,
+        is_russian:sessionStorage.getItem('lang')=='russian'?true:false
       }
     },
     computed: {
@@ -758,4 +759,12 @@
     height: 28px;
     margin-bottom: 10px;
   }
+  .f-is-russian{
+    width:120px;
+    word-break:break-all;
+    display:inline-block;
+    line-height:16px;
+    margin-top:10px;
+  }
+
 </style>

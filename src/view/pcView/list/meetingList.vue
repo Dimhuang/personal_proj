@@ -267,7 +267,7 @@
     color:#409EFF !important;
   }
   .m-meeting-nav .el-tabs__active-bar{
-   /* left: 50%;
+    /*left: 50%;
     margin-left: -35.5px;*/
   }
   .m-meeting-nav .f-view-width{

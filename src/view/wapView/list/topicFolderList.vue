@@ -599,12 +599,14 @@
   }
 
   .m-wap-folder-list-bd .yd-cell-left span.f-ex{
-    width: 4rem;
+    width: 3.2rem;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+
   .m-wap-folder-list-bd .yd-cell-left em{
    font-size: 0.24rem;
     padding: 0.06rem 0.1rem;

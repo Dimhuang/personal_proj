@@ -56,7 +56,7 @@
                   <div class="m-main-nav-list-bd">
                     <p>
                       <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
-                      <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
+                      <span class="fr"><span class="f-width-3" v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
                     </p>
                     <p><span class="fl"><span v-text="$lang.index.title.room+':'"></span><span class="f-width-2" v-text="items.room_name"></span></span></p>
                   </div>
@@ -86,7 +86,7 @@
                 <div class="m-main-nav-list-bd">
                   <p>
                     <span class="fl"><span v-text="$lang.index.title.time+':'"></span><span v-text="items.start_time"></span></span>
-                    <span class="fr"><span v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
+                    <span class="fr"><span class="f-width-3" v-text="$lang.index.title.host+':'"></span><span class="f-width-1" v-text="items.moderator"></span></span>
                   </p>
                   <p><span class="fl"><span v-text="$lang.index.title.room+':'"></span><span class="f-width-2" v-text="items.room_name"></span></span></p>
                 </div>
@@ -459,6 +459,16 @@
     float: right;
     text-overflow: ellipsis;
   }
+ /* .m-main-nav-list-bd span.f-width-3{
+    width: 70px;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    float: left;
+    text-overflow: ellipsis;
+  }*/
   .f-visibility{
     visibility: hidden;
   }

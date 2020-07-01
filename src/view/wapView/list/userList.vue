@@ -1,6 +1,6 @@
 <template>
     <yd-layout>
-      <yd-navbar slot="navbar" title="参会人员">
+      <yd-navbar slot="navbar" title="参会名单">
         <div slot="left" @click.stop="back">
           <yd-navbar-back-icon size="0.44rem"></yd-navbar-back-icon>
           <span>返回</span>
@@ -9,7 +9,7 @@
 
       <div slot="navbar" class="m-user-view-hd f-flex-content">
         <span class="f-flex-item">序号</span>
-        <span class="f-flex-item">姓名</span>
+        <span class="f-flex-item2">姓名</span>
         <span class="f-flex-item">角色</span>
         <span class="f-flex-item2">单位</span>
         <span class="f-flex-item">职务</span>
@@ -18,7 +18,7 @@
         <ul>
           <li class="f-flex-content" v-for="n,index in userList">
             <span class="f-flex-item" v-text="index<9?('0'+(index+1)):(index+1)"></span>
-            <span class="f-flex-item" v-text="n.username"></span>
+            <span class="f-flex-item2" v-text="n.username"></span>
             <span class="f-flex-item">
               <span v-if="n.is_chairman==1">管理</span>
               <span v-else-if="n.secretary==1">管理</span>

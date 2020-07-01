@@ -504,7 +504,7 @@
     font-size: 0.28rem;
   }
   .m-wap-folder-list-bd .yd-cell-left span.f-ex{
-    width: 4rem;
+    width: 3.2rem;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
