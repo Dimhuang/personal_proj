@@ -21,6 +21,7 @@
                 <span class="f-end" v-if="item.status == 2&&wapFunType==1">已结束</span>
                 <span class="f-load" v-if="item.status == 1&&wapFunType==1">进行中</span>
                 <span class="f-restar" v-if="item.status == 0&&wapFunType==1">未开始</span>
+                <span class="f-restar" v-if="item.status == 3&&wapFunType==1">准备开始</span>
               </div>
               <div class="f-fc-blue">
                 <span>查看材料 (</span>
