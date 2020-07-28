@@ -141,7 +141,7 @@
           m_id:_self.mid,
           type:'datum',
           file_id:_self.fid,
-          pagesize:10,
+          pagesize:50,
           page:_self.page
         }).then(result=>{
           let res = result.data;
@@ -150,8 +150,8 @@
           if(result.msg=='success'){
             if(flag){
               _self.topicList = _self.topicList.concat(res.data)
-              if(res.total<_self.page*10){
-                _self.busy=_self
+              if(res.total<_self.page*50){
+                _self.busy=true
               }else{
                 _self.busy=false
               }
@@ -316,11 +316,17 @@
        // return this.$confirm(`确定移除 ${ file.name }？`);
       },
       beforeAvatarUpload(file){
+        var fileTxtType = 'gif,jpg,jpeg,jpe,bmp,png,emf,wmf,tif,tiff,wdp,pdf,doc,docx,xls,xlsx,ppt,pptx,text,dps,wps,et,zip,rar,7z,exe'
+        var idx = file.name.lastIndexOf(".");
+        var ext = file.name.substr(idx+1).toUpperCase();
+        ext = ext.toLowerCase();
         var isLt100M = file.size / 1024 / 1024 < 100;
         if (!isLt100M) {
           this.$message.error('文件超出限制大小(限制：100M)');
+        }else if (isType==false){
+          this.$message.error('文件格式不支持');
         }
-        return isLt100M;
+        return isLt100M && isType;
       },
 
       successUpload(response, file, fileList){

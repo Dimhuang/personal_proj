@@ -13,7 +13,7 @@
             <yd-cell-group>
               <yd-cell-item v-for="(n,index) in docList" :key="index" :class="{'f-is-del':is_device!=2}">
                 <i :class="getType(n.filename)" slot="icon" @click.stop="openView(n.filepath,n,0)"></i>
-                <span class="f-ex" slot="left" v-text="n.filename"  @click.stop="openView(n.filepath,n,0)"></span>
+                <span class="f-ex"  :class="{'f-not-btn':is_device!=2}" slot="left" v-text="n.filename"  @click.stop="openView(n.filepath,n,0)"></span>
                 <i class="m-wap-folder-download" slot="right"  @click.stop="openView(n.filepath,n,1)" v-show="is_device==2"></i>
                 <!--<yd-icon slot="right" name="download" color="#1792FF" @click.native="openView(n.filepath,n,1)" ></yd-icon>-->
               </yd-cell-item>
@@ -77,7 +77,7 @@
             <yd-cell-group>
               <yd-cell-item v-for="(n,index) in docList" :class="{'f-is-del':is_device!=2}" :key="index" @click.native="openView(n.filepath,n)">
                 <i :class="getType(n.filename)" slot="icon"></i>
-                <span slot="left" v-text="n.filename"></span>
+                <span class="f-ex f-not-btn" slot="left" v-text="n.filename"></span>
               </yd-cell-item>
             </yd-cell-group>
             <yd-backtop></yd-backtop>
@@ -402,11 +402,14 @@
   }
   .m-board-view-bd .yd-cell-right{
     padding: 0;
+    flex: inherit;
+    width: 1rem;
   }
   .m-board-view-bd .yd-cell-left{
     white-space: normal;
     line-height: 0.48rem;
     font-size: 0.28rem;
+    flex: 1;
   }
   .m-board-view-bd .yd-cell{
     background-color: transparent;
@@ -450,7 +453,14 @@
   }
 
   .m-board-view-bd .yd-cell-left span.f-ex{
-    width: 4.8rem;
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .m-board-view-bd .yd-cell-left span.f-ex.f-not-btn{
+    width: 100%;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;

@@ -450,7 +450,8 @@
     text-overflow: ellipsis;
   }
   .m-main-nav-list-bd span.f-width-2{
-    width: 195px;
+    /*width: 195px;*/
+    width: 175px;
     overflow: hidden;
     position: relative;
     display: inline-block;

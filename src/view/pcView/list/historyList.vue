@@ -65,7 +65,7 @@
                     <p v-text="meetingMsg.userString"></p>
                   </div>
                 </li>
-                <li class="m-history-list" v-if="meetingMsg.agenda_path!=''" @click="openViewA(meetingMsg.agenda_path,meetingMsg)">
+                <li class="m-history-list" v-show="meetingMsg.agenda_path!=''" @click="openViewA(meetingMsg.agenda_path,meetingMsg)" style="display: none">
                   <img preview="4" :src="meetingMsg.agenda_path" class="f-msg-hide-img" v-if="(getType(meetingMsg.agenda_path)=='f-png-icon'||getType(meetingMsg.agenda_path)=='f-jpg-icon')&& !is_kehu">
                   <i class="iconfont pl-hyxx_hyfa_n"></i>
                   <div>
@@ -766,5 +766,7 @@
     line-height:16px;
     margin-top:10px;
   }
-
+  /*.el-tabs__item{
+    padding:0 10px !important;
+  }*/
 </style>

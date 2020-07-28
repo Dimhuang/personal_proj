@@ -30,7 +30,7 @@
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n,0)"></i>
         <i  v-else :class="getType(n.filename)" slot="icon" @click.stop="goDetails(n,0)"></i>
         <span slot="left" @click.stop="goDetails(n,0)">
-          <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+          <span class="f-ex f-has-btn">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
@@ -50,7 +50,7 @@
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon" @click.stop="goDetails(n)"></i>
         <i  v-else :class="getType(n.filename)" slot="icon" @click.stop="goDetails(n)"></i>
         <span slot="left" @click.stop="goDetails(n)">
-           <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+           <span class="f-ex f-has-btn">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
@@ -60,7 +60,7 @@
         <!--<yd-icon slot="right" name="delete" color="#FF685D" v-show="n.user_file!=0" @click.native="delFile(n.id)"></yd-icon>-->
       </yd-cell-item>
     </yd-cell-group>
-    <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn">
+    <yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="wapFunType==1&&showUpdataBtn&&is_device!=1">
       <!--<yd-tabbar slot="tabbar" style="padding: 0;z-index: 998" v-show="false">-->
       <yd-button bgcolor="#1791ff" color="#FFF" size="large" shape="angle" style="margin: 0" v-text="'上传文件'" @click.native="showMiddle=true"></yd-button>
     </yd-tabbar>
@@ -169,7 +169,7 @@
         type: 'stmpfile',
         d_id:0,
         file_id:_self.fid,
-        pagesize:10,
+        pagesize:20,
         page:_self.page
       }).then(result=>{
         let res = result.data;
@@ -178,7 +178,7 @@
       if(result.msg=='success'){
         if(flag){
           _self.topicList = _self.topicList.concat(res.data)
-          if(res.total<_self.page*10){
+          if(res.total<_self.page*20){
             _self.busy=true
           }else{
             _self.busy=false
@@ -257,9 +257,20 @@
         });
       }else{
         _self.file = event.target.files[0];
+        var fileTxtType = 'gif,jpg,jpeg,jpe,bmp,png,emf,wmf,tif,tiff,wdp,pdf,doc,docx,xls,xlsx,ppt,pptx,text,dps,wps,et,zip,rar,7z,exe'
+        var idx = _self.file.name.lastIndexOf(".");
+        var ext = _self.file.name.substr(idx+1).toUpperCase();
+        ext = ext.toLowerCase();
+        var isType = fileTxtType.indexOf(ext)==-1?false:true;
         if(_self.file.size>(100*1024*1024)){
           _self.$dialog.toast({
             mes: '文件超出限制大小(限制：100M)',
+            timeout: 1500,
+            icon: 'error'
+          });
+        }else if(isType==false){
+          _self.$dialog.toast({
+            mes: '文件格式不支持',
             timeout: 1500,
             icon: 'error'
           });
@@ -311,7 +322,7 @@
                     icon: 'success'
                   });
                 },100)
-                _self.page=_self.page-1
+                _self.page=1
                 _self.getfile()
               }else{
                 _self.$dialog.loading.close();
@@ -472,8 +483,8 @@
     line-height: 0.48rem;
     font-size: 0.28rem;
   }
-  .m-wap-folder-list-bd .yd-cell-left span.f-ex{
-    width: 3.2rem;
+  .m-wap-folder-list-bd .yd-cell-left span.f-ex.f-has-btn{
+    width: 3.2rem !important;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;

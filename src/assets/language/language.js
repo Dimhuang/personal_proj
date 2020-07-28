@@ -103,9 +103,9 @@ export const language = {
         pwd:'密码',
         reset_pwd:'重置密码',
         name:'姓名',
-        positions:'科室',
-        unit:'分类',
-        dept:'单位',
+        positions:'职务',
+        unit:'单位',
+        dept:'部门',
         salutatory:'欢迎词',
         salutatory_tips:'请输入欢迎词',
         confirm_btn:'确 定',
@@ -230,9 +230,9 @@ export const language = {
         pwd:'Password',
         reset_pwd:'Reset password',
         name:'Name',
-        positions:'Department',
-        unit:'Sort',
-        dept:'Unit',
+        positions:'Positions',
+        unit:'Unit',
+        dept:'Department',
         salutatory:'Salutatory',
         salutatory_tips:'Please enter a salutatory',
         confirm_btn:'Confirm',
@@ -377,6 +377,133 @@ export const language = {
         change_success:'изменение завершено',
         change_fail:'Ошибка изменения',
         name_length:'имя не может быть пустым'
+      }
+    }
+  },
+  "french": {
+    tips:{
+      no_data:"Données non disponibles",
+      back:'Retour',
+      back_index:"Page d 'accueil",
+      see:'Regarder',
+      nav_title:"Centre personnel sans papier"
+    },
+    index:{
+      title:{
+        his:'Conférence historique',
+        meet:'Liste des réunions',
+        weight_tips:"Réunion confidentielle. Demande d'autorisation à l'Administrateur.",
+        time:'Temps',
+        host:'Président',
+        room:'Salle de conférence'
+      },
+      status:{
+        not_start:'Sans commencer',
+        start:'En cours'
+      },
+      tips:{
+        refresh:'Actualiser la Liste'
+      }
+    },
+    login:{
+      tips:{
+        name_txt:"Veuillez saisir un nom d 'utilisateur",
+        pwd_txt:'Entrez le mot de passe.',
+        login_btn:'Connecter',
+        name_tips:"Nom d 'utilisateur",
+        pwd_tips:'Le mot de passe ne peut pas être vide.',
+        right_input:"Veuillez saisir le nom d 'utilisateur ou le mot de passe correct"
+      }
+    },
+    history:{
+      title:{
+        meet_msg:'Conference information',
+        m_name:'Nom de la réunion',
+        m_time:'Horaire des séances',
+        begin_txt:'Allez.',
+        m_place:'Lieu de réunion',
+        m_host:'Président',
+        m_mark:'Description de la réunion',
+        m_users:'Liste des participants',
+        m_case:'Ordre du jour de la session',
+        meet_topic:'Thèmes des réunions',
+        meet_means:'Renseignements provisoires',
+        meet_white:'Plaque blanche',
+        m_file:'Note de document',
+        m_hand:'Notes manuscrites',
+        m_electron:'Panneau électronique'
+      }
+    },
+    topic:{
+      form:{
+        reporter:'Informateur',
+        watch_file:'Consulter les données',
+        open:'Ouvre.',
+        download:'Télécharger',
+        report:'Rapport',
+        join:'Participation',
+        all:'Tout.',
+        slide_up:'Retirer',
+        upload:'Fichier de téléchargement'
+      }
+    },
+    means:{
+      form:{
+        open:'Ouvre.',
+        download:'Télécharger',
+        confirm:'Oui.',
+        cancel:'Annuler'
+      }
+    },
+    upload:{
+      form:{
+        title:'Fichier de téléchargement',
+        sel_file:'Fichier de sélection',
+        file_tips:'(pas plus de 100 documents téléchargés à une seule occasion et pas plus de 200 sujets pour les réunions)',
+        file_s_tips:'(le nombre de fichiers téléchargés ne doit pas dépasser 100 à une seule fois et le nombre total de données provisoires ne doit pas dépasser 100)',
+        is_upload:'Téléchargement:',
+        down_name:'Paramètres de téléchargement:',
+        can_down:'Téléchargeable sur le disque U.',
+        no_down:'Non téléchargeable',
+        is_secret:'Mode privé:',
+        only_watch:'Seuls les téléchargeurs peuvent le voir.',
+        all_watch:'Tout le monde peut le voir.',
+      },
+      tips:{
+        file_limit_tips:"Sélectionnez le fichier",
+        file_only:"Je l'ai téléchargé.",
+        secret_type:"Mode privé",
+        del_tips:'Vous êtes sûr de supprimer les options?',
+        del_title:'Delete'
+      }
+    },
+    head:{
+      form:{
+        info:'Renseignements personnels',
+        account:'Numéro de compte',
+        pwd:'Mot de passe',
+        reset_pwd:'Mot de passe de remplacement',
+        name:'Nom',
+        positions:'Section',
+        unit:'Classification',
+        dept:'Unité',
+        salutatory:'Bienvenue.',
+        salutatory_tips:'Veuillez saisir le mot de bienvenue',
+        confirm_btn:'Oui.',
+        cancel_btn:'Annuler',
+        new_pwd:'Nouveau mot de passe',
+        ag_pwd:'Confirm password'
+      },
+      tips:{
+        login_out:"Est - ce que vous êtes sûr de quitter l 'accès?",
+        quit:'Retrait',
+        yes:'Oui.',
+        cancel:'Annuler',
+        pwd_length:'La longueur du mot de passe est de 6 bits au minimum.',
+        pwd_same:'Confirmez que le mot de passe ne correspond pas au nouveau Code.',
+        change_success:'Changement réussi',
+        change_fail:'Erreur de modification',
+        name_length:'Les noms ne sont pas vides.'
       }
     }
   },

@@ -35,7 +35,7 @@
         <el-form-item :label="$lang.head.form.positions">
           <el-input v-model="formLabelAlign.position" disabled></el-input>
         </el-form-item>
-        <el-form-item :label="$lang.head.form.salutatory">
+        <el-form-item :label="$lang.head.form.salutatory" v-show="false">
           <el-input
             type="textarea"
             :placeholder="$lang.head.form.salutatory_tips"

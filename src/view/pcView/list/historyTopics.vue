@@ -53,7 +53,7 @@
             let _self = this;
             _self.$fetch('/wap/meeting/datum',{
               m_id:_self.mid,
-              pagesize:10,
+              pagesize:50,
               page:_self.page
             }).then(result=>{
               let res = result.data;
@@ -63,7 +63,7 @@
                 if(res.data.length!=0){
                   _self.topicList = _self.topicList.concat(res.data)
                 }
-                if(res.total<_self.page*10){
+                if(res.total<_self.page*50){
                   _self.busy=true
                 }else{
                   _self.busy=false
@@ -78,11 +78,11 @@
             })
           },
           loadMore(){
-            this.busy = true;
-            setTimeout(() => {
-              this.page++;
-              this.getList(true)
-            }, 500);
+            let _self = this;
+            setTimeout(()=>{
+              _self.page++;
+              _self.getList(true)
+            }, 500)
           },
           goList(id){
             if(this.is_meet_type==1){
