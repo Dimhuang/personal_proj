@@ -406,10 +406,15 @@
     width: 1rem;
   }
   .m-board-view-bd .yd-cell-left{
-    white-space: normal;
+    /*white-space: normal;*/
     line-height: 0.48rem;
     font-size: 0.28rem;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .m-board-view-bd .yd-cell{
     background-color: transparent;
@@ -448,36 +453,40 @@
   }
 
 
-  .m-board-view-bd .f-is-del .yd-cell-left{
+ /* .m-board-view-bd .f-is-del .yd-cell-left{
     width: 100%;
-  }
+  }*/
 
-  .m-board-view-bd .yd-cell-left span.f-ex{
+ /* .m-board-view-bd .yd-cell-left span.f-ex{
     width: 100%;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .m-board-view-bd .yd-cell-left span.f-ex.f-not-btn{
+  }*/
+  /*.m-board-view-bd .yd-cell-left span.f-ex.f-not-btn{
     width: 100%;
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }*/
+  .m-board-view-bd .yd-cell-right{
+    z-index: 99;
+    flex: 0;
   }
-
   .m-board-view-bd .f-is-del .yd-cell-right{
     display: none;
   }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left{
+ /* .m-wap-folder-list-bd .f-is-del .yd-cell-left{
     width: 100%;
   }
   .m-wap-folder-list-bd .f-is-del .yd-cell-left span.f-ex{
     width: 100%;
-  }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.yd-cell-icon+span{
-    width: 100%;
+  }*/
+  .m-board-view-bd .yd-cell-left span.yd-cell-icon+span{
+    display: inline-block;
+    width: calc(100% - 1.15rem);
     display:inline-block;
     overflow:hidden;
     text-overflow: ellipsis;

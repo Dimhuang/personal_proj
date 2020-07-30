@@ -30,7 +30,7 @@
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n,0)"></i>
         <i  v-else :class="getType(n.filename)" slot="icon" @click.stop="goDetails(n,0)"></i>
         <span slot="left" @click.stop="goDetails(n,0)">
-          <span class="f-ex f-has-btn">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+          <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
@@ -50,7 +50,7 @@
         <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon" @click.stop="goDetails(n)"></i>
         <i  v-else :class="getType(n.filename)" slot="icon" @click.stop="goDetails(n)"></i>
         <span slot="left" @click.stop="goDetails(n)">
-           <span class="f-ex f-has-btn">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+           <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
@@ -250,6 +250,7 @@
     getFileVal(event) {
       var _self = this;
       if((_self.fileMax - _self.fileCount)==parseInt(0)){
+        $('input[name="file"]').val('')
         _self.$dialog.toast({
           mes: '临时资料总数最多不得超过'+_self.fileMax+' 个文件',
           timeout: 1500,
@@ -263,12 +264,14 @@
         ext = ext.toLowerCase();
         var isType = fileTxtType.indexOf(ext)==-1?false:true;
         if(_self.file.size>(100*1024*1024)){
+          $('input[name="file"]').val('')
           _self.$dialog.toast({
             mes: '文件超出限制大小(限制：100M)',
             timeout: 1500,
             icon: 'error'
           });
         }else if(isType==false){
+          $('input[name="file"]').val('')
           _self.$dialog.toast({
             mes: '文件格式不支持',
             timeout: 1500,
@@ -482,14 +485,14 @@
   .m-wap-folder-list-bd .yd-cell-left{
     line-height: 0.48rem;
     font-size: 0.28rem;
-  }
-  .m-wap-folder-list-bd .yd-cell-left span.f-ex.f-has-btn{
-    width: 3.2rem !important;
-    display: inline-block;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .m-wap-folder-list-bd .yd-cell-left em{
     font-size: 0.24rem;
     padding: 0.06rem 0.1rem;
@@ -558,6 +561,7 @@
   }
   .m-wap-folder-list-bd .yd-cell-right{
     z-index: 99;
+    flex: 0;
   }
   .m-wap-folder-list-bd .f-is-del .yd-cell-right{
     display: none;
@@ -565,14 +569,10 @@
   .m-wap-folder-list-bd .yd-cell-right i.m-wap-folder-delete{
     margin-left: 0.2rem;
   }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left{
-    width: 100%;
-  }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.f-ex{
-    width: 100%;
-  }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.yd-cell-icon+span{
-    width: 100%;
+
+  .m-wap-folder-list-bd .yd-cell-left span.yd-cell-icon+span{
+    display: inline-block;
+    width: calc(100% - 1.15rem);
     display:inline-block;
     overflow:hidden;
     text-overflow: ellipsis;

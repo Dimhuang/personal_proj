@@ -17,8 +17,11 @@
              <p class="f-flex-content" v-show="true">
                <span>参会：</span>
                <span class="f-flex-item " :class="{'f-toggle-user':is_toggle,'f-is-height':is_show_height}" id="txtBox" style="word-break: break-all" v-text="topicTitle.users"></span>
-               <span v-if="show_toggle_btn" v-text="is_toggle?'展开':'收起'" @click.stop="is_toggle = !is_toggle"></span>
+
              </p>
+            <p v-if="show_toggle_btn" class="f-show-txt-view" :class="{'f-show':!is_toggle}">
+              <span v-text="is_toggle?'展开':'收起'" @click.stop="is_toggle = !is_toggle"></span>
+            </p>
           </span>
         </yd-cell-item>
       </yd-cell-group>
@@ -31,7 +34,7 @@
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n,0)"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n,0)"></i>
           <span slot="left"  @click.stop="goDetails(n,0)">
-             <span class="f-ex f-has-btn">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+             <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
@@ -52,7 +55,7 @@
           <i class="f-wap-wjj-icon" v-if="n.is_directory==1" slot="icon"  @click.stop="goDetails(n,0)"></i>
           <i  v-else :class="getType(n.filename)" slot="icon"  @click.stop="goDetails(n,0)"></i>
           <span slot="left" @click.stop="goDetails(n,0)">
-            <span class="f-ex f-has-btn">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
+            <span class="f-ex">{{n.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="n.is_directory==0">
               <em class="f-bc-yellow" v-show="n.user_file!=0">我上传的</em>
               <em class="f-bc-blue" v-show="n.is_secret!=0">私有模式</em>
@@ -306,12 +309,14 @@
           console.log(_self.fileCount)
           if((_self.fileMax - _self.fileCount)==parseInt(0)){
             if(_self.showType==1){
+              $('input[name="file"]').val('')
               _self.$dialog.toast({
                 mes: '会议议题总数最多不得超过'+_self.fileMax+' 个文件',
                 timeout: 1500,
                 icon: 'error'
               });
             }else{
+              $('input[name="file"]').val('')
               _self.$dialog.toast({
                 mes: '临时资料总数最多不得超过'+_self.fileMax+' 个文件',
                 timeout: 1500,
@@ -326,12 +331,14 @@
             ext = ext.toLowerCase();
             var isType = fileTxtType.indexOf(ext)==-1?false:true;
             if(_self.file.size>(100*1024*1024)){
+              $('input[name="file"]').val('')
               _self.$dialog.toast({
                 mes: '文件超出限制大小(限制：100M)',
                 timeout: 1500,
                 icon: 'error'
               });
             }else if(isType==false){
+              $('input[name="file"]').val('')
               _self.$dialog.toast({
                 mes: '文件格式不支持',
                 timeout: 1500,
@@ -562,12 +569,13 @@
     display: none;
   }
   .m-wap-folder-list-hd .yd-cell-left p span.f-is-height{
-    height: 0.8rem;
+    height: 1rem;
     overflow-y: auto;
   }
   .m-wap-folder-list-hd .yd-cell-left p span.f-toggle-user{
-      height: 0.8rem;
+      height: 1rem;
       position: relative;
+    overflow: hidden;
   }
   .m-wap-folder-list-hd .yd-cell-left p span.f-toggle-user:after{
     content: '';
@@ -575,7 +583,7 @@
     bottom: 0;
     left:0;
     width: 100%;
-    height: 0.3rem;
+    height: 0.5rem;
     background: -webkit-linear-gradient(bottom, transparent, rgba(255,255,255,0.9));
                  /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(bottom,  transparent, rgba(255,255,255,0.9));
@@ -585,11 +593,53 @@
     background: linear-gradient(to bottom,  transparent, rgba(255,255,255,0.9));
                  /* 标准的语法 */
   }
-  .m-wap-folder-list-hd .yd-cell-left p span:nth-of-type(3){
-    padding-left: 0.4rem;
-    display: inline-block;
-    height: 0.6rem;
+
+  .m-wap-folder-list-hd .yd-cell-left p.f-show-txt-view{
+    text-align: center;
+    font-size: 0.24rem;
+    color:#1791ff;
+    position: relative;
+    padding:0 0 0.16rem;
   }
+  .m-wap-folder-list-hd .yd-cell-left p.f-show-txt-view:after{
+    content: '';
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #1791ff;
+    display: inline-block;
+    position: absolute;
+    bottom: 0.1rem;
+    left: 50%;
+    margin-left:-4px;
+   transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -moz-transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    -o-transform: rotate(-135deg);
+  }
+  .m-wap-folder-list-hd .yd-cell-left p.f-show-txt-view.f-show:after{
+    content: '';
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #1791ff;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left:-4px;
+    transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+  }
+ /* .m-wap-folder-list-hd .yd-cell-left p span:nth-of-type(3){
+    !*padding-left: 0.4rem;
+    display: inline-block;
+    height: 0.6rem;*!
+    position: absolute;
+    bottom: -0.1rem;
+    left: 0;
+
+  }*/
   .m-wap-folder-list-bd{
     padding: 0.2rem;
   }
@@ -607,16 +657,13 @@
   .m-wap-folder-list-bd .yd-cell-left{
    line-height: 0.48rem;
     font-size: 0.28rem;
-  }
-
-  .m-wap-folder-list-bd .yd-cell-left span.f-ex.f-has-btn{
-    width: 3.2rem !important;
-    display: inline-block;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
 
   .m-wap-folder-list-bd .yd-cell-left em{
    font-size: 0.24rem;
@@ -687,22 +734,17 @@
   }
   .m-wap-folder-list-bd .yd-cell-right{
     z-index: 99;
+    flex: 0;
   }
-
   .m-wap-folder-list-bd .f-is-del .yd-cell-right{
     display: none;
   }
   .m-wap-folder-list-bd .yd-cell-right i.m-wap-folder-delete{
     margin-left: 0.2rem;
   }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left{
-    width: 100%;
-  }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.f-ex{
-    width: 100%;
-  }
-  .m-wap-folder-list-bd .f-is-del .yd-cell-left span.yd-cell-icon+span{
-    width: 100%;
+  .m-wap-folder-list-bd .yd-cell-left span.yd-cell-icon+span{
+    display: inline-block;
+    width: calc(100% - 1.15rem);
     display:inline-block;
     overflow:hidden;
     text-overflow: ellipsis;

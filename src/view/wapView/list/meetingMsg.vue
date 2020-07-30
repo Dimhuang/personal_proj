@@ -23,7 +23,9 @@
             </span>
             <span slot="left">
               <span>会议时间:</span>
-              <p class="f-fc-orange" v-text="meetingMsgList.start_time"></p>
+              <p class="f-fc-orange">
+                <span class="f-fc-orange" v-text="meetingMsgList.start_time"></span> 开始
+              </p>
             </span>
           </yd-cell-item>
         <!--  <yd-cell-item>
@@ -62,7 +64,7 @@
               <p v-text="meetingMsgList.description"></p>
             </span>
           </yd-cell-item>
-          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''"  @click.native="openView(meetingMsgList.agenda_path,meetingMsgList.agenda_id)">
+          <yd-cell-item class="f-ex" v-if="meetingMsgList.agenda_path!=''"  @click.native="openView(meetingMsgList.agenda_path,meetingMsgList.agenda_id,meetingMsgList)">
             <span slot="left">
                 <yd-icon name="hyxx_hyfa_n" custom size="0.42rem" color="#1791ff"></yd-icon>
             </span>
@@ -142,7 +144,9 @@
               });
             }else{
               if(sessionStorage.getItem('adType')!=null){
-                window.location.href = 'wzh://itc?id='+id+'&path='+path
+                console.log(data)
+                window.location.href = 'wzh://itc?id='+id+'&down=0&path='+path+'&name='+data.agenda_name
+
                 return
               }else{
                 if (_self.getType(path) == 'f-wap-pdf-icon'||_self.getType(path) == 'f-wap-txt-icon'||_self.getType(path) == 'f-wap-video-icon'||_self.getType(path) == 'f-wap-mp3-icon') {
@@ -216,5 +220,8 @@
     line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+  }
+  .f-fc-orange{
+    color: #f36323 !important;
   }
 </style>
