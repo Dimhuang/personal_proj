@@ -2,18 +2,15 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <!--<el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>-->
-        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn&&pTypeList.meeting_type!=3" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <!--<el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click.native="showPopup">{{$lang.topic.form.upload}}</el-button>-->
+        <!--<el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn&&pTypeList.meeting_type!=3" @click.native="showPopup">{{$lang.topic.form.upload}}</el-button>-->
       </div>
-      <el-button @click.native="goMain" size="small" type="primary " v-text="$lang.tips.back" class="fl" style="margin-right: 10px"></el-button>
-      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
-      <el-breadcrumb-item>{{folderNameTxt.replace(/\s/g,'&nbsp;')}}</el-breadcrumb-item>
+      <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_summary}}</el-breadcrumb-item>
     </el-breadcrumb>
     <ul>
-      <li class="m-history-topics-list f-flex-content"  v-for="items in topicList">
+      <li class="m-history-topics-list f-flex-content" v-for="items in dtopicList">
         <div class="f-flex-item m-history-topics-list-file">
-          <div class="f-wjj-icon fl" v-if="items.is_directory==1"></div>
-          <div class="fl" v-else :class="getType(items.filename)"></div>
+          <div class="fl" :class="getType(items.filename)"></div>
           <div class="f-ellipsis">
             <span :title="items.filename" class="f-ellipsis">{{items.filename.replace(/\s/g,'&nbsp;')}}</span>
             <p v-if="items.is_directory==0">
@@ -23,9 +20,9 @@
           </div>
         </div>
         <div class="m-history-list-r" :class="{'f-active':items.user_file!=0}">
-          <el-button size="mini" round  @click.native="goDetails(items)">
-             <span v-if="(((getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&is_kehu)||getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.means.form.download"></span>
-             <span v-else v-text="$lang.means.form.open"></span>
+          <el-button size="mini" round @click.native="goDetails(items)">
+            <span v-if="(((getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon'||getType(items.filepath)=='f-pdf-icon'||getType(items.filepath)=='f-txt-icon')&&is_kehu)||getType(items.filepath)=='f-xls-icon'||getType(items.filepath)=='f-doc-icon'||getType(items.filepath)=='f-ppt-icon'||getType(items.filepath)=='f-na-icon')&&items.is_directory==0" v-text="$lang.topic.form.download"></span>
+            <span v-else v-text="$lang.topic.form.open"></span>
             <!--<span>打开</span>-->
           </el-button>
           <img preview="4" :src="items.filepath" class="f-hide-img" v-if="(getType(items.filepath)=='f-png-icon'||getType(items.filepath)=='f-jpg-icon')&&!is_kehu">
@@ -35,7 +32,7 @@
     </ul>
     <div class="f-load-box" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="60">
       <i class="el-icon-loading" v-if="!busy"></i>
-      <span v-else v-text="$lang.tips.no_data"><</span>
+      <span v-else v-text="$lang.tips.no_data"></span>
     </div>
     <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
       <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
@@ -49,14 +46,14 @@
           :on-remove="handleRemove"
           :before-remove="beforeRemove"
           multiple
-          :data="{mid:mid}"
           :limit="fileLimit"
+          :data="{mid:mid}"
           :on-exceed="handleExceed"
           :on-success="successUpload"
           :before-upload="beforeAvatarUpload"
           :file-list="fileList">
           <el-button size="small" type="primary">{{$lang.upload.form.sel_file}}</el-button>
-          <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_s_tips}}</div>
+          <div slot="tip" class="el-upload__tip">{{$lang.upload.form.file_tips}}</div>
         </el-upload>
         <span class="m-upload-limit-tips">{{$lang.upload.form.is_upload}}{{fileList.length}}</span>
         <div class="m-upload-radio-box">
@@ -83,13 +80,16 @@
   import { fileType , global_ , upload_url} from '@/utils/utils'
   import { QWebChannel } from  '@/assets/js/qwebchannel.js'
   export default{
+
     data(){
       return {
-        folderNameTxt:'',
-        topicList:[],
+        did:'',
+        topicNameTxt:'',
+        toggleTap:true,
+        topicTitle:{},
+        dtopicList:[],
         page:1,
         busy:true,
-        fid:'',
         srcPath:' ',
         dialogTableVisible:false,
         is_meet_type:sessionStorage.getItem('meetType')==null?'1':sessionStorage.getItem('meetType'),
@@ -110,8 +110,6 @@
       ...mapState(["mid"])
   },
   mounted(){
-    this.folderNameTxt = this.$route.query.f_name
-    this.fid = this.$route.query.id
     if(typeof jsObj !== "undefined"){
       this.is_kehu = true
     }else if(typeof qt !== "undefined"){
@@ -126,28 +124,28 @@
   methods:{
     getType(name){
       var file = fileType(name,1)
-      return file;
+      return file
     },
     getShowUpdata(){
       this.$fetch('/api/system/system_config',{}).then(result=>{
         result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
-      })
+    })
     },
     getPlatType(){
       this.$fetch('/wap/platform/get_meeting_type',{
         mid:this.mid
       }).then(res=>{
         this.pTypeList = res.data
-        console.log(this.pTypeList)
-      })
+      console.log(this.pTypeList)
+    })
     },
     getfile(flag){
       var _self = this;
       _self.$fetch('/wap/meeting/files',{
         m_id:_self.mid,
-        type:'stmpfile',
-        file_id:_self.fid,
+        type:'summary',
         pagesize:50,
+        file_use:20,
         page:_self.page
       }).then(result=>{
         let res = result.data;
@@ -155,18 +153,18 @@
       _self.fileMax = result.file_max
       if(result.msg=='success'){
         if(flag){
-          _self.topicList = _self.topicList.concat(res.data)
+          _self.dtopicList = _self.dtopicList.concat(res.data)
           if(res.total<_self.page*50){
             _self.busy=true
           }else{
             _self.busy=false
           }
         }else{
-          _self.topicList = res.data
+          _self.dtopicList = res.data
           _self.busy=false
         }
       }else{
-        _self.topicList = []
+        _self.dtopicList = []
       }
     })
     },
@@ -174,56 +172,32 @@
       let _self = this;
       setTimeout(() => {
         _self.page++;
-        _self.getfile(true)
-        return
-      }, 500);
-    },
-    goMain(){
-      if(this.is_meet_type == 1) {
-        this.$router.push({path:'/list/historyList/stmpfile'})
-      }else{
-        this.$router.push({path:'/list/meetingList/stmpfile'})
-      }
-
+      _self.getfile(true)
+    }, 500);
     },
     goDetails(data){
       let _self = this;
-      if(data.is_directory==1){
-        if(_self.is_meet_type == 1) {
-          _self.$router.push({path:'/list/historyList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
-        }else{
-          _self.$router.push({path:'/list/meetingList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
-        }
-
-      }else{
-        _self.openView(data.filepath,data);
-      }
+      _self.openView(data.filepath,data);
     },
     openView(path,data) {
       var _self = this;
       if (_self.getType(path) == 'f-video-icon'||_self.getType(path) == 'f-mp3-icon') {
         _self.srcPath = path
         _self.dialogTableVisible=true
-
+        /*_self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
+         dangerouslyUseHTMLString: true
+         }).then(action => {
+         _self.srcPath = ''
+         }).catch(action => {
+         _self.srcPath = ''
+         });*/
+        /* }else if(_self.getType(path) == 'f-pdf-icon'){
+         _self.srcPath = path
+         _self.dialogTableVisible=true*/
         /* _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-         dangerouslyUseHTMLString: true
-         }).then(action => {
-         _self.srcPath = ''
-         }).catch(action => {
-         _self.srcPath = ''
-         });*/
-   /*   }else if(_self.getType(path) == 'f-pdf-icon'){
-        _self.srcPath = path
-        _self.dialogTableVisible=true*/
-        /*  _self.$alert(" <iframe src='" + _self.srcPath + "' width='100%' height='100%' frameborder='1'></iframe>", '查看', {
-         dangerouslyUseHTMLString: true
-         }).then(action => {
-         var elem = document.querySelector('.pswp');
-         elem.parentNode.removeChild(elem);
-         }).catch(action => {
-         var elem = document.querySelector('.pswp');
-         elem.parentNode.removeChild(elem);
-         });*/
+         dangerouslyUseHTMLString: true,
+         closeOnClickModal:true
+         })*/
       }else if((_self.getType(path) == 'f-png-icon'||_self.getType(path) == 'f-jpg-icon')&&!_self.is_kehu){
 
       }else {
@@ -241,6 +215,7 @@
             }
           }else{
             var parems = {"fileName":data.filename,"fileId":data.id,"downloadPath":data.filepath,"iSize":0}
+            console.log('khd_down='+JSON.stringify(parems))
             jsObj.downloadFile(JSON.stringify(parems))
           }
         }else{
@@ -269,7 +244,7 @@
       _self.downType  = '0'
       _self.fileList = []
       _self.showUpload = true
-      _self.fileLimit = _self.fileMax - _self.fileCount
+      _self.fileLimit = (_self.fileMax - _self.fileCount) > 100 ? 100 : (_self.fileMax - _self.fileCount)
       console.log(_self.fileLimit)
     },
     uploadKeep(){
@@ -283,15 +258,16 @@
         }
 
         var parems = {
+          datum_id:_self.did,
           mid:_self.mid,
-          parent_id:_self.fid,
+          parent_id:0,
           files:arr,
           is_secret:_self.watchType,
           allow_download:_self.downType
         }
 
 
-        _self.$post('/wap/meeting/upload_files',parems).then(result=>{
+        _self.$post('/wap/meeting/upload_datum_file',parems).then(result=>{
           let res = result;
         console.log(res)
         if(result.msg=='success'){
@@ -313,7 +289,7 @@
     handleRemove(file, fileList) {
       var _self = this;
       for(var i=0;i<_self.fileList.length;i++){
-        if(_self.fileList[i].fid==file.fid){
+        if(_self.fileList[i].response.fid==file.fid){
           _self.fileList.splice(i,1)
         }
       }
@@ -323,10 +299,10 @@
     },
     handleExceed(files, fileList) {
       //this.$message.warning(`当前限制选择 100 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      this.$message.warning(`单次最多支持上传100个文件；临时资料总数最多不得超过${this.fileMax} 个文件`);
+      this.$message.warning(`单次最多支持上传100个文件；会议议题总数最多不得超过${this.fileMax} 个文件`);
     },
     beforeRemove(file, fileList) {
-     // return this.$confirm(`确定移除 ${ file.name }？`);
+      return this.$confirm(`确定移除 ${ file.name }？`);
     },
     beforeAvatarUpload(file){
       var fileTxtType = 'gif,jpg,jpeg,jpe,bmp,png,emf,wmf,tif,tiff,wdp,pdf,doc,docx,xls,xlsx,ppt,pptx,text,dps,wps,et,zip,rar,7z,exe'
@@ -344,22 +320,21 @@
     },
     successUpload(response, file, fileList){
       var _self = this;
-      _self.fileList.push(response)
-      console.log( _self.fileList)
+      _self.fileList = fileList
     },
     delFile(id){
       var _self = this;
-      var arr = [];
-      arr.push(id)
       var  parems = {
-        meeting_id:_self.mid,
-        file_id:arr
+        type:2,
+        id:id,
+        datum_id:_self.did
       }
+
       _self.$confirm(_self.$lang.upload.tips.del_tips, _self.$lang.upload.tips.del_title, {
         confirmButtonText: _self.$lang.head.tips.yes,
         cancelButtonText:  _self.$lang.head.tips.cancel
       }).then(() => {
-        _self.$post('/wap/meeting/del_files',parems).then(result=>{
+        _self.$post('/wap/meeting/del_datum_file',parems).then(result=>{
         let res = result;
       if(result.msg=='success'){
         _self.$notify({
@@ -430,6 +405,11 @@
   .f-bc-yellow{
     background-color: #ffff00;
   }
+  .m-history-topics-list div.f-ellipsis{
+    width:700px;
+    font-size: 16px;
+  }
+
   .m-history-list-r{
     text-align: right;
   }
@@ -461,16 +441,11 @@
     cursor: pointer;
   }
   .m-history-list-r p:nth-of-type(2){
-    margin-top: 26px;
+    margin-top: 30px;
   }
   .m-history-topics-list-file{
     /*line-height: 54px;*/
   }
-  .m-history-topics-list-file div.f-ellipsis{
-    width:700px;
-    font-size: 16px;
-  }
-
   .m-history-list-r button{
     margin-top:14px;
   }
@@ -480,11 +455,19 @@
     padding-left: 0;
     font-size: 100%;
   }
-  .f-watch-dialog  .el-message-box{
-    width: 70% !important;
+  .f-topic-list-user span{
+    float: left;
+  }
+  .f-topic-list-user p{
+    float: left;
+    display: inline-block;
+    width: 802px;
+  }
+  .f-watch-dialog .el-message-box{
+    width: 90% !important;
   }
   .f-watch-dialog .el-message-box__content,
-  .f-watch-dialog  .el-message-box__message ,
+  .f-watch-dialog .el-message-box__message ,
   .f-watch-dialog .el-message-box__message p,
   .f-watch-dialog .el-dialog__body{
     height: 600px;
@@ -492,7 +475,6 @@
   .f-watch-dialog .el-message-box__btns{
     padding-top: 22px;
   }
-
 
   .f-upload-view .el-dialog__body{
     height: auto;
@@ -522,6 +504,7 @@
     padding-left: 10px;
     flex: 1;
   }
+
   .m-history-list-r i{
     font-size: 30px;
     float: right;
@@ -530,10 +513,11 @@
     margin-left: 15px;
     cursor: pointer;
   }
-  /*.m-history-list-r.f-active .f-hide-img{
-    right: 20px;
-  }*/
-   .m-history-list-r.f-active .f-hide-img{
-     right: 65px;
-   }
+  /* .m-history-list-r.f-active .f-hide-img{
+     right: 20px;
+   }*/
+  .m-history-list-r.f-active .f-hide-img{
+    right: 65px;
+  }
+
 </style>

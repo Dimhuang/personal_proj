@@ -44,6 +44,10 @@
           <img slot="icon" src="../../../assets/img/but_pzbb.png">
           <span slot="text">批注白板</span>
         </yd-grids-item>
+        <yd-grids-item @click.native="goSummary">
+          <img slot="icon" src="../../../assets/img/but_hyjy.png">
+          <span slot="text">会议纪要</span>
+        </yd-grids-item>
         <!--<yd-grids-item @click.native="goNote" v-if="wapFunType==2">-->
           <yd-grids-item @click.native="goNote" v-if="false">
           <img slot="icon" src="../../../assets/img/but_hysxtz.png">
@@ -158,6 +162,10 @@
       goBoard(){
         var _self = this;
         _self.$router.push({path:'/wap/board'});
+      },
+      goSummary(){
+        var _self = this;
+        _self.$router.push({path:'/wap/summary'});
       },
       goBack(){
         this.$router.push({path:'/wap/meetingList'});

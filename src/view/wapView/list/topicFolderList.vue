@@ -383,6 +383,7 @@
                     let res = result;
                     console.log(res)
                     _self.showMiddle=false
+                  $('input[name="file"]').val('')
                     if(result.msg=='success'){
                       _self.$dialog.loading.close();
                       setTimeout(function(){
@@ -417,6 +418,7 @@
                     let res = result;
                   console.log(res)
                   _self.showMiddle=false
+                  $('input[name="file"]').val('')
                   if(result.msg=='success'){
                     _self.$dialog.loading.close();
                     setTimeout(function(){

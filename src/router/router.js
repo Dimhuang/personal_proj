@@ -75,6 +75,13 @@ export const routerList = [
           requiresAuth: true
         },
         component: resolve => require(["@/view/pcView/list/historyDecision"], resolve)
+      },{
+        path: '/list/historyList/summary',
+        name:'summary',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historySummary"], resolve)
       }
     ]
    /* redirect:{
@@ -131,6 +138,13 @@ export const routerList = [
           requiresAuth: true
         },
         component: resolve => require(["@/view/pcView/list/historyStmpfileDetails"], resolve)
+      },{
+        path: '/list/meetingList/summary',
+        name:'summary',
+        meta: {
+          requiresAuth: true
+        },
+        component: resolve => require(["@/view/pcView/list/historySummary"], resolve)
       }
     ]
   },
@@ -258,6 +272,13 @@ export const routerList = [
       requiresAuth: false
     },
     component: resolve => require(["@/view/wapView/list/demo"], resolve)
+  },{
+    path: '/wap/summary',
+    name: 'wapSummary',
+    meta: {
+      requiresAuth: false
+    },
+    component: resolve => require(["@/view/wapView/list/summary"], resolve)
   }
 ]
 

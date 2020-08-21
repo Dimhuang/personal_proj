@@ -88,6 +88,10 @@
             <el-tab-pane :label="$lang.history.title.meet_means">
               <router-view/>
             </el-tab-pane>
+            <!--会议纪要-->
+            <el-tab-pane :label="$lang.history.title.meet_summary">
+              <router-view/>
+            </el-tab-pane>
             <!--批注白板-->
             <el-tab-pane :label="$lang.history.title.meet_white">
               <el-breadcrumb separator="/">
@@ -410,6 +414,8 @@
           this.$router.push({path:'/list/historyList/topics'})
         }else if(tab.label == this.$lang.history.title.meet_means){
           this.$router.push({path:'/list/historyList/stmpfile'})
+        }else if(tab.label == this.$lang.history.title.meet_summary){
+          this.$router.push({path:'/list/historyList/summary'})
         }
         /*else if(tab.label == '会议决定事项通知'){
           this.$router.push({path:'/list/historyList/decision'})

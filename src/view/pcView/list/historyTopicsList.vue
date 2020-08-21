@@ -2,7 +2,8 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click.native="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <!--<el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click.native="showPopup">{{$lang.topic.form.upload}}</el-button>-->
+        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn&&pTypeList.meeting_type!=3" @click.native="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
       <el-button @click.native="goMain" size="small" type="primary " v-text="$lang.tips.back" class="fl" style="margin-right: 10px"></el-button>
       <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_topic}}</el-breadcrumb-item>
@@ -125,7 +126,8 @@
         is_kehu:false,
         fileLimit:'',
         fileMax:'',
-        fileCount:''
+        fileCount:'',
+        pTypeList:[]
       }
     },
     computed: {
@@ -143,6 +145,7 @@
       this.getTitle()
       this.getfile()
       this.getShowUpdata()
+      this.getPlatType()
     },
     methods:{
       getType(name){
@@ -166,6 +169,14 @@
           }else{
             this.topicTitle = []
           }
+        })
+      },
+      getPlatType(){
+        this.$fetch('/wap/platform/get_meeting_type',{
+          mid:this.mid
+        }).then(res=>{
+          this.pTypeList = res.data
+          console.log(this.pTypeList)
         })
       },
       getfile(flag){
@@ -565,4 +576,5 @@
    .m-history-list-r.f-active .f-hide-img{
      right: 65px;
    }
+
 </style>

@@ -2,7 +2,8 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <!--<el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>-->
+        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn&&pTypeList.meeting_type!=3" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
       </div>
       <el-button @click.native="goList" size="small" type="primary " v-text="$lang.tips.back" class="fl" style="margin-right: 10px"></el-button>
       <el-breadcrumb-item @click.native="goMain">{{$lang.history.title.meet_means}}</el-breadcrumb-item>
@@ -105,7 +106,8 @@
         is_kehu:false,
         fileLimit:'',
         fileMax:'',
-        fileCount:''
+        fileCount:'',
+        pTypeList:[]
       }
     },
     computed: {
@@ -126,6 +128,7 @@
     }
       this.getfile()
       this.getShowUpdata()
+      this.getPlatType()
     },
     methods:{
       getType(name){
@@ -135,7 +138,15 @@
       getShowUpdata(){
         this.$fetch('/api/system/system_config',{}).then(result=>{
           result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
-      })
+        })
+      },
+      getPlatType(){
+        this.$fetch('/wap/platform/get_meeting_type',{
+          mid:this.mid
+        }).then(res=>{
+          this.pTypeList = res.data
+          console.log(this.pTypeList)
+        })
       },
       getfile(flag){
         var _self = this;

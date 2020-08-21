@@ -2,7 +2,16 @@
   <div>
     <el-breadcrumb separator="/">
       <div class="fr">
-        <el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <!--<el-button type="primary" size="small" v-if="is_meet_type==2&&showUpdataBtn" @click="showPopup">{{$lang.topic.form.upload}}</el-button>-->
+        <el-button type="primary" size="small" style="display: none" v-show="is_meet_type==2&&showUpdataBtn&&pTypeList.meeting_type!=3" @click="showPopup">{{$lang.topic.form.upload}}</el-button>
+        <el-select class="m-history-nav-palt-list" style="display: none" v-show="pTypeList.meeting_type==3" v-model="platValue" placeholder="请选择" @change="changePlat">
+          <el-option
+            v-for="item in platOptions"
+            :key="item.sysid"
+            :label="item.name"
+            :value="item.sysid">
+          </el-option>
+        </el-select>
       </div>
       <el-breadcrumb-item>{{$lang.history.title.meet_means}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -100,7 +109,25 @@
         is_kehu:false,
         fileLimit:'',
         fileMax:'',
-        fileCount:''
+        fileCount:'',
+        pTypeList:[],
+        platOptions: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        platValue: ''
       }
     },
     computed: {
@@ -109,6 +136,8 @@
     mounted(){
       this.getfile()
       this.getShowUpdata()
+      this.getPlatType()
+      this.getPlatList()
     if(typeof jsObj !== "undefined"){
       this.is_kehu = true
     }else if(typeof qt !== "undefined"){
@@ -131,12 +160,33 @@
           result.oPersonal.strUserUpload == 'disable'?this.showUpdataBtn=false:this.showUpdataBtn=true
         })
       },
+      getPlatType(){
+        this.$fetch('/wap/platform/get_meeting_type',{
+          mid:this.mid
+        }).then(res=>{
+          this.pTypeList = res.data
+          this.platValue =  res.data.sysid
+          console.log(this.pTypeList)
+        })
+      },
+      getPlatList(){
+        this.$fetch('/wap/platform/platform_options',{
+          mid:this.mid
+        }).then(res=>{
+          this.platOptions = res.data
+        })
+      },
+      changePlat(){
+        this.page = 1
+        this.getfile()
+      },
       getfile(flag){
         var _self = this;
         _self.$fetch('/wap/meeting/files',{
           m_id:_self.mid,
           type:'stmpfile',
           pagesize:50,
+          sysid:_self.platValue,
           page:_self.page
         }).then(result=>{
           let res = result.data;
@@ -534,5 +584,11 @@
   }*/
   .m-history-list-r.f-active .f-hide-img{
     right: 65px;
+  }
+  .m-history-nav-palt-list .el-input__inner{
+    height: 32px;
+  }
+  .m-history-nav-palt-list .el-input__icon{
+    line-height: 32px;
   }
 </style>

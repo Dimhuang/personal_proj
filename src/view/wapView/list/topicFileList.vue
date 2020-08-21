@@ -313,6 +313,7 @@
                 _self.$post('/wap/meeting/upload_datum_file',parems).then(result=>{
                   let res = result;
                 console.log(res)
+                $('input[name="file"]').val('')
                 _self.showMiddle=false
                 if(result.msg=='success'){
                   _self.$dialog.loading.close();
@@ -347,6 +348,7 @@
                 _self.$post('/wap/meeting/upload_files',parems).then(result=>{
                   let res = result;
                 console.log(res)
+                $('input[name="file"]').val('')
                 _self.showMiddle=false
                 if(result.msg=='success'){
                   _self.$dialog.loading.close();

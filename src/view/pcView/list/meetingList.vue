@@ -88,6 +88,10 @@
             <el-tab-pane :label="$lang.history.title.meet_means">
               <router-view/>
             </el-tab-pane>
+            <!--会议纪要-->
+            <el-tab-pane :label="$lang.history.title.meet_summary">
+              <router-view/>
+            </el-tab-pane>
           </el-tabs>
           <el-dialog class="f-watch-dialog" :title="$lang.tips.see" :visible.sync="dialogTableVisible" :append-to-body="true" v-if="dialogTableVisible" width="70%">
             <iframe :src="srcPath"  width='100%' height='100%' frameborder='1'></iframe>
@@ -160,6 +164,8 @@
           this.$router.push({path:'/list/meetingList/topics'})
         }else if(tab.label == this.$lang.history.title.meet_means){
           this.$router.push({path:'/list/meetingList/stmpfile'})
+        }else if(tab.label == this.$lang.history.title.meet_summary){
+          this.$router.push({path:'/list/meetingList/summary'})
         }
       },
       openViewA(path,data) {
