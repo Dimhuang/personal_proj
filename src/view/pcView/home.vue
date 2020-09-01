@@ -395,6 +395,15 @@
     font-size: 16px;
     height: 40px;
     line-height: 20px;
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    /*line-height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: box;
@@ -403,9 +412,9 @@
     -webkit-box-pack:center;
     line-clamp: 2;
     -webkit-line-clamp: 2;
-    /*! autoprefixer: off */
+    !*! autoprefixer: off *!
   　　-webkit-box-orient: vertical;
-    /*autoprefixer: on */
+    !*autoprefixer: on *!*/
   }
   .m-main-nav-list-hd-content .f-flex-content{
       margin-top: 10px;

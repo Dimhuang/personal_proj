@@ -107,7 +107,8 @@
         fileLimit:'',
         fileMax:'',
         fileCount:'',
-        pTypeList:[]
+        pTypeList:[],
+        platValue: ''
       }
     },
     computed: {
@@ -118,6 +119,7 @@
       this.folderNameTxt = this.$route.query.f_name
       this.outFolderNameTxt = this.$route.query.name
       this.o_fid = this.$route.query.o_fid
+      this.platValue = this.$route.query.sysid
 
     if(typeof jsObj !== "undefined"){
       this.is_kehu = true
@@ -155,6 +157,7 @@
           type:'stmpfile',
           file_id:_self.fid,
           pagesize:50,
+          sysid:_self.platValue,
           page:_self.page
         }).then(result=>{
           let res = result.data;

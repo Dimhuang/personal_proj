@@ -223,12 +223,12 @@
           if(_self.is_meet_type == 1) {
             _self.$router.push({
               path: '/list/historyList/stmpfileFolder',
-              query: {id: data.id, 'f_name': data.filename}
+              query: {id: data.id, 'f_name': data.filename,'sysid':_self.platValue}
             })
           }else{
             _self.$router.push({
               path: '/list/meetingList/stmpfileFolder',
-              query: {id: data.id, 'f_name': data.filename}
+              query: {id: data.id, 'f_name': data.filename,'sysid':_self.platValue}
             })
           }
         }else{

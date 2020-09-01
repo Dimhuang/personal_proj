@@ -103,7 +103,8 @@
         fileLimit:'',
         fileMax:'',
         fileCount:'',
-        pTypeList:[]
+        pTypeList:[],
+        platValue: ''
       }
     },
     computed: {
@@ -112,6 +113,7 @@
   mounted(){
     this.folderNameTxt = this.$route.query.f_name
     this.fid = this.$route.query.id
+    this.platValue = this.$route.query.sysid
     if(typeof jsObj !== "undefined"){
       this.is_kehu = true
     }else if(typeof qt !== "undefined"){
@@ -148,6 +150,7 @@
         type:'stmpfile',
         file_id:_self.fid,
         pagesize:50,
+        sysid:_self.platValue,
         page:_self.page
       }).then(result=>{
         let res = result.data;
@@ -190,9 +193,9 @@
       let _self = this;
       if(data.is_directory==1){
         if(_self.is_meet_type == 1) {
-          _self.$router.push({path:'/list/historyList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
+          _self.$router.push({path:'/list/historyList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid,'sysid':_self.platValue}})
         }else{
-          _self.$router.push({path:'/list/meetingList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid}})
+          _self.$router.push({path:'/list/meetingList/stmpfileDetails',query:{id:data.id,'f_name':data.filename,name:_self.folderNameTxt,o_fid:_self.fid,'sysid':_self.platValue}})
         }
 
       }else{
